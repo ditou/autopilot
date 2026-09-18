@@ -361,7 +361,7 @@
 
     .builder-tabs {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(5, 1fr);
       gap: 0;
       border-bottom: 1px solid var(--border);
     }
@@ -369,9 +369,9 @@
     .builder-tab {
       font-family: 'Syne', sans-serif;
       font-weight: 700;
-      font-size: 0.72rem;
-      letter-spacing: 0.02em;
-      padding: 14px 10px;
+      font-size: 0.68rem;
+      letter-spacing: 0.01em;
+      padding: 12px 6px;
       background: transparent;
       border: none;
       border-right: 1px solid var(--border);
@@ -380,11 +380,9 @@
       cursor: pointer;
       transition: color 0.2s, background 0.2s, border-color 0.2s;
       text-align: center;
-      line-height: 1.3;
+      line-height: 1.25;
     }
-    .builder-tab:nth-child(2n) { border-right: none; }
-    .builder-tab:nth-child(1),
-    .builder-tab:nth-child(2) { border-bottom: 1px solid var(--border); }
+    .builder-tab:last-child { border-right: none; }
     .builder-tab:hover { color: var(--white); background: rgba(255,255,255,0.02); }
     .builder-tab.active {
       color: var(--accent);
@@ -1393,7 +1391,12 @@
       }
       section { padding: 64px 0; }
       .form-row { grid-template-columns: 1fr; }
-      .builder-tab { font-size: 0.68rem; padding: 12px 6px; }
+      .builder-tab { font-size: 0.62rem; padding: 10px 4px; }
+      .builder-tabs { grid-template-columns: repeat(3, 1fr); }
+      .builder-tab:nth-child(3) { border-right: none; }
+      .builder-tab:nth-child(1),
+      .builder-tab:nth-child(2),
+      .builder-tab:nth-child(3) { border-bottom: 1px solid var(--border); }
       .ap-btn-label { display: none; }
       #ap-btn { padding: 0; width: 54px; }
       #ap-panel { width: calc(100vw - 28px); right: 14px; bottom: 78px; }
@@ -1443,7 +1446,8 @@
 
       <div class="builder" id="builder" aria-label="Constructor de automatización">
         <div class="builder-tabs" role="tablist">
-          <button type="button" class="builder-tab active" role="tab" data-type="cobranzas" aria-selected="true">Cobranzas</button>
+          <button type="button" class="builder-tab active" role="tab" data-type="laboratorio" aria-selected="true">Laboratorio</button>
+          <button type="button" class="builder-tab" role="tab" data-type="cobranzas" aria-selected="false">Cobranzas</button>
           <button type="button" class="builder-tab" role="tab" data-type="prospectos" aria-selected="false">Consultas</button>
           <button type="button" class="builder-tab" role="tab" data-type="facturas" aria-selected="false">Documentos</button>
           <button type="button" class="builder-tab" role="tab" data-type="integraciones" aria-selected="false">Integraciones</button>
@@ -1454,7 +1458,7 @@
           <div class="preview" id="preview" aria-live="polite"></div>
           <div class="builder-actions">
             <a class="btn-primary" id="ctaWant" href="#contacto">Quiero esto en mi empresa</a>
-            <a class="btn-secondary" id="ctaDemo" href="demo-bot-cobranzas.html" target="_blank" rel="noopener">Ver demo completa</a>
+            <a class="btn-secondary" id="ctaDemo" href="#casos" rel="noopener">Ver caso Biorossi</a>
           </div>
           <div class="builder-takeaway">
             <button type="button" class="takeaway-btn" id="ctaCopy">Copiar ejemplo</button>
@@ -1493,23 +1497,23 @@
       <h2 class="section-title reveal">¿Cuál de estos tres te tocó vivir?</h2>
       <p class="section-intro reveal">Si alguno es tu día a día, arriba podés armar el ejemplo y ver cómo quedaría automatizado.</p>
       <div class="pains-grid">
-        <article class="pain reveal" data-pain="prospectos">
+        <article class="pain reveal" data-pain="laboratorio">
           <div class="n">01 / 03</div>
-          <h3>WhatsApp desbordado</h3>
-          <p>El mismo mensaje mil veces. Consultas, cobranzas y seguimientos que se pierden entre chats.</p>
+          <h3>Call center desbordado</h3>
+          <p>WhatsApp del laboratorio explota: órdenes, obras sociales y consultas que el equipo responde a mano.</p>
+          <a class="pain-link" href="#probar">Armar ejemplo de laboratorio →</a>
+        </article>
+        <article class="pain reveal" data-pain="prospectos">
+          <div class="n">02 / 03</div>
+          <h3>WhatsApp comercial desordenado</h3>
+          <p>El mismo mensaje mil veces. Consultas y seguimientos que se pierden entre chats.</p>
           <a class="pain-link" href="#probar">Armar ejemplo de consultas →</a>
         </article>
         <article class="pain reveal" data-pain="facturas">
-          <div class="n">02 / 03</div>
+          <div class="n">03 / 03</div>
           <h3>La planilla eterna</h3>
           <p>Todo vive en un Excel que solo entiende una persona — hasta que una fórmula se rompe.</p>
           <a class="pain-link" href="#probar">Armar ejemplo de documentos →</a>
-        </article>
-        <article class="pain reveal" data-pain="integraciones">
-          <div class="n">03 / 03</div>
-          <h3>Sistemas que no se hablan</h3>
-          <p>CRM por un lado, ERP por otro, y alguien copiando datos a mano para que avance la operación.</p>
-          <a class="pain-link" href="#probar">Armar ejemplo de integración →</a>
         </article>
       </div>
     </div>
@@ -1791,9 +1795,36 @@
 
     // Problem builder
     var TYPES = {
+      laboratorio: {
+        label: 'Laboratorio',
+        demo: '#casos',
+        demoLabel: 'Ver caso Biorossi',
+        demoBlank: false,
+        fields: [
+          { id: 'lab', label: 'Nombre del laboratorio', placeholder: 'ej. Biorossi', default: 'tu laboratorio' },
+          { id: 'canal', label: 'Qué llega por WhatsApp', placeholder: 'ej. órdenes y consultas', default: 'órdenes y consultas' }
+        ],
+        summary: function (v) {
+          return 'Quiero un call center de laboratorio por WhatsApp para ' + v.lab + ': atender ' + v.canal + ', leer órdenes con IA, mapear estudios y escalar al humano con contexto.';
+        },
+        render: function (v, el) {
+          el.className = 'preview flow-preview';
+          el.style.border = '1px solid rgba(255,255,255,0.08)';
+          el.innerHTML =
+            flowStep('1', 'WhatsApp del paciente', esc(v.canal) + ' llegan a ' + esc(v.lab), 0) +
+            '<div class="flow-arrow" style="animation-delay:0.08s">↓ bot + call center</div>' +
+            flowStep('2', 'Autopilot atiende y lee', 'Responde el flujo y OCR de la orden médica', 1) +
+            '<div class="flow-arrow" style="animation-delay:0.16s">↓ matching</div>' +
+            flowStep('3', 'Códigos de estudio', 'Orden mapeada + nota lista para el agente', 2) +
+            '<div class="flow-arrow" style="animation-delay:0.24s">↓ si hace falta</div>' +
+            flowStep('4', 'Handoff humano', 'Escala al call center con el contexto armado', 3);
+        }
+      },
       cobranzas: {
         label: 'Cobranzas',
         demo: 'demo-bot-cobranzas.html',
+        demoLabel: 'Ver demo completa',
+        demoBlank: true,
         fields: [
           { id: 'empresa', label: 'Nombre de tu empresa', placeholder: 'ej. Alert Servicios', default: 'Tu Empresa' },
           { id: 'servicio', label: 'Qué cobrás', placeholder: 'ej. abono mensual', default: 'tu servicio' }
@@ -1818,6 +1849,8 @@
       prospectos: {
         label: 'Consultas',
         demo: 'demo-bot-prospectos.html',
+        demoLabel: 'Ver demo completa',
+        demoBlank: true,
         fields: [
           { id: 'empresa', label: 'Nombre de tu empresa', placeholder: 'ej. Studio Norte', default: 'Tu Empresa' },
           { id: 'producto', label: 'Qué ofrecés', placeholder: 'ej. planes de internet', default: 'nuestros servicios' }
@@ -1843,6 +1876,8 @@
       facturas: {
         label: 'Documentos',
         demo: 'demo-facturas.html',
+        demoLabel: 'Ver demo completa',
+        demoBlank: true,
         fields: [
           { id: 'empresa', label: 'Nombre de tu empresa', placeholder: 'ej. Distribuidora Sur', default: 'Tu Empresa' },
           { id: 'doc', label: 'Qué documento procesás', placeholder: 'ej. facturas de proveedores', default: 'facturas' }
@@ -1864,6 +1899,8 @@
       integraciones: {
         label: 'Integraciones',
         demo: 'demo-bot-cobranzas.html',
+        demoLabel: 'Ver demo completa',
+        demoBlank: true,
         fields: [
           { id: 'desde', label: 'Desde qué sistema', placeholder: 'ej. planilla / formulario', default: 'Formulario web' },
           { id: 'hacia', label: 'Hacia qué sistema', placeholder: 'ej. CRM / ERP', default: 'CRM' }
@@ -1903,7 +1940,7 @@
         '<div><strong>' + title + '</strong><span>' + desc + '</span></div></div>';
     }
 
-    var current = 'cobranzas';
+    var current = 'laboratorio';
     var fieldsEl = document.getElementById('builderFields');
     var previewEl = document.getElementById('preview');
     var ctaDemo = document.getElementById('ctaDemo');
@@ -1969,6 +2006,13 @@
         type.render(v, previewEl);
         previewEl.classList.remove('switching');
         ctaDemo.href = type.demo;
+        ctaDemo.textContent = type.demoLabel || 'Ver demo completa';
+        if (type.demoBlank) {
+          ctaDemo.setAttribute('target', '_blank');
+          ctaDemo.setAttribute('rel', 'noopener');
+        } else {
+          ctaDemo.removeAttribute('target');
+        }
         var payload = examplePayload();
         ctaWaExample.href = 'https://wa.me/5491157676283?text=' + encodeURIComponent(payload.summary + '\n\n¿Me pueden armar esto?');
         if (procesoField && !procesoField.dataset.touched) {
@@ -2047,7 +2091,7 @@
     window.__apGetExample = examplePayload;
     window.__apOpenChat = null;
 
-    setType('cobranzas');
+    setType('laboratorio');
   })();
 
   // Chat widget
