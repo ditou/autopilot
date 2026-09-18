@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo · Lectura de Facturas con IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#09090b;
+  --bg2:#111113;
+  --bg3:#18181b;
+  --border:#ffffff0f;
+  --border2:#ffffff1a;
+  --accent:#c8f135;
+  --accent2:#8bffd6;
+  --red:#ff4d6d;
+  --white:#f4f2ee;
+  --gray:#71717a;
+  --gray2:#a1a1aa;
+  --tg:#2aabee;
+  --tg-bg:#0a1829;
+  --gd:#4285f4;
+  --gd-bg:#0a1020;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* LAYOUT */
+.shell{display:grid;grid-template-columns:264px 1fr;min-height:100vh}
+
+/* SIDEBAR */
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);padding:28px 20px;display:flex;flex-direction:column;gap:6px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:var(--white);margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.logo span{color:var(--accent)}
+.logo-dot{width:8px;height:8px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+
+.step-btn{background:none;border:none;color:var(--gray2);font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:400;padding:10px 14px;border-radius:6px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;transition:all .2s;width:100%}
+.step-btn:hover{background:var(--bg3);color:var(--white)}
+.step-btn.active{background:rgba(200,241,53,.08);color:var(--accent);border:1px solid rgba(200,241,53,.15)}
+.step-num{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--gray);min-width:18px}
+.step-btn.active .step-num{color:var(--accent)}
+.step-btn.done .step-num::after{content:'✓';color:var(--accent2)}
+.sidebar-label{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);padding:16px 14px 6px}
+
+/* MAIN */
+.main{padding:40px 48px;max-width:920px}
+.scene{display:none;animation:fadeIn .35s ease}
+.scene.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.scene-header{margin-bottom:32px}
+.scene-tag{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.scene-title{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;line-height:1.2;color:var(--white);margin-bottom:10px}
+.scene-desc{color:var(--gray2);font-size:.88rem;line-height:1.6;max-width:560px}
+
+/* TELEGRAM MOCK */
+.tg-window{background:var(--tg-bg);border:1px solid rgba(42,171,238,.12);border-radius:12px;overflow:hidden;max-width:440px}
+.tg-header{background:rgba(42,171,238,.08);padding:14px 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(42,171,238,.1)}
+.tg-avatar{width:36px;height:36px;background:rgba(42,171,238,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+.tg-name{font-weight:500;font-size:.88rem}
+.tg-sub{font-size:.72rem;color:var(--tg);opacity:.8}
+.tg-body{padding:16px;display:flex;flex-direction:column;gap:10px;min-height:140px}
+.tg-msg{padding:10px 14px;border-radius:10px;font-size:.82rem;line-height:1.55;max-width:88%;position:relative}
+.tg-msg.out{background:rgba(42,171,238,.15);border:1px solid rgba(42,171,238,.1);align-self:flex-end;border-radius:10px 10px 2px 10px}
+.tg-msg.in{background:var(--bg3);border:1px solid var(--border);align-self:flex-start;border-radius:10px 10px 10px 2px}
+.tg-msg.in .tg-sender{font-size:.68rem;color:var(--tg);margin-bottom:4px;font-weight:500}
+.tg-time{font-size:.65rem;color:var(--gray);margin-top:4px;text-align:right}
+.tg-file{display:flex;align-items:center;gap:10px;background:rgba(42,171,238,.08);border:1px solid rgba(42,171,238,.15);border-radius:8px;padding:10px 14px;font-size:.8rem;margin-bottom:4px}
+.tg-file-icon{font-size:1.4rem}
+.tg-typing{display:flex;align-items:center;gap:4px;padding:10px 14px;align-self:flex-start}
+.tg-typing span{width:7px;height:7px;background:var(--tg);opacity:.4;border-radius:50%;animation:typing .9s infinite}
+.tg-typing span:nth-child(2){animation-delay:.18s}
+.tg-typing span:nth-child(3){animation-delay:.36s}
+@keyframes typing{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+
+/* GOOGLE DRIVE MOCK */
+.gd-window{background:var(--gd-bg);border:1px solid rgba(66,133,244,.15);border-radius:12px;overflow:hidden;max-width:440px}
+.gd-header{background:rgba(66,133,244,.06);padding:12px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(66,133,244,.1)}
+.gd-dot{width:8px;height:8px;border-radius:50%}
+
+/* FLOW */
+.flow{display:flex;flex-direction:column;gap:0;max-width:540px}
+.flow-node{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 16px;display:flex;align-items:center;gap:12px;font-size:.83rem}
+.flow-node.accent{border-color:rgba(200,241,53,.2);background:rgba(200,241,53,.04)}
+.flow-node.blue{border-color:rgba(42,171,238,.15);background:rgba(42,171,238,.03)}
+.flow-node.green{border-color:rgba(139,255,214,.15);background:rgba(139,255,214,.03)}
+.flow-node.purple{border-color:rgba(167,139,250,.2);background:rgba(167,139,250,.04)}
+.flow-node.gd{border-color:rgba(66,133,244,.2);background:rgba(66,133,244,.04)}
+.flow-arrow{text-align:center;color:var(--gray);font-size:.75rem;padding:4px 0;font-family:'DM Mono',monospace}
+.flow-icon{font-size:1.1rem;min-width:24px;text-align:center}
+
+/* NOTIF */
+.notif{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:16px 18px;display:flex;gap:14px;align-items:flex-start;max-width:480px}
+.notif-icon{font-size:1.4rem;line-height:1}
+.notif-title{font-weight:500;font-size:.85rem;margin-bottom:4px}
+.notif-body{font-size:.8rem;color:var(--gray2);line-height:1.5}
+.notif.success{border-color:rgba(139,255,214,.2);background:rgba(139,255,214,.04)}
+.notif.warning{border-color:rgba(200,241,53,.15);background:rgba(200,241,53,.03)}
+.notif.info{border-color:rgba(42,171,238,.15);background:rgba(42,171,238,.03)}
+.notif.dupe{border-color:rgba(255,77,109,.2);background:rgba(255,77,109,.04)}
+
+/* SPLIT */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+.split-label{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);margin-bottom:10px}
+
+/* PROGRESS */
+.progress-bar{height:2px;background:var(--border);border-radius:2px;margin-bottom:32px;overflow:hidden}
+.progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .4s ease}
+
+/* STATS */
+.stats{display:flex;gap:16px;flex-wrap:wrap;margin:20px 0}
+.stat{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px 18px;flex:1;min-width:120px}
+.stat-val{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;color:var(--white)}
+.stat-val.green{color:var(--accent2)}
+.stat-val.yellow{color:var(--accent)}
+.stat-val.blue{color:var(--tg)}
+
+/* EXTRACTED DATA CARD */
+.extracted-card{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;overflow:hidden;max-width:560px}
+.extracted-header{background:rgba(200,241,53,.05);border-bottom:1px solid rgba(200,241,53,.1);padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.extracted-title{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.extracted-badge{font-family:'DM Mono',monospace;font-size:.62rem;background:rgba(200,241,53,.1);color:var(--accent);padding:3px 9px;border-radius:4px;border:1px solid rgba(200,241,53,.2)}
+.extracted-body{padding:16px 18px;display:grid;gap:8px}
+.field-row{display:grid;grid-template-columns:160px 1fr;gap:12px;align-items:start;font-size:.8rem}
+.field-key{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--gray);padding-top:1px}
+.field-val{color:var(--white);font-weight:400;line-height:1.4}
+.field-val.highlight{color:var(--accent);font-family:'DM Mono',monospace;font-weight:500}
+.field-val.green{color:var(--accent2)}
+.field-divider{border:none;border-top:1px solid var(--border);margin:6px 0}
+
+/* AIRTABLE MOCK */
+.airtable{border:1px solid var(--border2);border-radius:10px;overflow:hidden;max-width:640px}
+.airtable-header{background:rgba(255,255,255,.03);padding:10px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
+.at-dot{width:8px;height:8px;border-radius:50%}
+.airtable table{width:100%;border-collapse:collapse;font-size:.78rem}
+.airtable th{background:rgba(255,255,255,.04);padding:9px 14px;text-align:left;font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;color:var(--gray);border-bottom:1px solid var(--border)}
+.airtable td{padding:9px 14px;border-bottom:1px solid var(--border);color:var(--gray2)}
+.airtable tr:last-child td{border-bottom:none}
+.airtable tr.new-row td{color:var(--white);background:rgba(200,241,53,.03)}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.68rem;font-family:'DM Mono',monospace}
+.badge.new{background:rgba(200,241,53,.1);color:var(--accent);border:1px solid rgba(200,241,53,.2)}
+.badge.existing{background:rgba(255,255,255,.06);color:var(--gray)}
+.badge.dupe{background:rgba(255,77,109,.1);color:#ff4d6d}
+.badge.tipo{background:rgba(42,171,238,.08);color:var(--tg)}
+
+/* CODE BLOCK */
+.code-block{background:#0d0d10;border:1px solid var(--border2);border-radius:8px;padding:16px 18px;font-family:'DM Mono',monospace;font-size:.75rem;line-height:1.7;color:var(--gray2);max-width:560px;overflow-x:auto}
+.code-key{color:#a78bfa}
+.code-val{color:var(--accent2)}
+.code-num{color:var(--accent)}
+.code-str{color:#fb923c}
+
+/* TRIGGER SELECTOR */
+.trigger-tabs{display:flex;gap:8px;margin-bottom:20px}
+.trigger-tab{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px 16px;font-size:.8rem;color:var(--gray2);cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
+.trigger-tab.active{background:rgba(200,241,53,.08);border-color:rgba(200,241,53,.2);color:var(--accent)}
+.trigger-panel{display:none}
+.trigger-panel.active{display:block}
+
+/* BUTTONS */
+.btn-next{font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;background:var(--accent);color:#000;border:none;padding:12px 24px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .2s;margin-top:24px}
+.btn-next:hover{background:var(--accent2);transform:translateY(-1px)}
+.btn-ghost{font-family:'Syne',sans-serif;font-weight:600;font-size:.82rem;background:none;color:var(--gray2);border:1px solid var(--border);padding:11px 20px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .2s;margin-top:24px;margin-right:10px}
+.btn-ghost:hover{border-color:var(--border2);color:var(--white)}
+
+/* PROCESSING ANIMATION */
+.processing-bar{height:4px;background:var(--border);border-radius:4px;overflow:hidden;margin:12px 0}
+.processing-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:4px;width:0;transition:width 1.2s ease}
+.processing-fill.done{width:100%}
+.step-check{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:.82rem;color:var(--gray2);border-bottom:1px solid var(--border)}
+.step-check:last-child{border-bottom:none}
+.check-icon{font-size:.85rem;min-width:20px}
+.check-icon.done{color:var(--accent2)}
+.check-icon.pending{color:var(--gray);opacity:.4}
+.check-icon.active{color:var(--accent);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* MOBILE */
+@media(max-width:768px){
+  .shell{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .main{padding:24px 20px}
+  .split{grid-template-columns:1fr}
+  .field-row{grid-template-columns:1fr}
+  .field-key{color:var(--gray);margin-bottom:2px}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="logo"><div class="logo-dot"></div>Autopilot<span>.</span></div>
+  <a href="/" style="
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #c8f135;
+    text-decoration: none;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    margin: 8px 0 16px;
+    transition: color 0.2s;
+  " onmouseover="this.style.color='#f4f2ee'" onmouseout="this.style.color='#c8f135'">
+    ← Volver al sitio
+  </a>
+  <div class="sidebar-label">Demo interactiva</div>
+  <button class="step-btn active" onclick="goTo(0)" id="sb0"><span class="step-num">01</span> Resumen del sistema</button>
+  <button class="step-btn" onclick="goTo(1)" id="sb1"><span class="step-num">02</span> Factura entra al sistema</button>
+  <button class="step-btn" onclick="goTo(2)" id="sb2"><span class="step-num">03</span> IA extrae los datos</button>
+  <button class="step-btn" onclick="goTo(3)" id="sb3"><span class="step-num">04</span> Normalización de montos</button>
+  <button class="step-btn" onclick="goTo(4)" id="sb4"><span class="step-num">05</span> Chequeo de duplicados</button>
+  <button class="step-btn" onclick="goTo(5)" id="sb5"><span class="step-num">06</span> Guardado en Airtable</button>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:17%"></div></div>
+
+  <!-- SCENE 0: Overview -->
+  <section class="scene active" id="scene0">
+    <div class="scene-header">
+      <div class="scene-tag">Sistema completo</div>
+      <h1 class="scene-title">Lectura de Facturas con IA</h1>
+      <p class="scene-desc">Mandás una factura por Telegram o la dejás en Google Drive. El sistema lee, extrae todos los datos y los guarda estructurados en Airtable sin que toques nada.</p>
+    </div>
+
+    <div class="flow">
+      <div class="flow-node blue"><span class="flow-icon">📱</span><div><strong>Entrada</strong> — Foto/PDF por Telegram o archivo en Google Drive</div></div>
+      <div class="flow-arrow">↓ recibe el archivo</div>
+      <div class="flow-node gd"><span class="flow-icon">☁️</span><div><strong>Subida a storage</strong> — convierte imagen si es necesario y aloja</div></div>
+      <div class="flow-arrow">↓ envía al modelo</div>
+      <div class="flow-node purple"><span class="flow-icon">🧠</span><div><strong>IA analiza la factura</strong> — extrae todos los campos con contexto AR</div></div>
+      <div class="flow-arrow">↓ normaliza formato ARS (puntos/comas)</div>
+      <div class="flow-node accent"><span class="flow-icon">⚙️</span><div><strong>Normalización</strong> — montos, cantidades, impuestos, IIBB</div></div>
+      <div class="flow-arrow">↓ busca duplicados</div>
+      <div class="flow-node green"><span class="flow-icon">🗄️</span><div><strong>Airtable</strong> — crea registro en Facturas + filas en Items</div></div>
+      <div class="flow-arrow">↓ notifica</div>
+      <div class="flow-node blue"><span class="flow-icon">✅</span><div><strong>Confirmación por Telegram</strong> — número, proveedor, total</div></div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="stat-val yellow">0</div><div class="stat-label">Carga manual</div></div>
+      <div class="stat"><div class="stat-val green">&lt;15s</div><div class="stat-label">Por factura</div></div>
+      <div class="stat"><div class="stat-val blue">100%</div><div class="stat-label">Campos extraídos</div></div>
+    </div>
+
+    <button class="btn-next" onclick="goTo(1)">Ver demo en vivo →</button>
+  </section>
+
+  <!-- SCENE 1: Entrada de la factura -->
+  <section class="scene" id="scene1">
+    <div class="scene-header">
+      <div class="scene-tag">Paso 1 — Entrada</div>
+      <h2 class="scene-title">La factura entra al sistema</h2>
+      <p class="scene-desc">Dos canales disponibles: Telegram (foto directa desde el celular) o Google Drive (trigger automático cuando se sube un archivo a una carpeta). Vos elegís cuál usás.</p>
+    </div>
+
+    <div class="trigger-tabs">
+      <button class="trigger-tab active" onclick="switchTrigger('tg', this)">📱 Telegram</button>
+      <button class="trigger-tab" onclick="switchTrigger('gd', this)">📂 Google Drive</button>
+    </div>
+
+    <div class="trigger-panel active" id="panel-tg">
+      <div class="split-label">Telegram — equipo de administración</div>
+      <div class="tg-window">
+        <div class="tg-header">
+          <div class="tg-avatar">🤖</div>
+          <div><div class="tg-name">Autopilot · Facturas</div><div class="tg-sub">en línea</div></div>
+        </div>
+        <div class="tg-body">
+          <div class="tg-msg out">
+            <div class="tg-file"><span class="tg-file-icon">🧾</span><div><div style="font-weight:500">factura_proveedor.jpg</div><div style="color:var(--gray);font-size:.72rem">Imagen · 1.2 MB</div></div></div>
+            <div class="tg-time">10:22</div>
+          </div>
+          <div class="tg-msg in">
+            <div class="tg-sender">Autopilot</div>
+            📸 Imagen recibida. Procesando...<br>
+            <span style="color:var(--gray);font-size:.76rem">Subiendo y analizando con IA</span>
+            <div class="tg-time">10:22</div>
+          </div>
+        </div>
+      </div>
+      <div class="notif info" style="margin-top:14px">
+        <span>💡</span>
+        <div>
+          <div class="notif-title">También acepta PDFs</div>
+          <div class="notif-body">Si mandás un PDF, el sistema lo convierte a imagen automáticamente antes de pasárselo al modelo de IA.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="trigger-panel" id="panel-gd">
+      <div class="split-label">Google Drive — carpeta "Facturas a procesar"</div>
+      <div class="gd-window">
+        <div class="gd-header">
+          <div class="at-dot" style="background:#ea4335"></div>
+          <div class="at-dot" style="background:#fbbc05;margin:0 4px"></div>
+          <div class="at-dot" style="background:#34a853"></div>
+          <span style="margin-left:10px;font-size:.78rem;color:var(--gray2)">Google Drive — Trigger automático</span>
+        </div>
+        <div style="padding:18px;font-size:.82rem;color:var(--gray2);line-height:1.6">
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(66,133,244,.06);border:1px solid rgba(66,133,244,.15);border-radius:8px;margin-bottom:12px">
+            <span style="font-size:1.2rem">📂</span>
+            <div>
+              <div style="color:var(--white);font-weight:500">Facturas a procesar</div>
+              <div style="font-size:.7rem;color:var(--gray)">Monitoreada cada 5 minutos</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(200,241,53,.04);border:1px solid rgba(200,241,53,.12);border-radius:8px">
+            <span>📄</span>
+            <div>
+              <div style="color:var(--white)">FACT-00312_Distribuidora_Sur.pdf</div>
+              <div style="font-size:.7rem;color:var(--accent)">Nuevo archivo detectado → disparando workflow</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <button class="btn-ghost" onclick="goTo(0)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(2)">Ver extracción de datos →</button>
+    </div>
+  </section>
+
+  <!-- SCENE 2: IA extrae datos -->
+  <section class="scene" id="scene2">
+    <div class="scene-header">
+      <div class="scene-tag">Paso 2 — Análisis IA</div>
+      <h2 class="scene-title">La IA lee y extrae los datos</h2>
+      <p class="scene-desc">El modelo recibe la imagen de la factura y devuelve un JSON estructurado con todos los campos: proveedor, montos, impuestos, ítems, tipo de comprobante y más.</p>
+    </div>
+
+    <div class="split">
+      <div>
+        <div class="split-label">Procesamiento</div>
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:16px">
+          <div class="step-check">
+            <span class="check-icon done">✓</span>
+            <span style="color:var(--white)">Archivo recibido</span>
+          </div>
+          <div class="step-check">
+            <span class="check-icon done">✓</span>
+            <span style="color:var(--white)">Subido a storage</span>
+          </div>
+          <div class="step-check">
+            <span class="check-icon done">✓</span>
+            <span style="color:var(--white)">Enviado al modelo de IA</span>
+          </div>
+          <div class="step-check">
+            <span class="check-icon done">✓</span>
+            <span style="color:var(--white)">JSON extraído</span>
+          </div>
+          <div class="processing-bar"><div class="processing-fill done"></div></div>
+          <div style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--accent2)">Completado en 8.3s</div>
+        </div>
+
+        <div class="notif info" style="margin-top:14px">
+          <span>🔍</span>
+          <div>
+            <div class="notif-title">Contexto argentino</div>
+            <div class="notif-body">El modelo entiende Factura A, B, C, IIBB BsAs, IIBB CABA, percepciones y formatos numéricos con punto de miles y coma decimal.</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="split-label">Datos extraídos</div>
+        <div class="extracted-card">
+          <div class="extracted-header">
+            <span class="extracted-title">Factura procesada</span>
+            <span class="extracted-badge">IA · confianza alta</span>
+          </div>
+          <div class="extracted-body">
+            <div class="field-row">
+              <span class="field-key">Invoice Number</span>
+              <span class="field-val highlight">0001-00003421</span>
+            </div>
+            <div class="field-row">
+              <span class="field-key">Invoice date</span>
+              <span class="field-val">15/03/2025</span>
+            </div>
+            <div class="field-row">
+              <span class="field-key">Invoice type</span>
+              <span class="field-val"><span class="badge tipo">Factura A</span></span>
+            </div>
+            <hr class="field-divider">
+            <div class="field-row">
+              <span class="field-key">Vendor name</span>
+              <span class="field-val">Distribuidora Sur S.A.</span>
+            </div>
+            <div class="field-row">
+              <span class="field-key">Email address</span>
+              <span class="field-val">admin@distrsur.com.ar</span>
+            </div>
+            <div class="field-row">
+              <span class="field-key">Phone number</span>
+              <span class="field-val">011 4523-8800</span>
+            </div>
+            <hr class="field-divider">
+            <div class="field-row">
+              <span class="field-key">Invoice SubTotal</span>
+              <span class="field-val">"2.152.495,00"</span>
+            </div>
+            <div class="field-row">
+              <span class="field-key">Invoice tax (IVA)</span>
+              <span class="field-val">"452.024,00"</span>
+            </div>
+            <div class="field-row">
+              <span class="field-key">Per IIBB BsAs</span>
+              <span class="field-val">"21.524,95"</span>
+            </div>
+            <div class="field-row">
+              <span class="field-key">Invoice Total</span>
+              <span class="field-val highlight">$2.626.043,95</span>
+            </div>
+            <hr class="field-divider">
+            <div class="field-row">
+              <span class="field-key">Items</span>
+              <span class="field-val green">3 líneas detectadas</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <button class="btn-ghost" onclick="goTo(1)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(3)">Ver normalización de montos →</button>
+    </div>
+  </section>
+
+  <!-- SCENE 3: Normalización -->
+  <section class="scene" id="scene3">
+    <div class="scene-header">
+      <div class="scene-tag">Paso 3 — Normalización</div>
+      <h2 class="scene-title">Los montos se normalizan automáticamente</h2>
+      <p class="scene-desc">Las facturas argentinas usan punto para miles y coma para decimales. El código detecta el formato y convierte todo a número limpio antes de guardar.</p>
+    </div>
+
+    <div class="split">
+      <div>
+        <div class="split-label">Como viene de la IA (string)</div>
+        <div class="code-block">
+{<br>
+&nbsp;&nbsp;<span class="code-key">"Invoice SubTotal"</span>: <span class="code-str">"2.152.495,00"</span>,<br>
+&nbsp;&nbsp;<span class="code-key">"Invoice tax"</span>: <span class="code-str">"452.024,00"</span>,<br>
+&nbsp;&nbsp;<span class="code-key">"Invoice Total"</span>: <span class="code-str">"2.626.043,95"</span>,<br>
+&nbsp;&nbsp;<span class="code-key">"Per IIBB BsAs"</span>: <span class="code-str">"21.524,95"</span>,<br>
+&nbsp;&nbsp;<span class="code-key">"Items"</span>: [{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"Quantity"</span>: <span class="code-str">"12.00"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"Unit cost"</span>: <span class="code-str">"179.374,58"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"IVA %"</span>: <span class="code-str">"21"</span><br>
+&nbsp;&nbsp;}]<br>
+}
+        </div>
+      </div>
+      <div>
+        <div class="split-label">Después de normalizar (number)</div>
+        <div class="code-block">
+{<br>
+&nbsp;&nbsp;<span class="code-key">"Invoice SubTotal"</span>: <span class="code-num">2152495</span>,<br>
+&nbsp;&nbsp;<span class="code-key">"Invoice tax"</span>: <span class="code-num">452024</span>,<br>
+&nbsp;&nbsp;<span class="code-key">"Invoice Total"</span>: <span class="code-num">2626043.95</span>,<br>
+&nbsp;&nbsp;<span class="code-key">"Per IIBB BsAs"</span>: <span class="code-num">21524.95</span>,<br>
+&nbsp;&nbsp;<span class="code-key">"Items"</span>: [{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"Quantity"</span>: <span class="code-num">12</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"Unit cost"</span>: <span class="code-num">179374.58</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"IVA %"</span>: <span class="code-num">21</span><br>
+&nbsp;&nbsp;}]<br>
+}
+        </div>
+      </div>
+    </div>
+
+    <div class="notif warning" style="margin-top:20px">
+      <span>⚙️</span>
+      <div>
+        <div class="notif-title">Lógica de detección automática</div>
+        <div class="notif-body">Si tiene punto Y coma → punto es miles, coma es decimal. Si solo tiene coma → es decimal. Si tiene más de un punto → son miles. Cubre todos los formatos de facturas argentinas.</div>
+      </div>
+    </div>
+
+    <div>
+      <button class="btn-ghost" onclick="goTo(2)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(4)">Ver chequeo de duplicados →</button>
+    </div>
+  </section>
+
+  <!-- SCENE 4: Chequeo duplicados -->
+  <section class="scene" id="scene4">
+    <div class="scene-header">
+      <div class="scene-tag">Paso 4 — Deduplicación</div>
+      <h2 class="scene-title">Chequeo de duplicados en Airtable</h2>
+      <p class="scene-desc">Antes de crear el registro, el sistema busca en Airtable si ya existe una factura con el mismo número. Si existe, la descarta. Si no, la crea.</p>
+    </div>
+
+    <div class="split">
+      <div>
+        <div class="split-label">Caso A — Factura nueva</div>
+        <div class="flow" style="max-width:300px">
+          <div class="flow-node accent"><span class="flow-icon">🔍</span><div><strong>Busca</strong> "0001-00003421"</div></div>
+          <div class="flow-arrow">↓ no encontrada</div>
+          <div class="flow-node green"><span class="flow-icon">✅</span><div><strong>Crea registro</strong> en Facturas + Items</div></div>
+          <div class="flow-arrow">↓ notifica</div>
+          <div class="flow-node blue"><span class="flow-icon">📲</span><div><strong>Confirmación</strong> por Telegram</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="split-label">Caso B — Duplicado detectado</div>
+        <div class="flow" style="max-width:300px">
+          <div class="flow-node accent"><span class="flow-icon">🔍</span><div><strong>Busca</strong> "0001-00003421"</div></div>
+          <div class="flow-arrow">↓ ya existe</div>
+          <div class="flow-node" style="border-color:rgba(255,77,109,.2);background:rgba(255,77,109,.04)">
+            <span class="flow-icon">🚫</span><div><strong>No crea</strong> registro duplicado</div>
+          </div>
+          <div class="flow-arrow">↓ notifica</div>
+          <div class="flow-node blue"><span class="flow-icon">⚠️</span><div><strong>Avisa</strong> "Ya existe en el sistema"</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="notif info" style="margin-top:20px">
+      <span>🧩</span>
+      <div>
+        <div class="notif-title">Clave de deduplicación</div>
+        <div class="notif-body">Se usa el campo <strong>Invoice Number</strong> (número de comprobante) como identificador único. Fácilmente configurable para usar también proveedor + fecha si hace falta.</div>
+      </div>
+    </div>
+
+    <div>
+      <button class="btn-ghost" onclick="goTo(3)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(5)">Ver registro en Airtable →</button>
+    </div>
+  </section>
+
+  <!-- SCENE 5: Airtable + confirmación -->
+  <section class="scene" id="scene5">
+    <div class="scene-header">
+      <div class="scene-tag">Paso 5 — Resultado final</div>
+      <h2 class="scene-title">Guardado en Airtable y confirmación</h2>
+      <p class="scene-desc">Se crean dos registros: uno en la tabla <strong>Facturas</strong> con todos los datos del encabezado, y uno por cada línea en la tabla <strong>Items</strong>. Luego el bot confirma por Telegram.</p>
+    </div>
+
+    <div class="split-label">Airtable — tabla Facturas</div>
+    <div class="airtable" style="margin-bottom:20px">
+      <div class="airtable-header">
+        <div class="at-dot" style="background:#ff5f57"></div>
+        <div class="at-dot" style="background:#febc2e;margin:0 4px"></div>
+        <div class="at-dot" style="background:#28c840"></div>
+        <span style="margin-left:10px;font-size:.75rem;color:var(--gray2)">Base: Facturas · Tabla: Facturas</span>
+      </div>
+      <table>
+        <tr><th>Nro.</th><th>Proveedor</th><th>Fecha</th><th>Total</th><th>Tipo</th><th>Estado</th></tr>
+        <tr><td>0001-00003418</td><td>Logística Norte</td><td>10/03/25</td><td>$892.400</td><td><span class="badge tipo">Fac. B</span></td><td><span class="badge existing">cargada</span></td></tr>
+        <tr><td>0001-00003419</td><td>Imprenta Del Valle</td><td>12/03/25</td><td>$145.800</td><td><span class="badge tipo">Fac. A</span></td><td><span class="badge existing">cargada</span></td></tr>
+        <tr class="new-row"><td>0001-00003421</td><td>Distribuidora Sur S.A.</td><td>15/03/25</td><td><strong>$2.626.044</strong></td><td><span class="badge tipo">Fac. A</span></td><td><span class="badge new">nueva ✨</span></td></tr>
+      </table>
+    </div>
+
+    <div class="split-label">Airtable — tabla Items (desglose)</div>
+    <div class="airtable" style="margin-bottom:20px">
+      <div class="airtable-header">
+        <div class="at-dot" style="background:#ff5f57"></div>
+        <div class="at-dot" style="background:#febc2e;margin:0 4px"></div>
+        <div class="at-dot" style="background:#28c840"></div>
+        <span style="margin-left:10px;font-size:.75rem;color:var(--gray2)">Base: Facturas · Tabla: Items</span>
+      </div>
+      <table>
+        <tr><th>Descripción</th><th>Cant.</th><th>P. Unit.</th><th>IVA %</th><th>Total línea</th></tr>
+        <tr class="new-row"><td>Resma A4 75g</td><td>120</td><td>$14.948</td><td>21%</td><td>$1.793.745</td></tr>
+        <tr class="new-row"><td>Tóner HP 85A</td><td>8</td><td>$42.100</td><td>21%</td><td>$336.800</td></tr>
+        <tr class="new-row"><td>Carpetas oficio</td><td>50</td><td>$4.361</td><td>10.5%</td><td>$218.050</td></tr>
+      </table>
+    </div>
+
+    <div class="split-label">Telegram — confirmación automática</div>
+    <div class="tg-window">
+      <div class="tg-header">
+        <div class="tg-avatar">🤖</div>
+        <div><div class="tg-name">Autopilot · Facturas</div><div class="tg-sub">en línea</div></div>
+      </div>
+      <div class="tg-body">
+        <div class="tg-msg in">
+          <div class="tg-sender">Autopilot</div>
+          ✅ <strong>Factura procesada y guardada</strong><br><br>
+          📄 Número: <strong>0001-00003421</strong><br>
+          🏢 Proveedor: <strong>Distribuidora Sur S.A.</strong><br>
+          📅 Fecha: <strong>15/03/2025</strong><br>
+          💰 Total: <strong>$2.626.043,95</strong><br>
+          📦 Items: <strong>3 líneas</strong><br><br>
+          Guardada en Airtable. <a href="#" style="color:var(--tg)">Ver registro →</a>
+          <div class="tg-time">10:30</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats" style="margin-top:24px">
+      <div class="stat"><div class="stat-val yellow">0</div><div class="stat-label">Carga manual</div></div>
+      <div class="stat"><div class="stat-val green">14</div><div class="stat-label">Campos extraídos</div></div>
+      <div class="stat"><div class="stat-val blue">∞</div><div class="stat-label">Facturas en paralelo</div></div>
+    </div>
+
+    <div class="notif warning" style="margin-top:20px;max-width:560px">
+      <span>💡</span>
+      <div>
+        <div class="notif-title">¿Te interesa implementarlo?</div>
+        <div class="notif-body">Funciona con cualquier proveedor: podés mandarlo por WhatsApp, Telegram, o conectar el Gmail para que procese adjuntos automáticamente. Adaptable a tu operación.</div>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap">
+      <a href="https://wa.me/5491157676283?text=Hola,%20vi%20la%20demo%20de%20lectura%20de%20facturas%20y%20quiero%20saber%20m%C3%A1s" target="_blank" style="text-decoration:none">
+        <button class="btn-next">Quiero implementarlo →</button>
+      </a>
+      <button class="btn-ghost" onclick="goTo(0)">↩ Ver desde el principio</button>
+<!-- AGREGÁ ESTO: -->
+      <a href="/" style="
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #71717a;
+        text-decoration: none;
+        font-size: 0.84rem;
+        font-family: 'Syne', sans-serif;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        padding: 15px 22px;
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 4px;
+        transition: color 0.2s, border-color 0.2s;
+      " onmouseover="this.style.color='#f4f2ee';this.style.borderColor='rgba(255,255,255,0.25)'"
+        onmouseout="this.style.color='#71717a';this.style.borderColor='rgba(255,255,255,0.1)'">
+        ← Volver al sitio
+      </a>
+    </div>
+  </section>
+
+</main>
+</div>
+
+<script>
+let current = 0;
+const total = 6;
+
+function goTo(n) {
+  document.getElementById('scene' + current).classList.remove('active');
+  document.getElementById('sb' + current).classList.remove('active');
+  if (current < n) document.getElementById('sb' + current).classList.add('done');
+  current = n;
+  document.getElementById('scene' + n).classList.add('active');
+  document.getElementById('sb' + n).classList.add('active');
+  document.getElementById('progressFill').style.width = ((n + 1) / total * 100) + '%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function switchTrigger(key, btn) {
+  document.querySelectorAll('.trigger-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.trigger-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + key).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
+.env
+.env.*
+!.env.example
+.wrangler/
+node_modules/
+.vscode/
+.idea/

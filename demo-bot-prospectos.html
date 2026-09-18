@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo · Bot de Prospectos IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07080a;
+  --bg2:#0e0f12;
+  --bg3:#14151a;
+  --border:#ffffff0d;
+  --border2:#ffffff18;
+  --accent:#c8f135;
+  --accent2:#8bffd6;
+  --purple:#a78bfa;
+  --orange:#fb923c;
+  --white:#f1efe9;
+  --gray:#6b7280;
+  --gray2:#9ca3af;
+  --wa:#25d366;
+  --wa-bubble-out:#005c4b;
+  --wa-bubble-in:#1e2a20;
+  --wa-bg:#0a1612;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;font-weight:300;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* SHELL */
+.shell{display:grid;grid-template-columns:256px 1fr;min-height:100vh}
+
+/* SIDEBAR */
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);padding:24px 16px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:.95rem;padding:0 8px 20px;margin-bottom:8px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.logo-badge{background:var(--accent);color:#000;font-size:.6rem;font-family:'DM Mono',monospace;padding:2px 6px;border-radius:3px;letter-spacing:.06em}
+.sidebar-label{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gray);padding:14px 8px 6px}
+
+.step-btn{all:unset;display:flex;align-items:flex-start;gap:10px;padding:9px 10px;border-radius:6px;cursor:pointer;width:100%;font-size:.79rem;color:var(--gray2);transition:all .18s;line-height:1.4}
+.step-btn:hover{background:var(--bg3);color:var(--white)}
+.step-btn.active{background:rgba(200,241,53,.07);color:var(--accent)}
+.step-btn.done{color:var(--gray)}
+.step-num{font-family:'DM Mono',monospace;font-size:.65rem;padding-top:1px;min-width:20px;color:var(--gray)}
+.step-btn.active .step-num{color:var(--accent)}
+.step-btn.done .step-num{color:var(--accent2)}
+
+/* MAIN */
+.main{padding:40px 44px;max-width:860px}
+.scene{display:none;animation:sceneIn .3s ease}
+.scene.active{display:block}
+@keyframes sceneIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* PROGRESS */
+.prog{height:1px;background:var(--border2);margin-bottom:36px;border-radius:1px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .5s ease}
+
+/* SCENE HEADER */
+.scene-tag{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.scene-title{font-family:'Syne',sans-serif;font-size:1.55rem;font-weight:800;line-height:1.2;margin-bottom:10px}
+.scene-desc{color:var(--gray2);font-size:.86rem;line-height:1.65;max-width:520px;margin-bottom:28px}
+
+/* WHATSAPP */
+.wa{background:var(--wa-bg);border:1px solid rgba(37,211,102,.1);border-radius:14px;overflow:hidden;max-width:400px}
+.wa-head{background:rgba(37,211,102,.05);padding:13px 16px;display:flex;align-items:center;gap:11px;border-bottom:1px solid rgba(37,211,102,.08)}
+.wa-av{width:34px;height:34px;background:rgba(37,211,102,.18);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
+.wa-name{font-weight:500;font-size:.84rem;color:var(--white)}
+.wa-status{font-size:.68rem;color:var(--wa);opacity:.8}
+.wa-body{padding:14px;display:flex;flex-direction:column;gap:8px;min-height:100px}
+.bbl{padding:9px 13px;border-radius:10px;font-size:.8rem;line-height:1.55;max-width:90%}
+.bbl.out{background:var(--wa-bubble-out);align-self:flex-end;border-radius:10px 10px 2px 10px}
+.bbl.in{background:var(--wa-bubble-in);border:1px solid rgba(37,211,102,.07);align-self:flex-start;border-radius:10px 10px 10px 2px}
+.bbl-time{font-size:.62rem;color:rgba(255,255,255,.35);margin-top:4px;text-align:right}
+.bbl-time.left{text-align:left}
+.dots{display:flex;align-items:center;gap:4px;padding:10px 13px;align-self:flex-start}
+.dots span{width:6px;height:6px;background:rgba(37,211,102,.4);border-radius:50%;animation:dot .9s infinite}
+.dots span:nth-child(2){animation-delay:.18s}
+.dots span:nth-child(3){animation-delay:.36s}
+@keyframes dot{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+
+/* INFO CARDS */
+.info-card{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:14px 16px;font-size:.8rem}
+.info-card.purple{border-color:rgba(167,139,250,.15);background:rgba(167,139,250,.04)}
+.info-card.green{border-color:rgba(139,255,214,.15);background:rgba(139,255,214,.03)}
+.info-card.orange{border-color:rgba(251,146,60,.15);background:rgba(251,146,60,.03)}
+.info-card.yellow{border-color:rgba(200,241,53,.15);background:rgba(200,241,53,.03)}
+.ic-title{font-weight:500;margin-bottom:5px;display:flex;align-items:center;gap:7px;font-size:.82rem}
+.ic-body{color:var(--gray2);line-height:1.6}
+
+/* GRID */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+.col-label{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);margin-bottom:10px}
+
+/* FLOW */
+.flow{display:flex;flex-direction:column;gap:0;max-width:480px}
+.fnode{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:11px 15px;display:flex;align-items:center;gap:11px;font-size:.8rem}
+.fnode.y{border-color:rgba(200,241,53,.18);background:rgba(200,241,53,.03)}
+.fnode.p{border-color:rgba(167,139,250,.15);background:rgba(167,139,250,.03)}
+.fnode.g{border-color:rgba(139,255,214,.12);background:rgba(139,255,214,.02)}
+.fnode.o{border-color:rgba(251,146,60,.15);background:rgba(251,146,60,.03)}
+.farrow{text-align:center;color:var(--gray);font-size:.7rem;padding:3px 0;font-family:'DM Mono',monospace}
+.fi{font-size:1rem;min-width:22px;text-align:center}
+
+/* ROUTE PILLS */
+.routes{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+.route{padding:5px 12px;border-radius:20px;font-size:.72rem;font-family:'DM Mono',monospace;border:1px solid}
+.route.r1{border-color:rgba(200,241,53,.3);color:var(--accent);background:rgba(200,241,53,.06)}
+.route.r2{border-color:rgba(167,139,250,.3);color:var(--purple);background:rgba(167,139,250,.06)}
+.route.r3{border-color:rgba(139,255,214,.25);color:var(--accent2);background:rgba(139,255,214,.05)}
+.route.r4{border-color:rgba(251,146,60,.25);color:var(--orange);background:rgba(251,146,60,.05)}
+
+/* FORM PREVIEW */
+.form-card{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:20px;max-width:380px}
+.form-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;margin-bottom:14px}
+.form-row{margin-bottom:12px}
+.form-label{font-size:.68rem;color:var(--gray2);margin-bottom:4px;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.06em}
+.form-val{font-size:.82rem;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:5px;padding:7px 11px;color:var(--white)}
+.form-val.filled{border-color:rgba(200,241,53,.2);color:var(--accent)}
+
+/* STATS */
+.stats{display:flex;gap:14px;flex-wrap:wrap;margin:20px 0}
+.stat{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px 16px;flex:1;min-width:110px}
+.sv{font-family:'Syne',sans-serif;font-weight:800;font-size:1.35rem}
+.sv.g{color:var(--accent2)}
+.sv.y{color:var(--accent)}
+.sv.p{color:var(--purple)}
+.sl{font-size:.7rem;color:var(--gray);margin-top:3px}
+
+/* BUTTONS */
+.btn-next{font-family:'Syne',sans-serif;font-weight:700;font-size:.8rem;background:var(--accent);color:#000;border:none;padding:11px 22px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:all .2s;margin-top:22px}
+.btn-next:hover{background:var(--accent2);transform:translateY(-1px)}
+.btn-ghost{font-family:'Syne',sans-serif;font-weight:500;font-size:.8rem;background:none;color:var(--gray2);border:1px solid var(--border);padding:10px 18px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:all .2s;margin-top:22px;margin-right:10px}
+.btn-ghost:hover{border-color:var(--border2);color:var(--white)}
+
+/* REVEAL */
+.hide{opacity:0;transform:translateY(6px);transition:opacity .35s ease,transform .35s ease}
+.show{opacity:1!important;transform:none!important}
+
+@media(max-width:720px){
+  .shell{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .main{padding:24px 18px}
+  .grid2{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<aside class="sidebar">
+  <div class="logo">Autopilot<span class="logo-badge">DEMO</span></div>
+  <a href="/" style="
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #c8f135;
+    text-decoration: none;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    margin: 8px 0 16px;
+    transition: color 0.2s;
+  " onmouseover="this.style.color='#f4f2ee'" onmouseout="this.style.color='#c8f135'">
+    ← Volver al sitio
+  </a>
+  <div class="sidebar-label">Demo interactiva</div>
+  <button class="step-btn active" onclick="go(0)" id="sb0"><span class="step-num">01</span><span>Cómo funciona el sistema</span></button>
+  <button class="step-btn" onclick="go(1)" id="sb1"><span class="step-num">02</span><span>Prospecto escribe por primera vez</span></button>
+  <button class="step-btn" onclick="go(2)" id="sb2"><span class="step-num">03</span><span>IA enruta la conversación</span></button>
+  <button class="step-btn" onclick="go(3)" id="sb3"><span class="step-num">04</span><span>Captura de datos automática</span></button>
+  <button class="step-btn" onclick="go(4)" id="sb4"><span class="step-num">05</span><span>Formulario enviado al CRM</span></button>
+  <button class="step-btn" onclick="go(5)" id="sb5"><span class="step-num">06</span><span>Casos especiales: cliente / vendedor</span></button>
+  <button class="step-btn" onclick="go(6)" id="sb6"><span class="step-num">07</span><span>Resumen y próximos pasos</span></button>
+</aside>
+
+<main class="main">
+  <div class="prog"><div class="prog-fill" id="pf" style="width:14%"></div></div>
+
+  <!-- 0: OVERVIEW -->
+  <section class="scene active" id="scene0">
+    <div class="scene-tag">Sistema completo</div>
+    <h1 class="scene-title">Bot de Captura de Prospectos</h1>
+    <p class="scene-desc">El bot atiende consultas en WhatsApp 24/7, detecta la intención del usuario, captura los datos del prospecto de forma natural y los carga automáticamente en el CRM.</p>
+
+    <div class="flow">
+      <div class="fnode y"><span class="fi">💬</span><div><strong>Prospecto escribe</strong> al WhatsApp de la empresa</div></div>
+      <div class="farrow">↓ primer mensaje detectado</div>
+      <div class="fnode p"><span class="fi">🧠</span><div><strong>IA enruta</strong> — detecta si es prospecto, cliente, vendedor o consulta</div></div>
+      <div class="farrow">↓ si es prospecto nuevo</div>
+      <div class="fnode g"><span class="fi">📋</span><div><strong>Captura de datos</strong> — nombre, servicio, localidad de forma conversacional</div></div>
+      <div class="farrow">↓ cuando tiene todo</div>
+      <div class="fnode y"><span class="fi">✅</span><div><strong>Confirma y envía</strong> al CRM automáticamente</div></div>
+      <div class="farrow">↓ en paralelo</div>
+      <div class="fnode o"><span class="fi">🔔</span><div><strong>Alerta al vendedor</strong> con los datos del lead en Telegram</div></div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="sv y">0s</div><div class="sl">Tiempo de respuesta</div></div>
+      <div class="stat"><div class="sv g">24/7</div><div class="sl">Disponibilidad</div></div>
+      <div class="stat"><div class="sv p">4</div><div class="sl">Rutas de intención</div></div>
+      <div class="stat"><div class="sv">100%</div><div class="sl">Leads registrados</div></div>
+    </div>
+    <button class="btn-next" onclick="go(1)">Ver demo en vivo →</button>
+  </section>
+
+  <!-- 1: PRIMER MENSAJE -->
+  <section class="scene" id="scene1">
+    <div class="scene-tag">Paso 1 — Primer contacto</div>
+    <h2 class="scene-title">El prospecto escribe</h2>
+    <p class="scene-desc">El bot detecta que es el primer mensaje de este número y activa la bienvenida. Antes de responder, ya intenta capturar datos del primer mensaje del usuario.</p>
+
+    <div class="grid2">
+      <div>
+        <div class="col-label">WhatsApp del prospecto</div>
+        <div class="wa">
+          <div class="wa-head">
+            <div class="wa-av">🏢</div>
+            <div><div class="wa-name">Alert Seguridad</div><div class="wa-status">en línea</div></div>
+          </div>
+          <div class="wa-body">
+            <div class="bbl in">
+              Hola, quería consultar por una alarma para mi casa en Quilmes
+              <div class="bbl-time left">10:14</div>
+            </div>
+            <div class="dots"><span></span><span></span><span></span></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="col-label">Pre-captura automática</div>
+        <div class="info-card purple">
+          <div class="ic-title">🧩 Datos detectados del primer mensaje</div>
+          <div class="ic-body">
+            <strong>servicio:</strong> alarma ✓<br>
+            <strong>localidad:</strong> Quilmes ✓<br>
+            <strong>nombre:</strong> pendiente<br>
+            <strong>destino:</strong> casa ✓
+          </div>
+        </div>
+        <div class="info-card" style="margin-top:12px">
+          <div class="ic-title">⚡ Sin esperar que lo escriba de nuevo</div>
+          <div class="ic-body">El sistema ya tiene servicio y localidad. Solo le va a pedir el nombre.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:20px">
+      <div class="wa" style="max-width:460px">
+        <div class="wa-body">
+          <div class="bbl out hide" id="w1r">
+            Hola, bienvenido a Alert Seguridad. 👋<br><br>
+            Para ayudarte con la alarma en Quilmes, ¿me decís tu nombre?
+            <div class="bbl-time">10:14 ✓✓</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <button class="btn-ghost" onclick="go(0)">← Atrás</button>
+      <button class="btn-next" onclick="revealAndNext('w1r', 2)">Ver bienvenida del bot →</button>
+    </div>
+  </section>
+
+  <!-- 2: ROUTING IA -->
+  <section class="scene" id="scene2">
+    <div class="scene-tag">Paso 2 — Router IA</div>
+    <h2 class="scene-title">La IA decide cómo responder</h2>
+    <p class="scene-desc">Cada mensaje pasa por un router inteligente que clasifica la intención antes de responder. Esto evita respuestas genéricas y adapta el comportamiento al contexto.</p>
+
+    <div class="routes">
+      <div class="route r1">ai_welcome — primer contacto</div>
+      <div class="route r2">data_parser — completar datos</div>
+      <div class="route r3">ai_general — consultas / info</div>
+      <div class="route r4">client — cliente existente</div>
+    </div>
+
+    <div class="info-card purple" style="max-width:480px;margin-bottom:16px">
+      <div class="ic-title">🧠 Ejemplo de clasificación en tiempo real</div>
+      <div class="ic-body">
+        <strong>"quería consultar por una alarma"</strong><br>
+        → WELCOMED: false → ruta: <strong style="color:var(--accent)">ai_welcome</strong><br><br>
+        <strong>"me llamo Carlos"</strong><br>
+        → WELCOMED: true, datos incompletos → ruta: <strong style="color:var(--purple)">data_parser</strong><br><br>
+        <strong>"¿cuánto tarda la instalación?"</strong><br>
+        → WELCOMED: true, LEAD_DONE: true → ruta: <strong style="color:var(--accent2)">ai_general</strong><br><br>
+        <strong>"tengo un problema con mi alarma"</strong><br>
+        → detecta cliente existente → ruta: <strong style="color:var(--orange)">client</strong>
+      </div>
+    </div>
+
+    <div class="info-card yellow" style="max-width:480px">
+      <div class="ic-title">🛡️ Filtro de vendedores externos</div>
+      <div class="ic-body">Si detecta frases como "somos una empresa de marketing" o "queremos ofrecerte", responde cortésmente que no corresponde y no sigue el flujo de prospectos.</div>
+    </div>
+
+    <div>
+      <button class="btn-ghost" onclick="go(1)">← Atrás</button>
+      <button class="btn-next" onclick="go(3)">Ver captura de datos →</button>
+    </div>
+  </section>
+
+  <!-- 3: CAPTURA DE DATOS -->
+  <section class="scene" id="scene3">
+    <div class="scene-tag">Paso 3 — Captura conversacional</div>
+    <h2 class="scene-title">Los datos se capturan solos</h2>
+    <p class="scene-desc">El bot no hace un formulario aburrido. Extrae nombre, servicio, localidad y destino de la conversación natural. Si falta algo, lo pide de forma natural.</p>
+
+    <div class="wa" style="max-width:440px">
+      <div class="wa-head">
+        <div class="wa-av">🏢</div>
+        <div><div class="wa-name">Alert Seguridad</div><div class="wa-status">en línea</div></div>
+      </div>
+      <div class="wa-body">
+        <div class="bbl out" style="opacity:.5;font-size:.75rem">...bienvenida enviada...</div>
+        <div class="bbl out" style="opacity:.5;font-size:.75rem">¿me decís tu nombre?</div>
+        <div class="bbl in">
+          Soy Carlos Méndez
+          <div class="bbl-time left">10:15</div>
+        </div>
+        <div class="bbl out">
+          Perfecto, Carlos. Entonces te estamos armando una cotización para alarma en Quilmes. ¿Es para una casa o un local/empresa?
+          <div class="bbl-time">10:15 ✓✓</div>
+        </div>
+        <div class="bbl in">
+          para la casa
+          <div class="bbl-time left">10:16</div>
+        </div>
+        <div class="bbl out">
+          Anotado. Un asesor de Alert te va a contactar en breve con la propuesta. 🙌<br><br>
+          ¿Tenés alguna consulta mientras tanto?
+          <div class="bbl-time">10:16 ✓✓</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-card green" style="max-width:440px;margin-top:16px">
+      <div class="ic-title">✅ Lead completo en 2 intercambios</div>
+      <div class="ic-body">
+        Nombre, servicio, localidad y destino capturados. El bot marca LEAD_DONE = true y ya no molesta más con preguntas.
+      </div>
+    </div>
+
+    <div>
+      <button class="btn-ghost" onclick="go(2)">← Atrás</button>
+      <button class="btn-next" onclick="go(4)">Ver envío al CRM →</button>
+    </div>
+  </section>
+
+  <!-- 4: CRM -->
+  <section class="scene" id="scene4">
+    <div class="scene-tag">Paso 4 — CRM y alerta</div>
+    <h2 class="scene-title">El lead entra solo al sistema</h2>
+    <p class="scene-desc">Cuando los datos están completos, el bot manda el formulario al CRM automáticamente y avisa al vendedor por Telegram — sin que nadie lo haya cargado a mano.</p>
+
+    <div class="grid2">
+      <div>
+        <div class="col-label">Formulario enviado al CRM</div>
+        <div class="form-card">
+          <div class="form-title">Nuevo prospecto</div>
+          <div class="form-row">
+            <div class="form-label">Nombre</div>
+            <div class="form-val filled">Carlos Méndez</div>
+          </div>
+          <div class="form-row">
+            <div class="form-label">Teléfono</div>
+            <div class="form-val filled">+54 9 11 4XXX XXXX</div>
+          </div>
+          <div class="form-row">
+            <div class="form-label">Servicio</div>
+            <div class="form-val filled">Alarma</div>
+          </div>
+          <div class="form-row">
+            <div class="form-label">Localidad</div>
+            <div class="form-val filled">Quilmes</div>
+          </div>
+          <div class="form-row">
+            <div class="form-label">Destino</div>
+            <div class="form-val filled">Casa</div>
+          </div>
+          <div class="form-row" style="margin-bottom:0">
+            <div class="form-label">Origen</div>
+            <div class="form-val">WhatsApp Bot · 10:16 hs</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="col-label">Alerta al vendedor — Telegram</div>
+        <div style="background:#0a1829;border:1px solid rgba(42,171,238,.12);border-radius:12px;overflow:hidden">
+          <div style="background:rgba(42,171,238,.07);padding:12px 15px;border-bottom:1px solid rgba(42,171,238,.08);display:flex;align-items:center;gap:10px">
+            <div style="width:30px;height:30px;background:rgba(42,171,238,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem">🤖</div>
+            <div style="font-size:.82rem;font-weight:500">Autopilot Bot</div>
+          </div>
+          <div style="padding:14px;font-size:.79rem;line-height:1.6">
+            <div style="background:rgba(42,171,238,.05);border:1px solid rgba(42,171,238,.1);border-radius:8px;padding:12px">
+              🔔 <strong>NUEVO PROSPECTO</strong><br><br>
+              👤 <strong>Carlos Méndez</strong><br>
+              📱 +54 9 11 4XXX XXXX<br>
+              🔒 Servicio: <strong>Alarma</strong><br>
+              📍 Localidad: <strong>Quilmes</strong><br>
+              🏠 Destino: <strong>Casa</strong><br><br>
+              <span style="color:rgba(42,171,238,.7);font-size:.72rem">via WhatsApp Bot · 10:16 hs</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-card" style="margin-top:12px">
+          <div class="ic-title">📊 También queda en Google Sheets</div>
+          <div class="ic-body">El nodo Get row(s) in sheet busca si ya existe el contacto para evitar duplicados.</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <button class="btn-ghost" onclick="go(3)">← Atrás</button>
+      <button class="btn-next" onclick="go(5)">Ver casos especiales →</button>
+    </div>
+  </section>
+
+  <!-- 5: CASOS ESPECIALES -->
+  <section class="scene" id="scene5">
+    <div class="scene-tag">Paso 5 — Casos especiales</div>
+    <h2 class="scene-title">El bot reconoce situaciones distintas</h2>
+    <p class="scene-desc">No todo el que escribe es un prospecto nuevo. El bot identifica clientes existentes, vendedores externos y consultas de empleo, y responde diferente en cada caso.</p>
+
+    <div style="display:flex;flex-direction:column;gap:14px;max-width:500px">
+
+      <div class="info-card o">
+        <div class="ic-title">🔧 Cliente existente con problema técnico</div>
+        <div class="ic-body">
+          <em style="color:var(--gray2)">"Tengo un problema con mi alarma, no suena bien"</em><br><br>
+          → Bot detecta cliente → responde con teléfono de soporte técnico y monitoreo, sin entrar al flujo de ventas.
+        </div>
+      </div>
+
+      <div class="info-card" style="border-color:rgba(255,255,255,.08)">
+        <div class="ic-title">💼 Vendedor externo</div>
+        <div class="ic-body">
+          <em style="color:var(--gray2)">"Somos una agencia de marketing digital, queremos ofrecerles..."</em><br><br>
+          → Bot responde cortésmente que no corresponde y cierra la conversación. No avisa al vendedor, no registra lead.
+        </div>
+      </div>
+
+      <div class="info-card" style="border-color:rgba(255,255,255,.08)">
+        <div class="ic-title">📄 Consulta de empleo / CV</div>
+        <div class="ic-body">
+          <em style="color:var(--gray2)">"¿Están buscando personal? Tengo experiencia en instalaciones"</em><br><br>
+          → Bot responde con el mail de RRHH y no genera lead ni molesta más.
+        </div>
+      </div>
+
+      <div class="info-card green">
+        <div class="ic-title">🔁 Memoria de conversación</div>
+        <div class="ic-body">
+          Si el mismo número escribe de nuevo días después, el bot recuerda el historial (Redis + memoria IA) y no repite preguntas ya respondidas.
+        </div>
+      </div>
+
+    </div>
+
+    <div>
+      <button class="btn-ghost" onclick="go(4)">← Atrás</button>
+      <button class="btn-next" onclick="go(6)">Ver resumen →</button>
+    </div>
+  </section>
+
+  <!-- 6: RESUMEN -->
+  <section class="scene" id="scene6">
+    <div class="scene-tag">Resumen</div>
+    <h2 class="scene-title">Lo que hace el sistema por vos</h2>
+    <p class="scene-desc">Un bot de WhatsApp que atiende, clasifica, captura y carga en el CRM sin intervención humana. Cada prospecto que escribe queda registrado.</p>
+
+    <div class="stats">
+      <div class="stat"><div class="sv y">0</div><div class="sl">Leads perdidos por falta de respuesta</div></div>
+      <div class="stat"><div class="sv g">~2 min</div><div class="sl">Del primer mensaje al CRM</div></div>
+      <div class="stat"><div class="sv p">4</div><div class="sl">Tipos de usuario manejados</div></div>
+      <div class="stat"><div class="sv">24/7</div><div class="sl">Sin horario de atención</div></div>
+    </div>
+
+    <div class="flow" style="margin-top:8px">
+      <div class="fnode y"><span class="fi">💬</span><div>Prospecto escribe → bienvenida inmediata</div></div>
+      <div class="farrow">↓</div>
+      <div class="fnode p"><span class="fi">🧠</span><div>IA enruta la conversación según contexto</div></div>
+      <div class="farrow">↓</div>
+      <div class="fnode g"><span class="fi">📋</span><div>Captura nombre, servicio, localidad, destino</div></div>
+      <div class="farrow">↓</div>
+      <div class="fnode y"><span class="fi">✅</span><div>Confirma con el prospecto y envía al CRM</div></div>
+      <div class="farrow">↓</div>
+      <div class="fnode o"><span class="fi">🔔</span><div>Vendedor recibe alerta en Telegram</div></div>
+    </div>
+
+    <div class="info-card yellow" style="margin-top:20px;max-width:500px">
+      <div class="ic-title">💡 ¿Querés implementarlo en tu empresa?</div>
+      <div class="ic-body">Este sistema está funcionando en producción. Se adapta a cualquier rubro con consultas por WhatsApp. Setup en 1-2 semanas.</div>
+    </div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px">
+      <a href="https://wa.me/5491157676283?text=Hola,%20vi%20la%20demo%20del%20bot%20de%20prospectos%20y%20quiero%20saber%20m%C3%A1s" target="_blank" style="text-decoration:none">
+        <button class="btn-next">Quiero implementarlo →</button>
+      </a>
+      <button class="btn-ghost" onclick="go(0)">↩ Ver desde el principio</button>
+<!-- AGREGÁ ESTO: -->
+      <a href="/" style="
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #71717a;
+        text-decoration: none;
+        font-size: 0.84rem;
+        font-family: 'Syne', sans-serif;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        padding: 15px 22px;
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 4px;
+        transition: color 0.2s, border-color 0.2s;
+      " onmouseover="this.style.color='#f4f2ee';this.style.borderColor='rgba(255,255,255,0.25)'"
+        onmouseout="this.style.color='#71717a';this.style.borderColor='rgba(255,255,255,0.1)'">
+        ← Volver al sitio
+      </a>
+    </div>
+  </section>
+
+</main>
+</div>
+
+<script>
+let cur = 0;
+const total = 7;
+
+function go(n) {
+  document.getElementById('scene'+cur).classList.remove('active');
+  document.getElementById('sb'+cur).classList.remove('active');
+  if(n > cur) document.getElementById('sb'+cur).classList.add('done');
+  cur = n;
+  document.getElementById('scene'+cur).classList.add('active');
+  document.getElementById('sb'+cur).classList.add('active');
+  document.getElementById('pf').style.width = ((n+1)/total*100)+'%';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function revealAndNext(id, next) {
+  const el = document.getElementById(id);
+  if(el){ el.classList.add('show'); }
+  setTimeout(() => go(next), 600);
+}
+</script>
+</body>
+</html>

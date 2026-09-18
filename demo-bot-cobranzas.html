@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo · Bot de Cobranzas IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#09090b;
+  --bg2:#111113;
+  --bg3:#18181b;
+  --border:#ffffff0f;
+  --border2:#ffffff1a;
+  --accent:#c8f135;
+  --accent2:#8bffd6;
+  --red:#ff4d6d;
+  --white:#f4f2ee;
+  --gray:#71717a;
+  --gray2:#a1a1aa;
+  --wa:#25d366;
+  --wa-bg:#0b1f12;
+  --tg:#2aabee;
+  --tg-bg:#0a1829;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* LAYOUT */
+.shell{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+
+/* SIDEBAR */
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);padding:28px 20px;display:flex;flex-direction:column;gap:6px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:var(--white);margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.logo span{color:var(--accent)}
+.logo-dot{width:8px;height:8px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+
+.step-btn{background:none;border:none;color:var(--gray2);font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:400;padding:10px 14px;border-radius:6px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;transition:all .2s;width:100%}
+.step-btn:hover{background:var(--bg3);color:var(--white)}
+.step-btn.active{background:rgba(200,241,53,.08);color:var(--accent);border:1px solid rgba(200,241,53,.15)}
+.step-num{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--gray);min-width:18px}
+.step-btn.active .step-num{color:var(--accent)}
+.step-btn.done .step-num::after{content:'✓';color:var(--accent2)}
+
+.sidebar-label{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);padding:16px 14px 6px}
+
+/* MAIN */
+.main{padding:40px 48px;max-width:900px}
+.scene{display:none;animation:fadeIn .35s ease}
+.scene.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.scene-header{margin-bottom:32px}
+.scene-tag{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.scene-title{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;line-height:1.2;color:var(--white);margin-bottom:10px}
+.scene-desc{color:var(--gray2);font-size:.88rem;line-height:1.6;max-width:560px}
+
+/* TELEGRAM MOCK */
+.tg-window{background:var(--tg-bg);border:1px solid rgba(42,171,238,.12);border-radius:12px;overflow:hidden;max-width:420px}
+.tg-header{background:rgba(42,171,238,.08);padding:14px 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(42,171,238,.1)}
+.tg-avatar{width:36px;height:36px;background:rgba(42,171,238,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem}
+.tg-name{font-weight:500;font-size:.88rem}
+.tg-sub{font-size:.72rem;color:var(--tg);opacity:.8}
+.tg-body{padding:16px;display:flex;flex-direction:column;gap:10px;min-height:160px}
+.tg-msg{padding:10px 14px;border-radius:10px;font-size:.82rem;line-height:1.5;max-width:85%;position:relative}
+.tg-msg.out{background:rgba(42,171,238,.15);border:1px solid rgba(42,171,238,.1);align-self:flex-end;border-radius:10px 10px 2px 10px}
+.tg-msg.in{background:var(--bg3);border:1px solid var(--border);align-self:flex-start;border-radius:10px 10px 10px 2px}
+.tg-msg.in .tg-sender{font-size:.68rem;color:var(--tg);margin-bottom:4px;font-weight:500}
+.tg-time{font-size:.65rem;color:var(--gray);margin-top:4px;text-align:right}
+.tg-file{display:flex;align-items:center;gap:10px;background:rgba(42,171,238,.08);border:1px solid rgba(42,171,238,.15);border-radius:8px;padding:10px 14px;font-size:.8rem;margin-bottom:4px}
+.tg-file-icon{font-size:1.4rem}
+
+/* WHATSAPP MOCK */
+.wa-window{background:var(--wa-bg);border:1px solid rgba(37,211,102,.12);border-radius:12px;overflow:hidden;max-width:420px}
+.wa-header{background:rgba(37,211,102,.06);padding:14px 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(37,211,102,.1)}
+.wa-avatar{width:36px;height:36px;background:rgba(37,211,102,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem}
+.wa-name{font-weight:500;font-size:.88rem}
+.wa-sub{font-size:.72rem;color:var(--wa);opacity:.8}
+.wa-body{padding:16px;display:flex;flex-direction:column;gap:10px;min-height:180px}
+.wa-msg{padding:10px 14px;border-radius:10px;font-size:.82rem;line-height:1.6;max-width:88%;position:relative}
+.wa-msg.out{background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.1);align-self:flex-end;border-radius:10px 10px 2px 10px}
+.wa-msg.in{background:var(--bg3);border:1px solid var(--border);align-self:flex-start;border-radius:10px 10px 10px 2px}
+.wa-time{font-size:.65rem;color:var(--gray);margin-top:4px;text-align:right}
+.wa-typing{display:flex;align-items:center;gap:4px;padding:10px 14px;align-self:flex-start}
+.wa-typing span{width:7px;height:7px;background:var(--gray);border-radius:50%;animation:typing .8s infinite}
+.wa-typing span:nth-child(2){animation-delay:.15s}
+.wa-typing span:nth-child(3){animation-delay:.3s}
+@keyframes typing{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+
+/* NOTIFICATION BOX */
+.notif{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:16px 18px;display:flex;gap:14px;align-items:flex-start;max-width:420px}
+.notif-icon{font-size:1.4rem;line-height:1}
+.notif-title{font-weight:500;font-size:.85rem;margin-bottom:4px}
+.notif-body{font-size:.8rem;color:var(--gray2);line-height:1.5}
+.notif.alert{border-color:rgba(255,77,109,.2);background:rgba(255,77,109,.04)}
+.notif.success{border-color:rgba(139,255,214,.2);background:rgba(139,255,214,.04)}
+.notif.warning{border-color:rgba(200,241,53,.15);background:rgba(200,241,53,.03)}
+
+/* TABLE */
+.excel-table{border:1px solid var(--border2);border-radius:10px;overflow:hidden;font-size:.78rem;max-width:640px}
+.excel-table table{width:100%;border-collapse:collapse}
+.excel-table th{background:rgba(255,255,255,.04);padding:10px 14px;text-align:left;font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.06em;text-transform:uppercase;color:var(--gray);border-bottom:1px solid var(--border)}
+.excel-table td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--gray2)}
+.excel-table tr:last-child td{border-bottom:none}
+.excel-table tr.highlight td{color:var(--white);background:rgba(200,241,53,.03)}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.68rem;font-family:'DM Mono',monospace}
+.badge.pending{background:rgba(200,241,53,.1);color:var(--accent)}
+.badge.sent{background:rgba(42,171,238,.1);color:var(--tg)}
+.badge.paid{background:rgba(139,255,214,.1);color:var(--accent2)}
+.badge.ignored{background:rgba(255,255,255,.06);color:var(--gray)}
+
+/* FLOW DIAGRAM */
+.flow{display:flex;flex-direction:column;gap:0;max-width:520px}
+.flow-node{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 16px;display:flex;align-items:center;gap:12px;font-size:.83rem}
+.flow-node.accent{border-color:rgba(200,241,53,.2);background:rgba(200,241,53,.04)}
+.flow-node.blue{border-color:rgba(42,171,238,.15);background:rgba(42,171,238,.03)}
+.flow-node.green{border-color:rgba(37,211,102,.15);background:rgba(37,211,102,.03)}
+.flow-node.red{border-color:rgba(255,77,109,.15);background:rgba(255,77,109,.03)}
+.flow-arrow{text-align:center;color:var(--gray);font-size:.75rem;padding:4px 0;font-family:'DM Mono',monospace}
+.flow-icon{font-size:1.1rem;min-width:24px;text-align:center}
+
+/* BUTTONS */
+.btn-next{font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;background:var(--accent);color:#000;border:none;padding:12px 24px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .2s;margin-top:24px}
+.btn-next:hover{background:var(--accent2);transform:translateY(-1px)}
+.btn-ghost{font-family:'Syne',sans-serif;font-weight:600;font-size:.82rem;background:none;color:var(--gray2);border:1px solid var(--border);padding:11px 20px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .2s;margin-top:24px;margin-right:10px}
+.btn-ghost:hover{border-color:var(--border2);color:var(--white)}
+
+/* SPLIT */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+.split-label{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);margin-bottom:10px}
+
+/* PROGRESS */
+.progress-bar{height:2px;background:var(--border);border-radius:2px;margin-bottom:32px;overflow:hidden}
+.progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .4s ease}
+
+/* STATS ROW */
+.stats{display:flex;gap:16px;flex-wrap:wrap;margin:20px 0}
+.stat{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px 18px;flex:1;min-width:120px}
+.stat-val{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;color:var(--white)}
+.stat-val.green{color:var(--accent2)}
+.stat-val.yellow{color:var(--accent)}
+.stat-val.red{color:var(--red)}
+.stat-label{font-size:.72rem;color:var(--gray);margin-top:3px}
+
+/* HIDDEN MESSAGES (animated reveal) */
+.msg-hidden{opacity:0;transform:translateY(6px)}
+.msg-reveal{animation:msgReveal .4s ease forwards}
+@keyframes msgReveal{to{opacity:1;transform:translateY(0)}}
+
+/* MOBILE */
+@media(max-width:768px){
+  .shell{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .main{padding:24px 20px}
+  .split{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="logo"><div class="logo-dot"></div>Autopilot<span>.</span></div>
+  <a href="/" style="
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #c8f135;
+    text-decoration: none;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    margin: 8px 0 16px;
+    transition: color 0.2s;
+  " onmouseover="this.style.color='#f4f2ee'" onmouseout="this.style.color='#c8f135'">
+    ← Volver al sitio
+  </a>
+  <div class="sidebar-label">Demo interactiva</div>
+  <button class="step-btn active" onclick="goTo(0)" id="sb0"><span class="step-num">01</span> Resumen del sistema</button>
+  <button class="step-btn" onclick="goTo(1)" id="sb1"><span class="step-num">02</span> Operador carga el Excel</button>
+  <button class="step-btn" onclick="goTo(2)" id="sb2"><span class="step-num">03</span> Bot envía los mensajes</button>
+  <button class="step-btn" onclick="goTo(3)" id="sb3"><span class="step-num">04</span> Deudor dice que no tiene</button>
+  <button class="step-btn" onclick="goTo(4)" id="sb4"><span class="step-num">05</span> Deudor manda comprobante</button>
+  <button class="step-btn" onclick="goTo(5)" id="sb5"><span class="step-num">06</span> Admin recibe la alerta</button>
+  <button class="step-btn" onclick="goTo(6)" id="sb6"><span class="step-num">07</span> Reenvío inteligente</button>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:14%"></div></div>
+
+  <!-- SCENE 0: Resumen -->
+  <section class="scene active" id="scene0">
+    <div class="scene-header">
+      <div class="scene-tag">Sistema completo</div>
+      <h1 class="scene-title">Bot de Cobranzas con IA</h1>
+      <p class="scene-desc">Automatizá el seguimiento de deudores por WhatsApp y email. El bot entiende respuestas, detecta comprobantes y escala al admin cuando corresponde.</p>
+    </div>
+    <div class="flow">
+      <div class="flow-node accent"><span class="flow-icon">📊</span><div><strong>Excel de deudores</strong> — se carga por Telegram</div></div>
+      <div class="flow-arrow">↓ procesa y filtra por grupo / monto</div>
+      <div class="flow-node blue"><span class="flow-icon">📤</span><div><strong>Envío masivo</strong> — WhatsApp + Email personalizado</div></div>
+      <div class="flow-arrow">↓ el deudor responde</div>
+      <div class="flow-node green"><span class="flow-icon">🤖</span><div><strong>IA responde</strong> — entiende contexto e insiste de forma natural</div></div>
+      <div class="flow-arrow">↓ si manda comprobante</div>
+      <div class="flow-node accent"><span class="flow-icon">🧾</span><div><strong>Detección de pago</strong> — analiza la imagen y avisa al admin</div></div>
+      <div class="flow-arrow">↓ después de 10 días</div>
+      <div class="flow-node red"><span class="flow-icon">🔄</span><div><strong>Reenvío inteligente</strong> — cambia mensaje según historial previo</div></div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-val yellow">0</div><div class="stat-label">Intervención manual</div></div>
+      <div class="stat"><div class="stat-val green">24/7</div><div class="stat-label">Disponibilidad</div></div>
+      <div class="stat"><div class="stat-val">∞</div><div class="stat-label">Deudores en paralelo</div></div>
+    </div>
+    <button class="btn-next" onclick="goTo(1)">Ver demo en vivo →</button>
+  </section>
+
+  <!-- SCENE 1: Carga Excel -->
+  <section class="scene" id="scene1">
+    <div class="scene-header">
+      <div class="scene-tag">Paso 1 — Telegram</div>
+      <h2 class="scene-title">El operador carga el Excel</h2>
+      <p class="scene-desc">Desde Telegram, el operador sube el listado de deudores y elige a qué grupo enviar. El bot lee el archivo, filtra los válidos y muestra un preview.</p>
+    </div>
+
+    <div class="split">
+      <div>
+        <div class="split-label">Telegram — operador</div>
+        <div class="tg-window">
+          <div class="tg-header">
+            <div class="tg-avatar">🤖</div>
+            <div><div class="tg-name">Autopilot Bot</div><div class="tg-sub">en línea</div></div>
+          </div>
+          <div class="tg-body" id="tgBody1">
+            <div class="tg-msg out">
+              <div class="tg-file"><span class="tg-file-icon">📊</span><div><div style="font-weight:500">deudores_junio.xlsx</div><div style="color:var(--gray);font-size:.72rem">48 registros · 24 KB</div></div></div>
+              /enviar_grupo_a
+              <div class="tg-time">14:03</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="split-label">Excel procesado</div>
+        <div class="excel-table">
+          <table>
+            <tr><th>Cliente</th><th>Deuda</th><th>Estado</th></tr>
+            <tr class="highlight"><td>Juan Pérez</td><td>$38.200</td><td><span class="badge pending">pendiente</span></td></tr>
+            <tr><td>María López</td><td>$15.500</td><td><span class="badge pending">pendiente</span></td></tr>
+            <tr><td>Carlos Ruiz</td><td>$72.000</td><td><span class="badge pending">pendiente</span></td></tr>
+            <tr><td>Ana Torres</td><td>$0</td><td><span class="badge ignored">sin deuda</span></td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:20px">
+      <div class="tg-window" style="max-width:640px">
+        <div class="tg-body">
+          <div class="tg-msg in">
+            <div class="tg-sender">Autopilot</div>
+            📊 <strong>Preview — Grupo A</strong><br><br>
+            ✅ Para enviar: <strong>3 contactos</strong><br>
+            💰 Monto total: <strong>$125.700</strong><br>
+            ❌ Sin contacto: 1 (sin teléfono)<br><br>
+            Respondé <strong>/confirmar</strong> para enviar o <strong>/cancelar</strong> para abortar.
+            <div class="tg-time">14:03</div>
+          </div>
+          <div class="tg-msg out">/confirmar<div class="tg-time">14:03</div></div>
+          <div class="tg-msg in">
+            <div class="tg-sender">Autopilot</div>
+            ✅ Enviando mensajes... <strong>3/3</strong> procesados.<br>
+            📤 WhatsApp: 3 enviados<br>
+            📧 Email: 3 enviados
+            <div class="tg-time">14:04</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <button class="btn-ghost" onclick="goTo(0)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(2)">Ver mensajes enviados →</button>
+    </div>
+  </section>
+
+  <!-- SCENE 2: Mensajes enviados -->
+  <section class="scene" id="scene2">
+    <div class="scene-header">
+      <div class="scene-tag">Paso 2 — WhatsApp</div>
+      <h2 class="scene-title">El bot envía el mensaje</h2>
+      <p class="scene-desc">Cada deudor recibe un mensaje personalizado con su nombre, el monto exacto, el número de factura y un alias para pagar. Las variaciones son automáticas para evitar spam.</p>
+    </div>
+
+    <div class="split-label">WhatsApp de Juan Pérez</div>
+    <div class="wa-window">
+      <div class="wa-header">
+        <div class="wa-avatar">🏢</div>
+        <div><div class="wa-name">Alert Seguridad</div><div class="wa-sub">bot activo</div></div>
+      </div>
+      <div class="wa-body">
+        <div class="wa-msg out">
+          Hola <strong>Juan</strong> 👋<br><br>
+          Te contactamos para informarte sobre un pago pendiente de tu servicio:<br><br>
+          📄 <strong>Factura:</strong> 0001-00012847<br>
+          💰 <strong>Monto:</strong> $38.200,00<br>
+          📅 <strong>Fecha:</strong> 01/06/2025<br>
+          ⏰ <strong>Vencimiento:</strong> 10/06/2025<br><br>
+          Podés abonar por transferencia al alias <strong>centralalerta</strong>.<br><br>
+          Si ya realizaste el pago, envianos el comprobante. Si necesitás coordinar, comunicate con nosotros.<br><br>
+          Saludos cordiales.
+          <div class="wa-time">14:04 ✓✓</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <button class="btn-ghost" onclick="goTo(1)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(3)">Juan responde que no tiene plata →</button>
+    </div>
+  </section>
+
+  <!-- SCENE 3: Deudor responde -->
+  <section class="scene" id="scene3">
+    <div class="scene-header">
+      <div class="scene-tag">Paso 3 — IA en acción</div>
+      <h2 class="scene-title">El deudor dice que no puede pagar</h2>
+      <p class="scene-desc">La IA entiende el contexto y responde de forma natural. No es un chatbot de árbol de decisiones — lee la respuesta, evalúa la situación y ajusta el tono.</p>
+    </div>
+
+    <div class="wa-window">
+      <div class="wa-header">
+        <div class="wa-avatar">🏢</div>
+        <div><div class="wa-name">Alert Seguridad</div><div class="wa-sub">bot activo</div></div>
+      </div>
+      <div class="wa-body" id="waBody3">
+        <div class="wa-msg out" style="opacity:.4;font-size:.75rem">...mensaje inicial enviado ayer...</div>
+        <div class="wa-msg in">
+          No tengo plata ahora, la semana que viene te mando
+          <div class="wa-time">10:22</div>
+        </div>
+        <div class="wa-typing" id="typing3"><span></span><span></span><span></span></div>
+      </div>
+    </div>
+
+    <div class="notif warning" style="margin-top:16px;max-width:420px">
+      <span>🤖</span>
+      <div>
+        <div class="notif-title">IA procesando respuesta</div>
+        <div class="notif-body">Detectó: promesa de pago futura. Responderá con tono comprensivo pero firme, recordando el vencimiento.</div>
+      </div>
+    </div>
+
+    <div id="botReply3" style="margin-top:16px;display:none">
+      <div class="wa-window">
+        <div class="wa-body">
+          <div class="wa-msg out msg-reveal">
+            Entendemos la situación, Juan. Anotamos tu comentario 📝<br><br>
+            Te pedimos que apenas puedas lo regularices, ya que la factura venció el <strong>10/06</strong>. Si necesitás fraccionar el pago o coordinar una fecha puntual, avisanos y lo vemos.<br><br>
+            Quedamos atentos. 🙏
+            <div class="wa-time">10:23 ✓✓</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <button class="btn-ghost" onclick="goTo(2)">← Atrás</button>
+      <button class="btn-next" onclick="showBotReply3()">Ver respuesta del bot →</button>
+    </div>
+  </section>
+
+  <!-- SCENE 4: Comprobante -->
+  <section class="scene" id="scene4">
+    <div class="scene-header">
+      <div class="scene-tag">Paso 4 — Detección de pago</div>
+      <h2 class="scene-title">El deudor manda un comprobante</h2>
+      <p class="scene-desc">El bot recibe la imagen, la analiza con IA para determinar si es un comprobante real de transferencia, y actúa en consecuencia.</p>
+    </div>
+
+    <div class="wa-window">
+      <div class="wa-body">
+        <div class="wa-msg in">
+          <div style="background:rgba(255,255,255,.04);border-radius:6px;padding:10px;margin-bottom:6px;font-size:.8rem">
+            🖼️ <strong>Imagen recibida</strong><br>
+            <span style="color:var(--gray)">comprobante_transferencia.jpg</span>
+          </div>
+          Acá te mando el comprobante
+          <div class="wa-time">16:45</div>
+        </div>
+        <div class="wa-typing"><span></span><span></span><span></span></div>
+      </div>
+    </div>
+
+    <div class="notif" style="margin-top:16px;max-width:420px">
+      <span>🔍</span>
+      <div>
+        <div class="notif-title">Análisis de imagen con IA</div>
+        <div class="notif-body">La IA evalúa si la imagen es: (1) comprobante válido, (2) no es comprobante, o (3) no está segura. Si detecta pago, notifica al admin.</div>
+      </div>
+    </div>
+
+    <div class="wa-window" style="margin-top:16px">
+      <div class="wa-body">
+        <div class="wa-msg out msg-reveal">
+          ¡Gracias Juan! 🙌 Recibimos el comprobante.<br><br>
+          Lo estamos revisando con nuestro equipo. Te confirmamos en breve la acreditación.<br><br>
+          ¡Gracias por regularizar!
+          <div class="wa-time">16:45 ✓✓</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <button class="btn-ghost" onclick="goTo(3)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(5)">Ver alerta al admin →</button>
+    </div>
+  </section>
+
+  <!-- SCENE 5: Alerta admin -->
+  <section class="scene" id="scene5">
+    <div class="scene-header">
+      <div class="scene-tag">Paso 5 — Panel del admin</div>
+      <h2 class="scene-title">El admin recibe la alerta</h2>
+      <p class="scene-desc">Apenas detecta el comprobante, el bot notifica al grupo de control de Telegram con todos los datos para que el admin lo verifique.</p>
+    </div>
+
+    <div class="split-label">Telegram — grupo de administración</div>
+    <div class="tg-window" style="max-width:480px">
+      <div class="tg-header">
+        <div class="tg-avatar">👥</div>
+        <div><div class="tg-name">Autopilot — Control</div><div class="tg-sub">grupo privado</div></div>
+      </div>
+      <div class="tg-body">
+        <div class="tg-msg in">
+          <div class="tg-sender">Autopilot Bot</div>
+          🧾 <strong>COMPROBANTE RECIBIDO</strong><br><br>
+          👤 Cliente: <strong>Juan Pérez</strong><br>
+          📱 Teléfono: <strong>+54 9 11 5555-1234</strong><br>
+          💰 Deuda: <strong>$38.200,00</strong><br>
+          🕐 Recibido: <strong>16:45 hs</strong><br><br>
+          📎 <em>[imagen adjunta — comprobante]</em><br><br>
+          ⚠️ <strong>Verificar manualmente</strong> antes de confirmar.<br><br>
+          ✅ El cliente ya fue informado de que está en revisión.
+          <div class="tg-time">16:45</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="notif success" style="margin-top:16px;max-width:480px">
+      <span>✅</span>
+      <div>
+        <div class="notif-title">Estado automático actualizado</div>
+        <div class="notif-body">El cliente queda en estado <strong>comprobante_recibido</strong> en Redis. El bot NO le enviará más mensajes hasta que el admin confirme o rechace.</div>
+      </div>
+    </div>
+
+    <div>
+      <button class="btn-ghost" onclick="goTo(4)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(6)">Ver reenvío inteligente →</button>
+    </div>
+  </section>
+
+  <!-- SCENE 6: Reenvío -->
+  <section class="scene" id="scene6">
+    <div class="scene-header">
+      <div class="scene-tag">Paso 6 — Reenvío inteligente</div>
+      <h2 class="scene-title">10 días después: nuevo Excel, mismo deudor</h2>
+      <p class="scene-desc">Al cargar el Excel del siguiente período, el bot detecta que ya tuvo contacto previo con el deudor y cambia el mensaje automáticamente — más directo, sin repetir.</p>
+    </div>
+
+    <div class="split">
+      <div>
+        <div class="split-label">Primer contacto</div>
+        <div class="wa-window">
+          <div class="wa-body">
+            <div class="wa-msg out" style="font-size:.78rem">
+              Hola <strong>Juan</strong> 👋<br>
+              Te contactamos para informarte sobre un pago pendiente...<br>
+              <em style="color:var(--gray)">[mensaje cordial inicial]</em>
+              <div class="wa-time">Junio</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="split-label">Reenvío — ya tiene historial</div>
+        <div class="wa-window">
+          <div class="wa-body">
+            <div class="wa-msg out" style="font-size:.78rem">
+              Juan, te recordamos que tenés una nueva factura pendiente:<br><br>
+              📄 <strong>Factura:</strong> 0001-00013102<br>
+              💰 <strong>Monto:</strong> $38.200,00<br>
+              ⏰ <strong>Vencimiento:</strong> 10/07/2025<br><br>
+              Por favor regularizá a la brevedad. Alias: <strong>centralalerta</strong>
+              <div class="wa-time">Julio ✓✓</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats" style="margin-top:24px">
+      <div class="stat"><div class="stat-val yellow">3</div><div class="stat-label">Deudores contactados</div></div>
+      <div class="stat"><div class="stat-val green">1</div><div class="stat-label">Comprobante recibido</div></div>
+      <div class="stat"><div class="stat-val">2</div><div class="stat-label">En seguimiento activo</div></div>
+      <div class="stat"><div class="stat-val red">0</div><div class="stat-label">Intervenciones manuales</div></div>
+    </div>
+
+    <div class="notif warning" style="margin-top:20px;max-width:560px">
+      <span>💡</span>
+      <div>
+        <div class="notif-title">¿Te interesa implementarlo?</div>
+        <div class="notif-body">Este sistema está funcionando en producción. Se configura en 1-2 semanas. Adaptable a cualquier empresa con cartera de deudores.</div>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap">
+      <a href="https://wa.me/5491157676283?text=Hola,%20vi%20la%20demo%20del%20bot%20de%20cobranzas%20y%20quiero%20saber%20m%C3%A1s" target="_blank" style="text-decoration:none">
+        <button class="btn-next">Quiero implementarlo →</button>
+      </a>
+      <button class="btn-ghost" onclick="goTo(0)">↩ Ver desde el principio</button>
+    </div>
+      <!-- AGREGÁ ESTO: -->
+      <a href="/" style="
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #71717a;
+        text-decoration: none;
+        font-size: 0.84rem;
+        font-family: 'Syne', sans-serif;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        padding: 15px 22px;
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 4px;
+        transition: color 0.2s, border-color 0.2s;
+      " onmouseover="this.style.color='#f4f2ee';this.style.borderColor='rgba(255,255,255,0.25)'"
+        onmouseout="this.style.color='#71717a';this.style.borderColor='rgba(255,255,255,0.1)'">
+        ← Volver al sitio
+      </a>
+    </div>
+  </section>
+
+</main>
+</div>
+
+<script>
+let current = 0;
+const total = 7;
+
+function goTo(n) {
+  document.getElementById('scene' + current).classList.remove('active');
+  document.getElementById('sb' + current).classList.remove('active');
+  if(current < n) document.getElementById('sb' + current).classList.add('done');
+
+  current = n;
+  document.getElementById('scene' + current).classList.add('active');
+  document.getElementById('sb' + current).classList.add('active');
+  document.getElementById('progressFill').style.width = ((n+1)/total*100) + '%';
+  window.scrollTo({top:0,behavior:'smooth'});
+
+  // Scene-specific animations
+  if(n === 3) {
+    setTimeout(() => {
+      document.getElementById('typing3').style.display = 'none';
+    }, 2000);
+  }
+}
+
+function showBotReply3() {
+  document.getElementById('typing3').style.display = 'none';
+  document.getElementById('botReply3').style.display = 'block';
+  // Change button
+  event.target.textContent = 'El deudor manda el comprobante →';
+  event.target.onclick = () => goTo(4);
+}
+</script>
+</body>
+</html>
