@@ -1077,6 +1077,36 @@
     .cases-grid.three {
       grid-template-columns: repeat(3, 1fr);
     }
+    .case.featured {
+      grid-column: 1 / -1;
+      padding: 32px 0 36px;
+      border-top: 2px solid rgba(200,241,53,0.35);
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(200px, 0.8fr);
+      gap: 28px 40px;
+      align-items: end;
+    }
+    .case.featured .case-body { max-width: 52ch; }
+    .case.featured .case-side {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: flex-end;
+      justify-content: flex-end;
+    }
+    .case-badge-real {
+      display: inline-block;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--accent);
+      padding: 4px 8px;
+      border-radius: 3px;
+      margin-bottom: 10px;
+    }
     .case {
       padding: 28px 0;
       border-top: 1px solid var(--border);
@@ -1329,11 +1359,18 @@
       .process-row,
       .cases-grid,
       .cases-grid.three,
+      .case.featured,
       .pains-grid,
       .pricing-soft,
       .faq-grid,
       .contact-box {
         grid-template-columns: 1fr;
+      }
+      .case.featured {
+        grid-template-columns: 1fr;
+      }
+      .case.featured .case-side {
+        justify-content: flex-start;
       }
       .services-grid { gap: 24px; }
       .pricing-soft-item {
@@ -1506,39 +1543,58 @@
 
     <section id="casos">
       <div class="container">
-        <p class="section-label reveal">Casos tipo</p>
+        <p class="section-label reveal">Casos</p>
         <h2 class="section-title reveal">Así se ve el impacto</h2>
-        <p class="section-intro reveal">Escenarios basados en implementaciones y demos reales. Los nombres son ilustrativos.</p>
+        <p class="section-intro reveal">Un caso real en producción y escenarios tipo basados en demos e implementaciones.</p>
         <div class="cases-grid three">
+          <article class="case featured reveal">
+            <div class="case-body">
+              <span class="case-badge-real">Cliente real</span>
+              <span class="case-tag">Salud · Laboratorio</span>
+              <p class="case-company">Laboratorio Biorossi</p>
+              <p class="case-place">Adrogué y Burzaco · análisis clínicos</p>
+              <h3>Órdenes y coordinación de turnos por WhatsApp, con lectura de documentos e integración al sistema de gestión</h3>
+              <p>
+                Workflow que lee órdenes médicas y mensajes, consulta información en el sistema del laboratorio
+                y responde al paciente para acelerar la gestión sin revisión manual constante.
+              </p>
+              <a class="case-link" href="https://biorossi.com.ar/" target="_blank" rel="noopener noreferrer">biorossi.com.ar →</a>
+            </div>
+            <div class="case-side">
+              <div class="case-metric">−80%<span>tiempo admin en el proceso</span></div>
+              <div class="case-metric">24/7<span>recepción y respuesta activa</span></div>
+            </div>
+          </article>
+
           <article class="case reveal">
-            <span class="case-tag">Cobranzas · WhatsApp</span>
+            <span class="case-tag">Caso tipo · Cobranzas</span>
             <p class="case-company">Norte Servicios</p>
             <p class="case-place">Gran Buenos Aires · servicios recurrentes</p>
             <h3>Seguimiento de deuda en 72 horas sin operador en el primer contacto</h3>
-            <p>Reglas de insistencia, detección de evasivas y escalado a humano solo cuando la conversación lo pide.</p>
+            <p>Reglas de insistencia, detección de evasivas y escalado a humano solo cuando hace falta.</p>
             <div class="case-metric">0<span>operadores en el primer contacto</span></div>
             <a class="case-link" href="demo-bot-cobranzas.html" target="_blank" rel="noopener">Ver demo →</a>
           </article>
           <article class="case reveal">
-            <span class="case-tag">Documentos · IA</span>
+            <span class="case-tag">Caso tipo · Documentos</span>
             <p class="case-company">Distribuidora Sur</p>
             <p class="case-place">CABA · operaciones y proveedores</p>
             <h3>Facturas que se leen solas y cargan al sistema</h3>
-            <p>El PDF o la foto llega por canal interno; la IA extrae datos, valida y deja todo listo sin tipeo.</p>
+            <p>El PDF o la foto llega; la IA extrae datos, valida y deja todo listo sin tipeo.</p>
             <div class="case-metric">−80%<span>tiempo admin en ese proceso</span></div>
             <a class="case-link" href="demo-facturas.html" target="_blank" rel="noopener">Ver demo →</a>
           </article>
           <article class="case reveal">
-            <span class="case-tag">Atención · WhatsApp</span>
-            <p class="case-company">Alert Monitor</p>
-            <p class="case-place">GBA Sur · seguridad electrónica</p>
-            <h3>Consultas y prospectos atendidos 24/7, calificados antes del humano</h3>
+            <span class="case-tag">Caso tipo · Atención</span>
+            <p class="case-company">Comercio con alto volumen WA</p>
+            <p class="case-place">Consultas repetidas · stock y precios</p>
+            <h3>Prospectos y consultas atendidos 24/7, calificados antes del humano</h3>
             <p>El bot responde lo repetido, captura datos y deriva solo los casos que valen la pena.</p>
             <div class="case-metric">24/7<span>primera respuesta activa</span></div>
             <a class="case-link" href="demo-bot-prospectos.html" target="_blank" rel="noopener">Ver demo →</a>
           </article>
         </div>
-        <p class="cases-note reveal">Casos tipo / ilustrativos: representan el tipo de problema y resultado que buscamos, no testimonios de clientes con esos nombres comerciales.</p>
+        <p class="cases-note reveal">Biorossi es cliente real. Los demás son casos tipo / ilustrativos vinculados a demos e implementaciones del mismo estilo.</p>
       </div>
     </section>
 
