@@ -50,37 +50,7 @@
     },
     "email": "hola@autopilot.com.ar",
     "priceRange": "USD 500 - A medida",
-    "knowsAbout": ["automatización con IA", "bots de WhatsApp", "integración de sistemas", "automatización de cobranzas", "lectura de documentos con IA"],
-    "hasOfferCatalog": {
-      "@type": "OfferCatalog",
-      "name": "Servicios de automatización",
-      "itemListElement": [
-        {
-          "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "Bots de WhatsApp para atención, seguimiento y cobranzas",
-            "description": "Automatización de consultas, recordatorios, seguimiento comercial y recupero de deuda por WhatsApp."
-          }
-        },
-        {
-          "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "Automatización de procesos con IA",
-            "description": "Lectura de documentos, clasificación de datos, validación de información y ejecución de acciones automáticas."
-          }
-        },
-        {
-          "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "Integración entre sistemas",
-            "description": "Conexión de CRM, ERP, formularios, planillas, APIs y canales de contacto para eliminar doble trabajo."
-          }
-        }
-      ]
-    }
+    "knowsAbout": ["automatización con IA", "bots de WhatsApp", "integración de sistemas", "automatización de cobranzas", "lectura de documentos con IA"]
   }
   </script>
 
@@ -131,17 +101,17 @@
     :root {
       --black: #060608;
       --white: #f4f2ee;
-      --cream: #ede9e0;
       --accent: #c8f135;
       --accent2: #8bffd6;
       --gray: #9a9893;
       --gray2: #b9b6af;
-      --card-bg: #0e0e10;
-      --card-bg-2: #111114;
       --border: rgba(255,255,255,0.08);
       --border-strong: rgba(200,241,53,0.22);
-      --shadow: 0 20px 60px rgba(0,0,0,0.22);
-      --max: 1240px;
+      --max: 1120px;
+      --wa: #25d366;
+      --wa-bg: #0b1612;
+      --wa-out: #005c4b;
+      --wa-in: #1a2620;
     }
 
     html { scroll-behavior: smooth; }
@@ -153,940 +123,783 @@
       font-weight: 300;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
     }
 
     a { color: inherit; }
 
     .container {
-      width: min(var(--max), calc(100% - 48px));
+      width: min(var(--max), calc(100% - 40px));
       margin: 0 auto;
     }
 
+    /* NAV */
     nav {
       position: sticky;
       top: 0;
       z-index: 100;
-      backdrop-filter: blur(12px);
-      background: rgba(6,6,8,0.82);
+      backdrop-filter: blur(14px);
+      background: rgba(6,6,8,0.88);
       border-bottom: 1px solid rgba(255,255,255,0.04);
     }
 
     .nav-inner {
-      width: min(var(--max), calc(100% - 48px));
+      width: min(var(--max), calc(100% - 40px));
       margin: 0 auto;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 20px;
-      padding: 18px 0;
+      gap: 16px;
+      padding: 16px 0;
     }
 
-    .nav-logo,
-    .footer-logo {
+    .nav-logo {
       font-family: 'Syne', sans-serif;
       font-weight: 800;
-      font-size: 1.08rem;
+      font-size: 1.1rem;
       letter-spacing: -0.02em;
-      color: var(--white);
       text-decoration: none;
-      white-space: nowrap;
+      color: var(--white);
+      z-index: 110;
     }
-
-    .nav-logo span,
-    .footer-logo span { color: var(--accent); }
+    .nav-logo span { color: var(--accent); }
 
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 26px;
+      gap: 28px;
       list-style: none;
     }
 
     .nav-links a {
       color: var(--gray);
       text-decoration: none;
-      font-size: 0.84rem;
-      letter-spacing: 0.05em;
+      font-size: 0.82rem;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
-      transition: color 0.2s ease;
+      transition: color 0.2s;
     }
+    .nav-links a:hover { color: var(--white); }
 
-    .nav-links a:hover,
-    .footer-links a:hover,
-    .btn-ghost:hover,
-    .mini-link:hover { color: var(--white); }
-
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .btn-primary,
-    .btn-secondary,
-    .price-cta,
-    .submit-btn,
-    .floating-wa {
+    .nav-cta {
       font-family: 'Syne', sans-serif;
       font-weight: 700;
-      letter-spacing: 0.03em;
+      font-size: 0.82rem;
+      background: var(--accent);
+      color: var(--black);
+      padding: 11px 18px;
+      border-radius: 4px;
       text-decoration: none;
-      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+      transition: background 0.2s, transform 0.2s;
     }
+    .nav-cta:hover { background: var(--accent2); transform: translateY(-1px); }
 
+    .nav-toggle {
+      display: none;
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--border);
+      background: transparent;
+      border-radius: 6px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 5px;
+      z-index: 110;
+    }
+    .nav-toggle span {
+      display: block;
+      width: 18px;
+      height: 1.5px;
+      background: var(--white);
+      transition: transform 0.2s, opacity 0.2s;
+    }
+    .nav-toggle.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; }
+    .nav-toggle.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    .nav-mobile {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(6,6,8,0.97);
+      z-index: 105;
+      padding: 100px 32px 40px;
+      flex-direction: column;
+      gap: 28px;
+    }
+    .nav-mobile.open { display: flex; }
+    .nav-mobile a {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.6rem;
+      text-decoration: none;
+      color: var(--white);
+      letter-spacing: -0.02em;
+    }
+    .nav-mobile a.accent { color: var(--accent); font-size: 1.1rem; margin-top: 12px; }
+
+    /* BUTTONS */
     .btn-primary,
+    .btn-secondary,
     .submit-btn {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-decoration: none;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 8px;
+      border-radius: 4px;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s, border-color 0.2s;
+      border: 1px solid transparent;
+    }
+    .btn-primary,
+    .submit-btn {
       background: var(--accent);
       color: var(--black);
-      padding: 15px 24px;
-      border-radius: 4px;
-      border: 1px solid var(--accent);
-      font-size: 0.88rem;
+      padding: 15px 22px;
+      border-color: var(--accent);
     }
-
     .btn-primary:hover,
-    .submit-btn:hover,
-    .price-card.featured .price-cta:hover,
-    .floating-wa:hover {
+    .submit-btn:hover {
       background: var(--accent2);
       border-color: var(--accent2);
       transform: translateY(-2px);
     }
-
-    .btn-secondary,
-    .price-cta {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
+    .btn-secondary {
       background: transparent;
       color: var(--white);
-      border: 1px solid var(--border);
+      border-color: var(--border);
       padding: 15px 22px;
-      border-radius: 4px;
-      font-size: 0.84rem;
     }
-
-    .btn-secondary:hover,
-    .price-cta:hover {
-      border-color: rgba(255,255,255,0.18);
+    .btn-secondary:hover {
+      border-color: rgba(255,255,255,0.2);
       background: rgba(255,255,255,0.03);
       transform: translateY(-2px);
     }
 
-    .mini-link {
-      color: var(--gray);
-      text-decoration: none;
-      font-size: 0.85rem;
-      border-bottom: 1px solid rgba(255,255,255,0.14);
-      padding-bottom: 2px;
-      transition: color 0.2s ease, border-color 0.2s ease;
-    }
-
+    /* HERO */
     .hero {
       position: relative;
-      padding: 108px 0 68px;
+      padding: 56px 0 72px;
       overflow: hidden;
+      min-height: calc(100vh - 74px);
+      display: flex;
+      align-items: center;
     }
 
-    .hero::before,
-    .cta-section::before {
+    .hero::before {
       content: "";
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(ellipse 70% 55% at 75% 20%, rgba(200,241,53,0.08) 0%, transparent 62%),
-        radial-gradient(ellipse 55% 45% at 15% 75%, rgba(139,255,214,0.06) 0%, transparent 55%);
-      pointer-events: none;
-    }
-
-    .hero-grid {
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-      background-size: 80px 80px;
-      mask-image: radial-gradient(ellipse at center, black 35%, transparent 76%);
+        radial-gradient(ellipse 60% 50% at 80% 10%, rgba(200,241,53,0.09) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 40% at 10% 80%, rgba(139,255,214,0.05) 0%, transparent 50%);
       pointer-events: none;
     }
 
     .hero-inner {
       position: relative;
       z-index: 1;
-      width: min(var(--max), calc(100% - 48px));
+      width: min(var(--max), calc(100% - 40px));
       margin: 0 auto;
       display: grid;
-      grid-template-columns: minmax(0, 1fr);
-      gap: 28px;
-      align-items: start;
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 420px);
+      gap: 48px;
+      align-items: center;
     }
 
-    .eyebrow,
-    .section-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 0.73rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--accent);
+    .brand-mark {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.8rem, 6vw, 4.6rem);
+      line-height: 0.95;
+      letter-spacing: -0.05em;
       margin-bottom: 18px;
     }
-
-    .eyebrow::before,
-    .section-label::before {
-      content: "";
-      width: 22px;
-      height: 1px;
-      background: rgba(200,241,53,0.8);
-      display: inline-block;
-    }
+    .brand-mark span { color: var(--accent); }
 
     .hero-title {
       font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: clamp(3rem, 5.6vw, 5.4rem);
-      line-height: 0.94;
-      letter-spacing: -0.05em;
-      max-width: 9ch;
-    }
-
-    .hero-title .stroke {
-      color: transparent;
-      -webkit-text-stroke: 1px rgba(244,242,238,0.3);
+      font-weight: 700;
+      font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+      line-height: 1.25;
+      letter-spacing: -0.03em;
+      color: var(--white);
+      max-width: 18ch;
+      margin-bottom: 14px;
     }
 
     .hero-copy {
-      margin-top: 26px;
-      max-width: 760px;
       color: var(--gray2);
-      font-size: 1.08rem;
-      line-height: 1.65;
+      font-size: 1.02rem;
+      line-height: 1.6;
+      max-width: 36ch;
+      margin-bottom: 28px;
     }
 
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 14px;
-      margin-top: 32px;
+    .hero-hint {
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
     }
 
-    .hero-proof {
+    /* BUILDER */
+    .builder {
+      background: rgba(255,255,255,0.025);
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+    }
+
+    .builder-tabs {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      margin-top: 42px;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
     }
 
-    .proof-chip {
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.02);
-      padding: 16px 16px;
-      border-radius: 6px;
-      min-height: 92px;
-    }
-
-    .proof-chip strong {
-      display: block;
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--white);
-      margin-bottom: 6px;
-    }
-
-    .proof-chip span {
-      display: block;
-      font-size: 0.84rem;
-      color: var(--gray);
-      line-height: 1.45;
-    }
-
-    .hero-panel {
-      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 28px;
-      box-shadow: var(--shadow);
-      max-width: 760px;
-    }
-
-    .hero-panel-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      margin-bottom: 24px;
-    }
-
-    .hero-panel-title {
+    .builder-tab {
       font-family: 'Syne', sans-serif;
       font-weight: 700;
-      font-size: 1.05rem;
-      letter-spacing: -0.02em;
-    }
-
-    .hero-panel-badge {
-      padding: 6px 10px;
-      border: 1px solid rgba(200,241,53,0.2);
-      background: rgba(200,241,53,0.08);
-      color: var(--accent);
-      font-size: 0.68rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      white-space: nowrap;
-    }
-
-    .hero-list {
-      list-style: none;
-      display: grid;
-      gap: 14px;
-      margin-bottom: 24px;
-    }
-
-    .hero-list li {
-      display: grid;
-      grid-template-columns: 18px 1fr;
-      gap: 12px;
-      color: var(--gray2);
-      font-size: 0.92rem;
-      line-height: 1.6;
-    }
-
-    .hero-list li::before {
-      content: "●";
-      color: var(--accent);
-      font-size: 0.7rem;
-      margin-top: 6px;
-    }
-
-    .hero-panel-note {
-      font-size: 0.82rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.02em;
+      padding: 14px 10px;
+      background: transparent;
+      border: none;
+      border-right: 1px solid var(--border);
+      border-bottom: 2px solid transparent;
       color: var(--gray);
-      line-height: 1.5;
-      padding-top: 18px;
-      border-top: 1px solid var(--border);
+      cursor: pointer;
+      transition: color 0.2s, background 0.2s, border-color 0.2s;
+      text-align: center;
+      line-height: 1.3;
+    }
+    .builder-tab:nth-child(2n) { border-right: none; }
+    .builder-tab:nth-child(1),
+    .builder-tab:nth-child(2) { border-bottom: 1px solid var(--border); }
+    .builder-tab:hover { color: var(--white); background: rgba(255,255,255,0.02); }
+    .builder-tab.active {
+      color: var(--accent);
+      background: rgba(200,241,53,0.06);
+      border-bottom-color: var(--accent);
     }
 
-    .outcome-strip {
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      background: rgba(255,255,255,0.015);
+    .builder-body { padding: 18px 18px 20px; }
+
+    .builder-fields {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 14px;
     }
 
-    .outcome-inner {
-      width: min(var(--max), calc(100% - 48px));
-      margin: 0 auto;
-      padding: 18px 0;
+    .builder-fields label {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--gray);
+      margin-bottom: 4px;
+      letter-spacing: 0.04em;
+    }
+
+    .builder-fields input {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.03);
+      border-radius: 6px;
+      padding: 11px 12px;
+      color: var(--white);
+      font-family: inherit;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .builder-fields input:focus { border-color: rgba(200,241,53,0.4); }
+    .builder-fields input::placeholder { color: var(--gray); }
+
+    /* PREVIEW */
+    .preview {
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(37,211,102,0.15);
+      background: var(--wa-bg);
+      min-height: 220px;
+      transition: opacity 0.25s, transform 0.25s;
+    }
+    .preview.switching {
+      opacity: 0.35;
+      transform: translateY(6px);
+    }
+
+    .preview-head {
       display: flex;
-      flex-wrap: wrap;
-      gap: 18px 26px;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .outcome-item {
-      color: var(--gray2);
-      font-size: 0.83rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      display: inline-flex;
       align-items: center;
       gap: 10px;
+      padding: 12px 14px;
+      background: rgba(37,211,102,0.06);
+      border-bottom: 1px solid rgba(37,211,102,0.1);
     }
-
-    .outcome-item::before {
-      content: "";
-      width: 6px;
-      height: 6px;
+    .preview-av {
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 10px rgba(200,241,53,0.35);
-    }
-
-    section {
-      padding: 110px 0;
-    }
-
-    .section-head {
+      background: rgba(200,241,53,0.2);
+      color: var(--accent);
       display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 30px;
-      margin-bottom: 54px;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 0.75rem;
+    }
+    .preview-name {
+      font-size: 0.84rem;
+      font-weight: 500;
+      color: var(--white);
+    }
+    .preview-status {
+      font-size: 0.68rem;
+      color: var(--wa);
+    }
+
+    .preview-msgs {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 160px;
+    }
+
+    .bubble {
+      max-width: 88%;
+      padding: 9px 12px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      line-height: 1.5;
+      animation: bubbleIn 0.35s ease both;
+    }
+    .bubble.out {
+      align-self: flex-end;
+      background: var(--wa-out);
+      border-radius: 10px 10px 2px 10px;
+      color: var(--white);
+    }
+    .bubble.in {
+      align-self: flex-start;
+      background: var(--wa-in);
+      border: 1px solid rgba(37,211,102,0.08);
+      border-radius: 10px 10px 10px 2px;
+      color: var(--gray2);
+    }
+    .bubble .meta {
+      display: block;
+      font-size: 0.62rem;
+      color: rgba(255,255,255,0.35);
+      margin-top: 4px;
+      text-align: right;
+    }
+
+    @keyframes bubbleIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Flow preview (docs / integrations) */
+    .flow-preview {
+      padding: 18px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 200px;
+      justify-content: center;
+      background: #0c0c0e;
+      border-color: var(--border);
+    }
+    .flow-step {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.02);
+      animation: bubbleIn 0.35s ease both;
+    }
+    .flow-step .n {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      color: var(--accent);
+      font-size: 0.85rem;
+    }
+    .flow-step strong {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 2px;
+      color: var(--white);
+    }
+    .flow-step span {
+      font-size: 0.78rem;
+      color: var(--gray);
+      line-height: 1.4;
+    }
+    .flow-arrow {
+      text-align: center;
+      color: var(--accent);
+      font-size: 0.85rem;
+      opacity: 0.6;
+      animation: bubbleIn 0.35s ease both;
+    }
+
+    .builder-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .builder-actions .btn-primary,
+    .builder-actions .btn-secondary {
+      flex: 1;
+      min-width: 140px;
+      padding: 13px 16px;
+      font-size: 0.82rem;
+    }
+
+    /* SERVICES STRIP */
+    .services {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 36px 0;
+    }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+    .service-item h3 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    .service-item p {
+      color: var(--gray2);
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+    .service-item .num {
+      display: block;
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    /* SECTIONS */
+    section { padding: 88px 0; }
+
+    .section-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .section-label::before {
+      content: "";
+      display: inline-block;
+      width: 18px;
+      height: 1px;
+      background: var(--accent);
+      margin-right: 10px;
+      vertical-align: middle;
     }
 
     .section-title {
       font-family: 'Syne', sans-serif;
       font-weight: 700;
-      font-size: clamp(2rem, 4vw, 3.45rem);
-      line-height: 1.03;
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      line-height: 1.05;
       letter-spacing: -0.035em;
+      margin-bottom: 14px;
     }
-
-    .section-title em,
-    .cta-title em {
-      font-style: normal;
-      color: transparent;
-      -webkit-text-stroke: 1px rgba(244,242,238,0.25);
-    }
-
     .section-intro {
-      max-width: 420px;
       color: var(--gray2);
-      line-height: 1.68;
       font-size: 0.98rem;
+      line-height: 1.6;
+      max-width: 42ch;
+      margin-bottom: 40px;
     }
 
-    .services-grid,
-    .proof-grid,
-    .pricing-grid,
-    .faq-grid {
+    /* PROCESS */
+    .process-row {
       display: grid;
-      gap: 18px;
-    }
-
-    .services-grid {
       grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .process-step {
+      padding-top: 16px;
+      border-top: 2px solid rgba(200,241,53,0.25);
+    }
+    .process-step .n {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 0.8rem;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .process-step h3 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+    }
+    .process-step p {
+      color: var(--gray2);
+      font-size: 0.88rem;
+      line-height: 1.55;
     }
 
-    .service-card,
-    .proof-card,
-    .price-card,
-    .faq-card,
-    .case-card,
-    .step,
-    .contact-card,
-    .contact-form-wrap {
-      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      box-shadow: var(--shadow);
+    /* CASES */
+    .cases-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
     }
-
-    .service-card {
-      padding: 34px 28px;
-      position: relative;
-      overflow: hidden;
+    .case {
+      padding: 28px 0;
+      border-top: 1px solid var(--border);
     }
-
-    .service-card::before,
-    .price-card::before,
-    .case-card::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--accent), transparent 70%);
-      opacity: 0.9;
-    }
-
-    .service-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      margin-bottom: 22px;
-    }
-
-    .service-number,
-    .case-tag,
-    .price-tier,
-    .faq-tag {
+    .case-tag {
       font-size: 0.68rem;
-      letter-spacing: 0.16em;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--accent);
     }
-
-    .service-icon {
-      width: 44px;
-      height: 44px;
-      color: var(--accent);
-      opacity: 0.95;
-      flex-shrink: 0;
-    }
-
-    .service-name,
-    .case-title,
-    .proof-title,
-    .faq-question {
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-    }
-
-    .service-name {
-      font-size: 1.25rem;
-      margin-bottom: 14px;
-    }
-
-    .service-desc,
-    .service-meta,
-    .case-desc,
-    .proof-text,
-    .faq-answer,
-    .contact-note,
-    .price-note,
-    .pricing-footnote,
-    .step-desc,
-    .contact-list li,
-    label,
-    input,
-    textarea {
-      color: var(--gray2);
-      line-height: 1.68;
-    }
-
-    .service-desc { font-size: 0.94rem; }
-    .service-meta {
-      margin-top: 18px;
-      font-size: 0.84rem;
-      padding-top: 18px;
-      border-top: 1px solid var(--border);
-    }
-
-    .service-meta strong { color: var(--white); font-weight: 700; }
-
-    .service-demos {
-      margin-top: 20px;
-      padding-top: 16px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .demo-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      font-size: 0.73rem;
-      letter-spacing: 0.04em;
-      color: var(--accent);
-      text-decoration: none;
-      border: 1px solid rgba(200,241,53,0.18);
-      padding: 7px 13px;
-      border-radius: 4px;
-      background: rgba(200,241,53,0.04);
-      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
-    }
-
-    .demo-link:hover {
-      background: rgba(200,241,53,0.1);
-      border-color: rgba(200,241,53,0.38);
-      transform: translateY(-1px);
-    }
-
-    .demo-link svg { flex-shrink: 0; }
-
-    .process-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
-      gap: 22px;
-    }
-
-    .steps-wrap {
-      display: grid;
-      gap: 16px;
-    }
-
-    .step {
-      padding: 28px 24px;
-      display: grid;
-      grid-template-columns: 72px 1fr;
-      gap: 18px;
-      align-items: start;
-    }
-
-    .step-num {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: 2.4rem;
-      line-height: 1;
-      color: rgba(200,241,53,0.18);
-    }
-
-    .step-title {
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      font-size: 1.08rem;
-      margin-bottom: 8px;
-    }
-
-    .process-side {
-      padding: 28px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: linear-gradient(180deg, rgba(200,241,53,0.05), rgba(255,255,255,0.02));
-      box-shadow: var(--shadow);
-    }
-
-    .process-side h3 {
+    .case h3 {
       font-family: 'Syne', sans-serif;
       font-weight: 700;
       font-size: 1.15rem;
-      margin-bottom: 16px;
+      margin: 10px 0 10px;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
     }
-
-    .process-side ul {
-      list-style: none;
-      display: grid;
-      gap: 12px;
-    }
-
-    .process-side li {
-      display: grid;
-      grid-template-columns: 18px 1fr;
-      gap: 12px;
-      font-size: 0.92rem;
-      color: var(--gray2);
-      line-height: 1.58;
-    }
-
-    .process-side li::before {
-      content: "→";
-      color: var(--accent);
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-    }
-
-    .cases-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 18px;
-    }
-
-    .case-card {
-      padding: 34px 30px;
-      position: relative;
-    }
-
-    .case-title {
-      font-size: 1.28rem;
-      margin: 14px 0 12px;
-      line-height: 1.22;
-    }
-
-    .case-desc {
-      font-size: 0.94rem;
-      max-width: 560px;
-    }
-
-    .case-points {
-      list-style: none;
-      display: grid;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .case-points li {
-      display: grid;
-      grid-template-columns: 18px 1fr;
-      gap: 12px;
+    .case p {
       color: var(--gray2);
       font-size: 0.9rem;
-      line-height: 1.58;
-    }
-
-    .case-points li::before {
-      content: "●";
-      color: var(--accent);
-      font-size: 0.66rem;
-      margin-top: 7px;
-    }
-
-    .case-metrics {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 18px;
-      margin-top: 26px;
-    }
-
-    .metric {
-      min-width: 150px;
-      padding: 16px 16px;
-      border-radius: 8px;
-      background: rgba(255,255,255,0.025);
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .metric strong {
-      display: block;
-      font-family: 'Syne', sans-serif;
-      font-size: 2rem;
-      line-height: 1;
-      color: var(--accent);
-      letter-spacing: -0.04em;
-      margin-bottom: 6px;
-    }
-
-    .metric span {
-      display: block;
-      font-size: 0.8rem;
-      color: var(--gray);
-      line-height: 1.4;
-    }
-
-    .proof-grid {
-      grid-template-columns: repeat(4, 1fr);
-      margin-top: 18px;
-    }
-
-    .proof-card {
-      padding: 26px 22px;
-    }
-
-    .proof-title {
-      font-size: 1rem;
-      margin-bottom: 10px;
-    }
-
-    .proof-text {
-      font-size: 0.88rem;
-    }
-
-    .pricing-grid {
-      grid-template-columns: repeat(3, 1fr);
-      margin-top: 10px;
-    }
-
-    .price-card {
-      padding: 34px 28px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .price-card.featured {
-      border-color: var(--border-strong);
-      background: linear-gradient(180deg, rgba(200,241,53,0.08), rgba(255,255,255,0.02));
-    }
-
-    .price-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--accent);
-      color: var(--black);
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      font-size: 0.68rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
+      line-height: 1.55;
       margin-bottom: 16px;
     }
+    .case-metric {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.6rem;
+      color: var(--accent);
+      letter-spacing: -0.03em;
+    }
+    .case-metric span {
+      display: block;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      font-size: 0.78rem;
+      color: var(--gray);
+      margin-top: 2px;
+    }
+    .case-link {
+      display: inline-block;
+      margin-top: 16px;
+      color: var(--accent);
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.82rem;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(200,241,53,0.3);
+      padding-bottom: 2px;
+    }
+    .case-link:hover { border-color: var(--accent); }
 
+    /* PRICING */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .price {
+      padding: 28px 24px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+    }
+    .price.featured {
+      border-color: var(--border-strong);
+      background: rgba(200,241,53,0.04);
+    }
+    .price-tier {
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
     .price-value {
       font-family: 'Syne', sans-serif;
       font-weight: 800;
-      font-size: 2.75rem;
-      letter-spacing: -0.05em;
-      line-height: 1;
-      margin: 14px 0 8px;
+      font-size: 2rem;
+      letter-spacing: -0.04em;
+      margin-bottom: 6px;
     }
-
     .price-note {
-      font-size: 0.88rem;
-      margin-bottom: 22px;
+      color: var(--gray);
+      font-size: 0.84rem;
+      line-height: 1.45;
+      margin-bottom: 20px;
     }
-
-    .price-features {
+    .price ul {
       list-style: none;
       display: grid;
-      gap: 12px;
-      margin: 24px 0 26px;
-      padding-top: 22px;
-      border-top: 1px solid var(--border);
+      gap: 10px;
+      margin-bottom: 24px;
+      flex: 1;
     }
-
-    .price-features li {
-      display: grid;
-      grid-template-columns: 18px 1fr;
-      gap: 12px;
+    .price li {
+      font-size: 0.88rem;
       color: var(--gray2);
-      font-size: 0.9rem;
-      line-height: 1.55;
+      line-height: 1.45;
+      padding-left: 16px;
+      position: relative;
     }
-
-    .price-features li::before {
+    .price li::before {
       content: "→";
+      position: absolute;
+      left: 0;
       color: var(--accent);
       font-family: 'Syne', sans-serif;
       font-weight: 700;
     }
-
-    .price-cta {
+    .price .btn-secondary,
+    .price .btn-primary {
       width: 100%;
     }
-
     .pricing-footnote {
       margin-top: 18px;
-      font-size: 0.84rem;
+      font-size: 0.8rem;
+      color: var(--gray);
     }
 
+    /* FAQ */
     .faq-grid {
-      grid-template-columns: repeat(2, 1fr);
-      margin-top: 14px;
-    }
-
-    .faq-card {
-      padding: 26px 24px;
-    }
-
-    .faq-question {
-      font-size: 1rem;
-      margin: 12px 0 10px;
-    }
-
-    .faq-answer {
-      font-size: 0.9rem;
-    }
-
-    .cta-section {
-      position: relative;
-      padding: 120px 0 80px;
-      overflow: hidden;
-    }
-
-    .cta-box {
-      position: relative;
-      z-index: 1;
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(320px, 470px);
-      gap: 22px;
-      align-items: stretch;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px 40px;
     }
-
-    .contact-card,
-    .contact-form-wrap {
-      padding: 34px 30px;
-      overflow: hidden;
-    }
-
-    .cta-title {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: clamp(2rem, 4vw, 3.8rem);
-      line-height: 0.97;
-      letter-spacing: -0.045em;
-      margin: 20px 0 24px;
-    }
-
-    .cta-sub {
-      max-width: 560px;
-      color: var(--gray2);
-      font-size: 1rem;
-      line-height: 1.68;
-      margin-bottom: 28px;
-    }
-
-    .contact-list {
-      list-style: none;
-      display: grid;
-      gap: 14px;
-      margin: 24px 0 26px;
-    }
-
-    .contact-list li {
-      display: grid;
-      grid-template-columns: 20px 1fr;
-      gap: 12px;
-      font-size: 0.92rem;
-    }
-
-    .contact-list li::before {
-      content: "●";
-      color: var(--accent);
-      font-size: 0.7rem;
-      margin-top: 6px;
-    }
-
-    .contact-inline {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      align-items: center;
-      margin-top: 6px;
-    }
-
-    .contact-inline .btn-secondary {
-      border-color: rgba(255,255,255,0.12);
-    }
-
-    .contact-form-wrap form {
-      display: grid;
-      gap: 14px;
-    }
-
-    .form-title {
+    .faq-item h3 {
       font-family: 'Syne', sans-serif;
       font-weight: 700;
-      font-size: 1.15rem;
+      font-size: 1rem;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    .faq-item p {
+      color: var(--gray2);
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+
+    /* CONTACT */
+    .contact-section {
+      padding-bottom: 100px;
+      position: relative;
+    }
+    .contact-section::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 50% 40% at 50% 0%, rgba(200,241,53,0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .contact-box {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr minmax(300px, 400px);
+      gap: 40px;
+      align-items: start;
+    }
+    .contact-copy .section-title {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      margin-bottom: 16px;
+    }
+    .contact-copy p {
+      color: var(--gray2);
+      line-height: 1.6;
+      margin-bottom: 24px;
+      max-width: 40ch;
+    }
+    .contact-form {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 28px 24px;
+      background: rgba(255,255,255,0.02);
+      display: grid;
+      gap: 12px;
+    }
+    .contact-form h3 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
       margin-bottom: 4px;
     }
-
-    .form-sub {
+    .contact-form .form-sub {
       color: var(--gray);
-      font-size: 0.88rem;
-      line-height: 1.55;
-      margin-bottom: 10px;
+      font-size: 0.84rem;
+      margin-bottom: 8px;
+      line-height: 1.45;
     }
-
-    label {
+    .contact-form label {
       display: block;
-      font-size: 0.82rem;
-      margin-bottom: 6px;
+      font-size: 0.78rem;
       color: var(--gray);
+      margin-bottom: 4px;
     }
-
-    input,
-    textarea {
+    .contact-form input,
+    .contact-form textarea {
       width: 100%;
-      border: 1px solid rgba(255,255,255,0.09);
+      border: 1px solid rgba(255,255,255,0.1);
       background: rgba(255,255,255,0.03);
       border-radius: 6px;
-      padding: 14px 14px;
+      padding: 12px;
+      color: var(--white);
       font-family: inherit;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       outline: none;
-      transition: border-color 0.2s ease, background 0.2s ease;
     }
-
-    input:focus,
-    textarea:focus {
-      border-color: rgba(200,241,53,0.38);
-      background: rgba(255,255,255,0.045);
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+      border-color: rgba(200,241,53,0.4);
     }
-
-    textarea {
+    .contact-form textarea {
+      min-height: 110px;
       resize: vertical;
-      min-height: 130px;
     }
-
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 10px;
     }
-
     .form-note {
-      font-size: 0.78rem;
+      font-size: 0.74rem;
       color: var(--gray);
-      line-height: 1.5;
+      line-height: 1.4;
     }
-
     .bot-field {
       position: absolute !important;
       left: -9999px !important;
@@ -1095,139 +908,88 @@
       overflow: hidden !important;
     }
 
+    /* FOOTER */
     footer {
       border-top: 1px solid var(--border);
-      padding: 26px 0 34px;
+      padding: 24px 0 32px;
     }
-
     .footer-inner {
-      width: min(var(--max), calc(100% - 48px));
+      width: min(var(--max), calc(100% - 40px));
       margin: 0 auto;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 18px;
+      gap: 16px;
       flex-wrap: wrap;
     }
-
+    .footer-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      text-decoration: none;
+      color: var(--white);
+    }
+    .footer-logo span { color: var(--accent); }
     .footer-copy {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: var(--gray);
     }
-
     .footer-links {
       display: flex;
       gap: 18px;
-      flex-wrap: wrap;
     }
-
     .footer-links a {
-      text-decoration: none;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: var(--gray);
-      transition: color 0.2s ease;
+      text-decoration: none;
     }
-
-    .floating-wa {
-      position: fixed;
-      right: 18px;
-      bottom: 88px;
-      z-index: 90;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 14px 16px;
-      border-radius: 999px;
-      background: #25d366;
-      color: #fff;
-      border: 1px solid rgba(37,211,102,0.6);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-      font-size: 0.82rem;
-    }
-
-    .floating-wa svg,
-    .btn-primary svg,
-    .btn-secondary svg,
-    .submit-btn svg { flex-shrink: 0; }
+    .footer-links a:hover { color: var(--white); }
 
     .reveal {
       opacity: 0;
-      transform: translateY(22px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
+      transform: translateY(18px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
     }
-
     .reveal.visible {
       opacity: 1;
       transform: translateY(0);
     }
 
-    .reveal-delay-1 { transition-delay: 0.08s; }
-    .reveal-delay-2 { transition-delay: 0.16s; }
-    .reveal-delay-3 { transition-delay: 0.24s; }
-
-
-    @media (min-width: 1550px) {
+    @media (max-width: 960px) {
       .hero-inner {
-        grid-template-columns: minmax(0, 1fr) minmax(320px, 360px);
+        grid-template-columns: 1fr;
         gap: 36px;
-        align-items: start;
       }
-
-      .hero-panel {
-        max-width: 360px;
-        margin-top: 84px;
-      }
-    }
-
-    @media (max-width: 1080px) {
-      .cta-box,
-      .process-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .proof-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    @media (max-width: 900px) {
-      .services-grid,
-      .pricing-grid,
-      .cases-grid,
-      .faq-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .section-head {
-        flex-direction: column;
+      .hero {
+        min-height: auto;
+        padding: 40px 0 56px;
         align-items: flex-start;
       }
-
-      .hero-proof {
+      .brand-mark { font-size: clamp(2.4rem, 10vw, 3.6rem); }
+      .hero-title { max-width: none; }
+      .services-grid,
+      .process-row,
+      .cases-grid,
+      .pricing-grid,
+      .faq-grid,
+      .contact-box {
         grid-template-columns: 1fr;
       }
+      .services-grid { gap: 24px; }
     }
 
     @media (max-width: 768px) {
+      .nav-links,
+      .nav-cta { display: none; }
+      .nav-toggle { display: flex; }
       .container,
       .nav-inner,
       .hero-inner,
-      .outcome-inner,
       .footer-inner {
         width: min(var(--max), calc(100% - 32px));
       }
-
-      nav { position: sticky; }
-      .nav-links { display: none; }
-      .nav-actions .mini-link { display: none; }
-      .hero { padding: 58px 0 52px; }
-      .hero-title { max-width: 100%; font-size: clamp(2.6rem, 13vw, 4.5rem); }
-      section { padding: 82px 0; }
-      .step { grid-template-columns: 56px 1fr; padding: 24px 20px; }
-      .contact-card, .contact-form-wrap, .service-card, .price-card, .case-card, .faq-card, .proof-card { padding: 26px 22px; }
+      section { padding: 64px 0; }
       .form-row { grid-template-columns: 1fr; }
-      .floating-wa span { display: none; }
-      .floating-wa { padding: 14px; }
-      .proof-grid { grid-template-columns: 1fr; }
+      .builder-tab { font-size: 0.68rem; padding: 12px 6px; }
     }
   </style>
 </head>
@@ -1236,339 +998,126 @@
   <nav>
     <div class="nav-inner">
       <a href="#top" class="nav-logo">Autopilot<span>.</span></a>
-
       <ul class="nav-links">
-        <li><a href="#servicios">Servicios</a></li>
+        <li><a href="#probar">Probar</a></li>
         <li><a href="#casos">Casos</a></li>
         <li><a href="#precios">Precios</a></li>
         <li><a href="#faq">FAQ</a></li>
       </ul>
-
-      <div class="nav-actions">
-        <a class="mini-link" href="https://wa.me/5491157676283?text=Hola%2C%20quiero%20ver%20si%20puedo%20automatizar%20un%20proceso%20con%20Autopilot." target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:6px;color:var(--white);">
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="#25d366" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-  WhatsApp
-</a>
-        <a class="btn-primary" href="#contacto">Pedir diagnóstico</a>
-      </div>
+      <a class="nav-cta" href="#contacto">Pedir diagnóstico</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </nav>
 
+  <div class="nav-mobile" id="navMobile" hidden>
+    <a href="#probar">Probar</a>
+    <a href="#casos">Casos</a>
+    <a href="#precios">Precios</a>
+    <a href="#faq">FAQ</a>
+    <a href="#contacto" class="accent">Pedir diagnóstico</a>
+  </div>
+
   <header class="hero" id="top">
-    <div class="hero-grid"></div>
-
     <div class="hero-inner">
-      <div class="reveal visible">
-        <p class="eyebrow">Automatización con IA · WhatsApp · Integraciones · Buenos Aires / LatAm</p>
-
-        <h1 class="hero-title">
-          Tu empresa en<br>
-          <span class="stroke">piloto</span><br>
-          automático.
-        </h1>
-
+      <div>
+        <h1 class="brand-mark">Autopilot<span>.</span></h1>
+        <p class="hero-title">Automatizamos lo que tu equipo repite todos los días.</p>
         <p class="hero-copy">
-          Implementamos <strong>bots de WhatsApp, automatización de tareas internas e integración entre sistemas</strong> para que tu equipo deje de hacer trabajo repetitivo y se enfoque en vender, atender y operar mejor.
+          WhatsApp, documentos e integraciones — sin cambiar todos tus sistemas.
         </p>
+        <p class="hero-hint" id="probar">Armá tu ejemplo</p>
+        <p style="color:var(--gray);font-size:0.9rem;line-height:1.5;max-width:34ch;">
+          Elegí el problema. En segundos ves cómo quedaría automatizado.
+        </p>
+      </div>
 
-        <div class="hero-actions">
-          <a href="#contacto" class="btn-primary">
-            Pedir diagnóstico
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-          <a href="#casos" class="btn-secondary">
-            Ver casos reales
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
+      <div class="builder" id="builder" aria-label="Constructor de automatización">
+        <div class="builder-tabs" role="tablist">
+          <button type="button" class="builder-tab active" role="tab" data-type="cobranzas" aria-selected="true">Cobranzas</button>
+          <button type="button" class="builder-tab" role="tab" data-type="prospectos" aria-selected="false">Consultas</button>
+          <button type="button" class="builder-tab" role="tab" data-type="facturas" aria-selected="false">Documentos</button>
+          <button type="button" class="builder-tab" role="tab" data-type="integraciones" aria-selected="false">Integraciones</button>
         </div>
 
-        <div class="hero-proof">
-          <div class="proof-chip">
-            <strong>Implementación rápida</strong>
-            <span>Proyectos acotados y con foco operativo, no consultoría eterna.</span>
-          </div>
-          <div class="proof-chip">
-            <strong>Se integra con lo que ya usás</strong>
-            <span>WhatsApp, formularios, planillas, CRM, ERP, email y APIs.</span>
-          </div>
-          <div class="proof-chip">
-            <strong>Soporte mensual real</strong>
-            <span>No se entrega y desaparece: se monitorea, ajusta y mejora.</span>
+        <div class="builder-body">
+          <div class="builder-fields" id="builderFields"></div>
+          <div class="preview" id="preview" aria-live="polite"></div>
+          <div class="builder-actions">
+            <a class="btn-primary" id="ctaWant" href="#contacto">Quiero esto en mi empresa</a>
+            <a class="btn-secondary" id="ctaDemo" href="demo-bot-cobranzas.html" target="_blank" rel="noopener">Ver demo completa</a>
           </div>
         </div>
       </div>
-
-      <aside class="hero-panel reveal reveal-delay-1 visible" aria-label="Resumen del servicio">
-        <div class="hero-panel-head">
-          <h2 class="hero-panel-title">Qué tipo de procesos solemos automatizar</h2>
-          <span class="hero-panel-badge">foco en operación</span>
-        </div>
-
-        <ul class="hero-list">
-          <li>Consultas repetitivas por WhatsApp, seguimiento comercial y derivación a un humano solo cuando hace falta.</li>
-          <li>Cobranzas, recordatorios, confirmaciones y respuestas automáticas con reglas claras.</li>
-          <li>Lectura de documentos, órdenes, formularios o mensajes para disparar acciones sin carga manual.</li>
-          <li>Conexión entre sistemas que hoy no se hablan para evitar doble trabajo y errores operativos.</li>
-        </ul>
-
-        <p class="hero-panel-note">
-          Si hoy tenés gente copiando datos, respondiendo lo mismo o persiguiendo tareas manuales, probablemente haya algo para automatizar.
-        </p>
-      </aside>
     </div>
   </header>
 
-  <div class="outcome-strip">
-    <div class="outcome-inner">
-      <div class="outcome-item">Bots para WhatsApp</div>
-      <div class="outcome-item">Cobranzas automáticas</div>
-      <div class="outcome-item">Lectura de documentos</div>
-      <div class="outcome-item">Integración con CRM / ERP</div>
-      <div class="outcome-item">Atención y seguimiento 24/7</div>
+  <div class="services">
+    <div class="container services-grid">
+      <div class="service-item reveal">
+        <span class="num">01 · WhatsApp</span>
+        <h3>Bots que atienden, cobran y hacen seguimiento</h3>
+        <p>Consultas, recordatorios y recupero de deuda — un humano solo cuando hace falta.</p>
+      </div>
+      <div class="service-item reveal">
+        <span class="num">02 · Procesos</span>
+        <h3>IA que lee documentos y ejecuta acciones</h3>
+        <p>Facturas, órdenes y formularios dejan de cargarse a mano.</p>
+      </div>
+      <div class="service-item reveal">
+        <span class="num">03 · Integraciones</span>
+        <h3>Sistemas que hoy no se hablan, conectados</h3>
+        <p>CRM, ERP, planillas y APIs sin copiar y pegar.</p>
+      </div>
     </div>
   </div>
 
   <main>
-    <section id="servicios">
-      <div class="container">
-        <div class="section-head reveal">
-          <div>
-            <p class="section-label">Servicios</p>
-            <h2 class="section-title">Qué resolvemos<br><em>y cómo lo hacemos</em></h2>
-          </div>
-          <p class="section-intro">
-            No vendemos “IA” en abstracto. Armamos soluciones concretas para procesos que hoy te consumen tiempo, coordinación o capacidad operativa.
-          </p>
-        </div>
-
-        <div class="services-grid">
-          <article class="service-card reveal">
-            <div class="service-top">
-              <span class="service-number">01 · WhatsApp</span>
-              <svg class="service-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-                <rect x="8" y="8" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
-                <rect x="26" y="8" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
-                <rect x="8" y="26" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
-                <rect x="26" y="26" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
-                <path d="M22 15h4M24 22v4M22 33h4M33 22v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-              </svg>
-            </div>
-            <h3 class="service-name">Bots de WhatsApp para atención, seguimiento y cobranzas</h3>
-            <p class="service-desc">
-              Automatizá consultas, recordatorios, seguimiento comercial, recupero de deuda o derivación a operadores cuando realmente corresponde.
-            </p>
-            <p class="service-meta"><strong>Ideal para:</strong> empresas con mucho volumen de mensajes, consultas repetidas o tareas manuales por WhatsApp.</p>
-            <div class="service-demos">
-              <a class="demo-link" href="demo-bot-prospectos.html" target="_blank">
-                <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                Demo · Bot Prospectos
-              </a>
-              </div>
-          </article>
-
-          <article class="service-card reveal reveal-delay-1">
-            <div class="service-top">
-              <span class="service-number">02 · Procesos</span>
-              <svg class="service-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-                <circle cx="24" cy="24" r="14" stroke="currentColor" stroke-width="1.5"/>
-                <path d="M16 24h4l3-6 4 12 3-6h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-            <h3 class="service-name">Automatización de procesos con IA</h3>
-            <p class="service-desc">
-              Leemos documentos, clasificamos datos, validamos información y ejecutamos acciones automáticas para reducir carga operativa y tiempos muertos.
-            </p>
-            <p class="service-meta"><strong>Ideal para:</strong> operaciones con órdenes, formularios, mails, imágenes o datos que hoy alguien procesa a mano.</p>
-            <div class="service-demos">
-              <a class="demo-link" href="demo-facturas.html" target="_blank">
-                <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                Demo · Lectura de Facturas
-              </a>
-            </div>
-          </article>
-
-          <article class="service-card reveal reveal-delay-2">
-            <div class="service-top">
-              <span class="service-number">03 · Integraciones</span>
-              <svg class="service-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-                <path d="M8 20h32M8 28h32" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                <rect x="8" y="12" width="32" height="24" rx="3" stroke="currentColor" stroke-width="1.5"/>
-                <path d="M20 12v24M28 12v24" stroke="currentColor" stroke-width="1" stroke-dasharray="2 3"/>
-              </svg>
-            </div>
-            <h3 class="service-name">Integración entre sistemas que hoy no se hablan</h3>
-            <p class="service-desc">
-              Conectamos CRM, ERP, formularios, planillas, APIs, bases de datos y canales de contacto para que la información circule sola y no se duplique.
-            </p>
-            <p class="service-meta"><strong>Ideal para:</strong> equipos que copian datos de un lado a otro o dependen de revisiones manuales para avanzar.</p>
-            <div class="service-demos">
-              <a class="demo-link" href="demo-bot-cobranzas.html" target="_blank">
-                <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                Demo · Cobranzas + Airtable
-              </a>
-              
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
     <section>
       <div class="container">
-        <div class="section-head reveal">
-          <div>
-            <p class="section-label">Proceso</p>
-            <h2 class="section-title">Cómo trabajamos<br><em>sin humo ni vueltas</em></h2>
+        <p class="section-label reveal">Proceso</p>
+        <h2 class="section-title reveal">De la idea al sistema en tres pasos</h2>
+        <p class="section-intro reveal">Sin consultoría eterna. Relevamos, proponemos alcance cerrado e implementamos.</p>
+        <div class="process-row">
+          <div class="process-step reveal">
+            <div class="n">01</div>
+            <h3>Relevamiento</h3>
+            <p>Vemos dónde se pierde tiempo o seguimiento hoy.</p>
           </div>
-          <p class="section-intro">
-            La idea no es complicarte más. Primero entendemos el proceso, después definimos alcance real y recién ahí implementamos.
-          </p>
-        </div>
-
-        <div class="process-grid">
-          <div class="steps-wrap">
-            <article class="step reveal">
-              <div class="step-num">01</div>
-              <div>
-                <h3 class="step-title">Relevamiento</h3>
-                <p class="step-desc">Vemos cómo funciona hoy tu operación y detectamos dónde se pierde tiempo, seguimiento o consistencia.</p>
-              </div>
-            </article>
-
-            <article class="step reveal reveal-delay-1">
-              <div class="step-num">02</div>
-              <div>
-                <h3 class="step-title">Propuesta cerrada</h3>
-                <p class="step-desc">Te decimos qué automatizar, con qué alcance, en qué plazo y con qué costo. Nada de ambigüedad innecesaria.</p>
-              </div>
-            </article>
-
-            <article class="step reveal reveal-delay-2">
-              <div class="step-num">03</div>
-              <div>
-                <h3 class="step-title">Implementación</h3>
-                <p class="step-desc">Conectamos herramientas, armamos el flujo, probamos y dejamos todo funcionando en un entorno real.</p>
-              </div>
-            </article>
-
-            <article class="step reveal reveal-delay-3">
-              <div class="step-num">04</div>
-              <div>
-                <h3 class="step-title">Ajustes y soporte</h3>
-                <p class="step-desc">Medimos el uso, corregimos desvíos y mejoramos el sistema en base a operación real, no a teoría.</p>
-              </div>
-            </article>
+          <div class="process-step reveal">
+            <div class="n">02</div>
+            <h3>Propuesta cerrada</h3>
+            <p>Alcance, plazo y costo — sin ambigüedad.</p>
           </div>
-
-          <aside class="process-side reveal reveal-delay-1">
-            <h3>Qué buscamos al automatizar</h3>
-            <ul>
-              <li>Menos tareas repetitivas para el equipo.</li>
-              <li>Menos dependencia de copiar y pegar datos entre sistemas.</li>
-              <li>Respuestas más rápidas y seguimiento más consistente.</li>
-              <li>Menos errores manuales y menos cuellos de botella.</li>
-              <li>Una operación más ordenada, medible y escalable.</li>
-            </ul>
-          </aside>
+          <div class="process-step reveal">
+            <div class="n">03</div>
+            <h3>Implementación</h3>
+            <p>Lo dejamos funcionando y lo ajustamos con uso real.</p>
+          </div>
         </div>
       </div>
     </section>
 
     <section id="casos">
       <div class="container">
-        <div class="section-head reveal">
-          <div>
-            <p class="section-label">Casos de uso</p>
-            <h2 class="section-title">Resultados<br><em>más concretos</em></h2>
-          </div>
-          <p class="section-intro">
-            No todos los proyectos son iguales, pero estos ejemplos muestran bien el tipo de problema que resolvemos y el tipo de resultado que buscamos.
-          </p>
-        </div>
-
+        <p class="section-label reveal">Casos</p>
+        <h2 class="section-title reveal">Resultados concretos</h2>
+        <p class="section-intro reveal">Ejemplos del tipo de problema que resolvemos.</p>
         <div class="cases-grid">
-          <article class="case-card reveal">
-            <span class="case-tag">Servicios / Cobranzas</span>
-            <h3 class="case-title">Automatización de cobranzas por WhatsApp para empresa de servicios</h3>
-            <p class="case-desc">
-              Se armó un sistema de seguimiento automático por WhatsApp para ordenar el primer contacto, detectar evasivas y escalar solo cuando la conversación lo requería.
-            </p>
-            <ul class="case-points">
-              <li>Seguimiento automático durante 72 horas.</li>
-              <li>Primer contacto sin intervención humana.</li>
-              <li>Reglas para insistencia, espera y escalado.</li>
-              <li>Menos carga operativa en tareas repetitivas de cobranza.</li>
-            </ul>
-            <div class="case-metrics">
-              <div class="metric">
-                <strong>72hs</strong>
-                <span>de seguimiento automático</span>
-              </div>
-              <div class="metric">
-                <strong>0</strong>
-                <span>operadores en el primer contacto</span>
-              </div>
-            </div>
+          <article class="case reveal">
+            <span class="case-tag">Cobranzas · WhatsApp</span>
+            <h3>Seguimiento automático de deuda durante 72 horas</h3>
+            <p>Primer contacto sin operador, reglas de insistencia y escalado solo cuando la conversación lo requiere.</p>
+            <div class="case-metric">0<span>operadores en el primer contacto</span></div>
+            <a class="case-link" href="demo-bot-cobranzas.html" target="_blank" rel="noopener">Ver demo de cobranzas →</a>
           </article>
-
-          <article class="case-card reveal reveal-delay-1">
-            <span class="case-tag">Salud / Laboratorio</span>
-            <h3 class="case-title">Automatización de órdenes y coordinación de turnos por WhatsApp</h3>
-            <p class="case-desc">
-              Se diseñó un workflow que lee órdenes médicas, consulta información del sistema y responde al paciente para acelerar la gestión sin depender de revisión manual constante.
-            </p>
-            <ul class="case-points">
-              <li>Lectura de documentos y mensajes entrantes.</li>
-              <li>Consulta al sistema de gestión para validar información.</li>
-              <li>Respuesta automática y seguimiento del caso.</li>
-              <li>Menor carga administrativa sobre el equipo.</li>
-            </ul>
-            <div class="case-metrics">
-              <div class="metric">
-                <strong>-80%</strong>
-                <span>de tiempo administrativo en el proceso</span>
-              </div>
-              <div class="metric">
-                <strong>24/7</strong>
-                <span>de atención y recepción activa</span>
-              </div>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <div class="container">
-        <div class="section-head reveal">
-          <div>
-            <p class="section-label">Por qué Autopilot</p>
-            <h2 class="section-title">Más foco en operación,<br><em>menos verso técnico</em></h2>
-          </div>
-          <p class="section-intro">
-            La tecnología importa, pero lo que realmente define si sirve o no es cómo impacta en una operación real, con gente real y sistemas que ya existen.
-          </p>
-        </div>
-
-        <div class="proof-grid">
-          <article class="proof-card reveal">
-            <h3 class="proof-title">Se adapta al proceso real</h3>
-            <p class="proof-text">No obligamos a rehacer toda la operación para que encaje con una herramienta.</p>
-          </article>
-
-          <article class="proof-card reveal reveal-delay-1">
-            <h3 class="proof-title">Integra sin reemplazar todo</h3>
-            <p class="proof-text">La idea es conectar mejor lo que ya usás antes de pedirte cambiar todo de golpe.</p>
-          </article>
-
-          <article class="proof-card reveal reveal-delay-2">
-            <h3 class="proof-title">Se piensa con criterio comercial</h3>
-            <p class="proof-text">No alcanza con que “funcione”; tiene que bajar carga, ordenar y dar resultado operativo.</p>
-          </article>
-
-          <article class="proof-card reveal reveal-delay-3">
-            <h3 class="proof-title">Se mide y se corrige</h3>
-            <p class="proof-text">Después de implementado, se ajusta según uso real y no se deja congelado.</p>
+          <article class="case reveal">
+            <span class="case-tag">Documentos · IA</span>
+            <h3>Lectura de facturas y carga automática</h3>
+            <p>El documento llega, la IA extrae los datos y los deja listos en el sistema — sin tipeo manual.</p>
+            <div class="case-metric">−80%<span>de tiempo administrativo en el proceso</span></div>
+            <a class="case-link" href="demo-facturas.html" target="_blank" rel="noopener">Ver demo de facturas →</a>
           </article>
         </div>
       </div>
@@ -1576,182 +1125,121 @@
 
     <section id="precios">
       <div class="container">
-        <div class="section-head reveal">
-          <div>
-            <p class="section-label">Precios</p>
-            <h2 class="section-title">Precios más claros,<br><em>con mejor alcance</em></h2>
-          </div>
-          <p class="section-intro">
-            Estos valores sirven para orientar. El alcance exacto se define según complejidad, herramientas a conectar y volumen operativo.
-          </p>
-        </div>
-
+        <p class="section-label reveal">Precios</p>
+        <h2 class="section-title reveal">Precios orientativos</h2>
+        <p class="section-intro reveal">El alcance exacto se define según complejidad y herramientas a conectar.</p>
         <div class="pricing-grid">
-          <article class="price-card reveal">
+          <article class="price reveal">
             <p class="price-tier">Básico</p>
             <div class="price-value">Desde USD 500</div>
-            <p class="price-note">Setup inicial + desde USD 80/mes para mantenimiento y soporte.</p>
-            <ul class="price-features">
-              <li>Para empresas que quieren automatizar 1 proceso puntual.</li>
-              <li>1 a 2 workflows acotados.</li>
-              <li>1 integración principal.</li>
-              <li>Bot o respuesta automática básica.</li>
-              <li>Servidor y soporte operativo base.</li>
+            <p class="price-note">Setup + desde USD 80/mes</p>
+            <ul>
+              <li>1 proceso puntual</li>
+              <li>1–2 workflows</li>
+              <li>1 integración principal</li>
             </ul>
-            <a href="#contacto" class="price-cta">Quiero evaluar este plan</a>
+            <a href="#contacto" class="btn-secondary">Evaluar</a>
           </article>
-
-          <article class="price-card featured reveal reveal-delay-1">
-            <div class="price-badge">Más elegido</div>
-            <p class="price-tier">Profesional</p>
+          <article class="price featured reveal">
+            <p class="price-tier">Profesional · más elegido</p>
             <div class="price-value">Desde USD 1200</div>
-            <p class="price-note">Setup inicial + desde USD 130/mes para soporte, monitoreo y mejoras.</p>
-            <ul class="price-features">
-              <li>Para empresas que necesitan bot + IA + varias integraciones.</li>
-              <li>3 a 5 workflows con más lógica de negocio.</li>
-              <li>Automatización con lectura de datos o documentos.</li>
-              <li>Integraciones múltiples y panel de seguimiento si aplica.</li>
-              <li>Soporte prioritario y ajustes mensuales.</li>
+            <p class="price-note">Setup + desde USD 130/mes</p>
+            <ul>
+              <li>Bot + IA + varias integraciones</li>
+              <li>3–5 workflows</li>
+              <li>Lectura de documentos</li>
+              <li>Soporte y ajustes mensuales</li>
             </ul>
-            <a href="#contacto" class="price-cta">Quiero evaluar este plan</a>
+            <a href="#contacto" class="btn-primary">Evaluar</a>
           </article>
-
-          <article class="price-card reveal reveal-delay-2">
+          <article class="price reveal">
             <p class="price-tier">Enterprise</p>
             <div class="price-value">A medida</div>
-            <p class="price-note">Para operaciones con mayor volumen, múltiples áreas o sistemas propios.</p>
-            <ul class="price-features">
-              <li>Arquitectura y alcance definidos según operación.</li>
-              <li>Integración con ERP, CRM o herramientas internas.</li>
-              <li>Automatizaciones transversales entre varias áreas.</li>
-              <li>Capacitación, documentación y soporte dedicado.</li>
-              <li>Evolución continua del sistema.</li>
+            <p class="price-note">Alto volumen o sistemas propios</p>
+            <ul>
+              <li>Arquitectura a medida</li>
+              <li>ERP / CRM / herramientas internas</li>
+              <li>Soporte dedicado</li>
             </ul>
-            <a href="#contacto" class="price-cta">Quiero hablarlo</a>
+            <a href="#contacto" class="btn-secondary">Hablarlo</a>
           </article>
         </div>
-
-        <p class="pricing-footnote reveal">
-          Importante: costos de APIs, WhatsApp Business, proveedores externos, licencias o infraestructura especial no están incluidos salvo que se indique explícitamente en la propuesta.
-        </p>
+        <p class="pricing-footnote reveal">APIs, WhatsApp Business, licencias o infraestructura especial no están incluidos salvo que se indique en la propuesta.</p>
       </div>
     </section>
 
     <section id="faq">
       <div class="container">
-        <div class="section-head reveal">
-          <div>
-            <p class="section-label">FAQ</p>
-            <h2 class="section-title">Preguntas que suelen<br><em>aparecer al principio</em></h2>
-          </div>
-          <p class="section-intro">
-            Estas preguntas ayudan a bajar objeciones y también a filtrar rápido cuándo una automatización realmente vale la pena y cuándo no.
-          </p>
-        </div>
-
-        <div class="faq-grid">
-          <article class="faq-card reveal">
-            <span class="faq-tag">01</span>
-            <h3 class="faq-question">¿Hace falta cambiar todos mis sistemas?</h3>
-            <p class="faq-answer">No necesariamente. Muchas veces el mayor valor viene de integrar mejor lo que ya usás antes que reemplazar todo.</p>
+        <p class="section-label reveal">FAQ</p>
+        <h2 class="section-title reveal">Preguntas frecuentes</h2>
+        <div class="faq-grid" style="margin-top:32px;">
+          <article class="faq-item reveal">
+            <h3>¿Hace falta cambiar todos mis sistemas?</h3>
+            <p>No. Muchas veces el valor está en integrar mejor lo que ya usás.</p>
           </article>
-
-          <article class="faq-card reveal reveal-delay-1">
-            <span class="faq-tag">02</span>
-            <h3 class="faq-question">¿Sirve para empresas chicas o solo grandes?</h3>
-            <p class="faq-answer">Sirve para ambos casos. Lo que define si conviene no es el tamaño sino cuánta tarea repetitiva, volumen o fricción operativa tenés hoy.</p>
+          <article class="faq-item reveal">
+            <h3>¿Sirve para empresas chicas?</h3>
+            <p>Sí. Importa el volumen de tarea repetitiva, no el tamaño de la empresa.</p>
           </article>
-
-          <article class="faq-card reveal reveal-delay-2">
-            <span class="faq-tag">03</span>
-            <h3 class="faq-question">¿En cuánto tiempo se puede ver algo funcionando?</h3>
-            <p class="faq-answer">Depende del alcance, pero los proyectos más acotados suelen avanzar bastante rápido cuando el proceso está claro y los accesos están disponibles.</p>
+          <article class="faq-item reveal">
+            <h3>¿En cuánto tiempo se ve algo funcionando?</h3>
+            <p>Los proyectos acotados avanzan rápido cuando el proceso y los accesos están claros.</p>
           </article>
-
-          <article class="faq-card reveal reveal-delay-3">
-            <span class="faq-tag">04</span>
-            <h3 class="faq-question">¿Qué pasa si no estoy seguro de qué automatizar?</h3>
-            <p class="faq-answer">Justamente para eso sirve el diagnóstico inicial: ordenar el proceso, ver si vale la pena y priorizar dónde hay más impacto real.</p>
+          <article class="faq-item reveal">
+            <h3>¿No sé qué automatizar?</h3>
+            <p>Para eso es el diagnóstico: ordenamos prioridades y vemos si vale la pena.</p>
           </article>
         </div>
       </div>
     </section>
 
-    <section class="cta-section" id="contacto">
-      <div class="container">
-        <div class="cta-box">
-          <div class="contact-card reveal">
-            <p class="section-label">Contacto</p>
-            <h2 class="cta-title">Contanos qué querés<br><em>automatizar</em></h2>
-            <p class="cta-sub">
-              Te decimos si vale la pena, qué alcance tendría y por dónde conviene empezar. Sin vueltas y sin venderte algo que no aplica.
-            </p>
-
-            <ul class="contact-list">
-              <li>Ideal si hoy tu equipo hace demasiadas tareas repetitivas.</li>
-              <li>Ideal si WhatsApp o la carga manual ya te está desordenando la operación.</li>
-              <li>Ideal si querés integrar sistemas y dejar de mover información a mano.</li>
-            </ul>
-
-            <div class="contact-inline">
-              <a class="btn-primary" href="https://wa.me/5491157676283?text=Hola%2C%20quiero%20ver%20si%20puedo%20automatizar%20un%20proceso%20con%20Autopilot." target="_blank" rel="noopener noreferrer">
-                Escribir por WhatsApp
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </a>
-              
-            </div>
-
-            <p class="contact-note" style="margin-top:18px; font-size:0.82rem;">
-              Si preferís, también podés dejar el formulario y te respondemos con una propuesta inicial de enfoque.
-            </p>
-          </div>
-
-          <div class="contact-form-wrap reveal reveal-delay-1">
-            <h3 class="form-title">Pedir diagnóstico</h3>
-            <p class="form-sub">Completá el formulario y te respondemos con una propuesta inicial de enfoque.</p>
-
-            <form method="POST" action="https://api.web3forms.com/submit">
-              <input type="hidden" name="access_key" value="7e47046d-83a0-400f-a02a-13f2555b0cd5">
-              <input type="hidden" name="redirect" value="https://autopilot.com.ar/gracias/">
-              <input type="hidden" name="subject" value="Nueva consulta desde autopilot.com.ar">
-             
-
-              <div class="form-row">
-                <div>
-                  <label for="nombre">Nombre</label>
-                  <input id="nombre" name="nombre" type="text" placeholder="Tu nombre" required>
-                </div>
-                <div>
-                  <label for="empresa">Empresa</label>
-                  <input id="empresa" name="empresa" type="text" placeholder="Nombre de la empresa">
-                </div>
-              </div>
-
-              <div class="form-row">
-                <div>
-                  <label for="whatsapp">WhatsApp</label>
-                  <input id="whatsapp" name="whatsapp" type="tel" placeholder="11 1234 5678" required>
-                </div>
-                <div>
-                  <label for="email">Email</label>
-                  <input id="email" name="email" type="email" placeholder="vos@empresa.com" required>
-                </div>
-              </div>
-
-              <div>
-                <label for="proceso">¿Qué proceso querés automatizar?</label>
-                <textarea id="proceso" name="proceso" placeholder="Ej: cobranzas por WhatsApp, consultas repetitivas, lectura de documentos, integración entre sistemas..." required></textarea>
-              </div>
-
-              <button class="submit-btn" type="submit">
-                Enviar consulta
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </button>
-
-              <p class="form-note">Al enviar, dejás tus datos para contacto comercial. Si después querés, se puede sumar una página de gracias o un tracking más fino.</p>
-            </form>
-          </div>
+    <section class="contact-section" id="contacto">
+      <div class="container contact-box">
+        <div class="contact-copy reveal">
+          <p class="section-label">Contacto</p>
+          <h2 class="section-title">Contanos qué querés automatizar</h2>
+          <p>Te decimos si vale la pena, qué alcance tendría y por dónde empezar.</p>
+          <a class="btn-primary" href="https://wa.me/5491157676283?text=Hola%2C%20quiero%20ver%20si%20puedo%20automatizar%20un%20proceso%20con%20Autopilot." target="_blank" rel="noopener noreferrer">
+            Escribir por WhatsApp
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
         </div>
+
+        <form class="contact-form reveal" method="POST" action="https://api.web3forms.com/submit">
+          <h3>Pedir diagnóstico</h3>
+          <p class="form-sub">Te respondemos con un enfoque inicial.</p>
+          <input type="hidden" name="access_key" value="7e47046d-83a0-400f-a02a-13f2555b0cd5">
+          <input type="hidden" name="redirect" value="https://autopilot.com.ar/gracias/">
+          <input type="hidden" name="subject" value="Nueva consulta desde autopilot.com.ar">
+          <input class="bot-field" type="text" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+          <div class="form-row">
+            <div>
+              <label for="nombre">Nombre</label>
+              <input id="nombre" name="nombre" type="text" placeholder="Tu nombre" required>
+            </div>
+            <div>
+              <label for="empresa">Empresa</label>
+              <input id="empresa" name="empresa" type="text" placeholder="Nombre de la empresa">
+            </div>
+          </div>
+          <div class="form-row">
+            <div>
+              <label for="whatsapp">WhatsApp</label>
+              <input id="whatsapp" name="whatsapp" type="tel" placeholder="11 1234 5678" required>
+            </div>
+            <div>
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" placeholder="vos@empresa.com" required>
+            </div>
+          </div>
+          <div>
+            <label for="proceso">¿Qué proceso querés automatizar?</label>
+            <textarea id="proceso" name="proceso" placeholder="Ej: cobranzas por WhatsApp, consultas, facturas..." required></textarea>
+          </div>
+          <button class="submit-btn" type="submit">Enviar consulta</button>
+          <p class="form-note">Usamos tus datos solo para responder esta consulta.</p>
+        </form>
       </div>
     </section>
   </main>
@@ -1759,9 +1247,8 @@
   <footer>
     <div class="footer-inner">
       <a href="#top" class="footer-logo">Autopilot<span>.</span></a>
-      <p class="footer-copy">© 2026 Autopilot · Automatización con IA para empresas · Buenos Aires, Argentina</p>
+      <p class="footer-copy">© 2026 Autopilot · Buenos Aires, Argentina</p>
       <div class="footer-links">
-        <a href="#servicios">Servicios</a>
         <a href="#casos">Casos</a>
         <a href="#precios">Precios</a>
         <a href="#contacto">Contacto</a>
@@ -1769,447 +1256,233 @@
     </div>
   </footer>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-    const reveals = document.querySelectorAll('.reveal');
+  <script>
+  (function () {
+    // Mobile nav
+    var toggle = document.getElementById('navToggle');
+    var mobile = document.getElementById('navMobile');
+    function closeNav() {
+      toggle.classList.remove('open');
+      mobile.classList.remove('open');
+      mobile.hidden = true;
+      toggle.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+    toggle.addEventListener('click', function () {
+      var open = !toggle.classList.contains('open');
+      toggle.classList.toggle('open', open);
+      mobile.classList.toggle('open', open);
+      mobile.hidden = !open;
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      document.body.style.overflow = open ? 'hidden' : '';
+    });
+    mobile.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', closeNav);
+    });
 
+    // Reveal
+    var reveals = document.querySelectorAll('.reveal');
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach(function (el) { observer.observe(el); });
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
+    // Problem builder
+    var TYPES = {
+      cobranzas: {
+        label: 'Cobranzas',
+        demo: 'demo-bot-cobranzas.html',
+        fields: [
+          { id: 'empresa', label: 'Nombre de tu empresa', placeholder: 'ej. Alert Servicios', default: 'Tu Empresa' },
+          { id: 'servicio', label: 'Qué cobrás', placeholder: 'ej. abono mensual', default: 'tu servicio' }
+        ],
+        summary: function (v) {
+          return 'Quiero automatizar cobranzas por WhatsApp para ' + v.empresa + ' (cobro de ' + v.servicio + ').';
+        },
+        render: function (v, el) {
+          el.className = 'preview';
+          el.innerHTML =
+            '<div class="preview-head">' +
+              '<div class="preview-av">A</div>' +
+              '<div><div class="preview-name">' + esc(v.empresa) + '</div><div class="preview-status">en línea</div></div>' +
+            '</div>' +
+            '<div class="preview-msgs">' +
+              bubble('out', 'Hola, te escribimos de ' + esc(v.empresa) + '. Tenés un pago pendiente de ' + esc(v.servicio) + '. ¿Podés confirmar cuándo lo liquidás?', 'Bot · ahora', 0) +
+              bubble('in', 'Esta semana no puedo, la semana que viene.', 'Cliente', 1) +
+              bubble('out', 'Entendido. Te vuelvo a escribir en 48 hs. Si ya pagaste, respondé con el comprobante.', 'Bot · +48 hs', 2) +
+            '</div>';
+        }
+      },
+      prospectos: {
+        label: 'Consultas',
+        demo: 'demo-bot-prospectos.html',
+        fields: [
+          { id: 'empresa', label: 'Nombre de tu empresa', placeholder: 'ej. Studio Norte', default: 'Tu Empresa' },
+          { id: 'producto', label: 'Qué ofrecés', placeholder: 'ej. planes de internet', default: 'nuestros servicios' }
+        ],
+        summary: function (v) {
+          return 'Quiero un bot de WhatsApp para atender consultas y calificar prospectos de ' + v.empresa + ' (' + v.producto + ').';
+        },
+        render: function (v, el) {
+          el.className = 'preview';
+          el.innerHTML =
+            '<div class="preview-head">' +
+              '<div class="preview-av">A</div>' +
+              '<div><div class="preview-name">' + esc(v.empresa) + '</div><div class="preview-status">en línea</div></div>' +
+            '</div>' +
+            '<div class="preview-msgs">' +
+              bubble('in', 'Hola, quiero info sobre ' + esc(v.producto), 'Prospecto', 0) +
+              bubble('out', '¡Hola! Soy el asistente de ' + esc(v.empresa) + '. ¿Para empresa o particular?', 'Bot', 1) +
+              bubble('in', 'Empresa, somos 40 personas.', 'Prospecto', 2) +
+              bubble('out', 'Perfecto. Un asesor te contacta hoy con la propuesta. ¿Cuál es tu nombre y mail?', 'Bot · calificado', 3) +
+            '</div>';
+        }
+      },
+      facturas: {
+        label: 'Documentos',
+        demo: 'demo-facturas.html',
+        fields: [
+          { id: 'empresa', label: 'Nombre de tu empresa', placeholder: 'ej. Distribuidora Sur', default: 'Tu Empresa' },
+          { id: 'doc', label: 'Qué documento procesás', placeholder: 'ej. facturas de proveedores', default: 'facturas' }
+        ],
+        summary: function (v) {
+          return 'Quiero automatizar la lectura de ' + v.doc + ' para ' + v.empresa + '.';
+        },
+        render: function (v, el) {
+          el.className = 'preview flow-preview';
+          el.style.border = '1px solid rgba(255,255,255,0.08)';
+          el.innerHTML =
+            flowStep('1', 'Llega el documento', esc(v.doc) + ' por WhatsApp, mail o carpeta', 0) +
+            '<div class="flow-arrow" style="animation-delay:0.1s">↓</div>' +
+            flowStep('2', 'Autopilot lee con IA', 'Extrae monto, fecha, proveedor y valida', 1) +
+            '<div class="flow-arrow" style="animation-delay:0.2s">↓</div>' +
+            flowStep('3', 'Queda cargado', 'En el sistema de ' + esc(v.empresa) + ' — sin tipeo', 2);
+        }
+      },
+      integraciones: {
+        label: 'Integraciones',
+        demo: 'demo-bot-cobranzas.html',
+        fields: [
+          { id: 'desde', label: 'Desde qué sistema', placeholder: 'ej. planilla / formulario', default: 'Formulario web' },
+          { id: 'hacia', label: 'Hacia qué sistema', placeholder: 'ej. CRM / ERP', default: 'CRM' }
+        ],
+        summary: function (v) {
+          return 'Quiero integrar ' + v.desde + ' con ' + v.hacia + ' para dejar de copiar datos a mano.';
+        },
+        render: function (v, el) {
+          el.className = 'preview flow-preview';
+          el.style.border = '1px solid rgba(255,255,255,0.08)';
+          el.innerHTML =
+            flowStep('A', esc(v.desde), 'Origen de los datos', 0) +
+            '<div class="flow-arrow" style="animation-delay:0.1s">↓ Autopilot sincroniza</div>' +
+            flowStep('B', esc(v.hacia), 'Destino actualizado solo', 1) +
+            '<div class="flow-arrow" style="animation-delay:0.2s">↓</div>' +
+            flowStep('✓', 'Sin doble carga', 'Menos errores, menos tiempo perdido', 2);
+        }
+      }
+    };
+
+    function esc(s) {
+      return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function bubble(side, text, meta, i) {
+      return '<div class="bubble ' + side + '" style="animation-delay:' + (i * 0.12) + 's">' +
+        text + '<span class="meta">' + meta + '</span></div>';
+    }
+
+    function flowStep(n, title, desc, i) {
+      return '<div class="flow-step" style="animation-delay:' + (i * 0.12) + 's">' +
+        '<div class="n">' + n + '</div>' +
+        '<div><strong>' + title + '</strong><span>' + desc + '</span></div></div>';
+    }
+
+    var current = 'cobranzas';
+    var fieldsEl = document.getElementById('builderFields');
+    var previewEl = document.getElementById('preview');
+    var ctaDemo = document.getElementById('ctaDemo');
+    var procesoField = document.getElementById('proceso');
+    var debounceTimer;
+
+    function values() {
+      var type = TYPES[current];
+      var v = {};
+      type.fields.forEach(function (f) {
+        var input = document.getElementById('bf-' + f.id);
+        var raw = input ? input.value.trim() : '';
+        v[f.id] = raw || f.default;
+      });
+      return v;
+    }
+
+    function renderFields() {
+      var type = TYPES[current];
+      fieldsEl.innerHTML = type.fields.map(function (f) {
+        return '<div><label for="bf-' + f.id + '">' + f.label + '</label>' +
+          '<input id="bf-' + f.id + '" type="text" placeholder="' + f.placeholder + '" autocomplete="off"></div>';
+      }).join('');
+      fieldsEl.querySelectorAll('input').forEach(function (input) {
+        input.addEventListener('input', function () {
+          clearTimeout(debounceTimer);
+          debounceTimer = setTimeout(updatePreview, 180);
+        });
+      });
+    }
+
+    function updatePreview() {
+      var type = TYPES[current];
+      var v = values();
+      previewEl.classList.add('switching');
+      setTimeout(function () {
+        type.render(v, previewEl);
+        previewEl.classList.remove('switching');
+        ctaDemo.href = type.demo;
+        if (procesoField && !procesoField.dataset.touched) {
+          procesoField.value = type.summary(v);
+        }
+      }, 160);
+    }
+
+    function setType(type) {
+      current = type;
+      document.querySelectorAll('.builder-tab').forEach(function (tab) {
+        var on = tab.getAttribute('data-type') === type;
+        tab.classList.toggle('active', on);
+        tab.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      renderFields();
+      updatePreview();
+    }
+
+    document.querySelectorAll('.builder-tab').forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        setType(tab.getAttribute('data-type'));
+      });
+    });
+
+    document.getElementById('ctaWant').addEventListener('click', function () {
+      var type = TYPES[current];
+      var v = values();
+      if (procesoField) {
+        procesoField.value = type.summary(v);
+        procesoField.dataset.touched = '1';
       }
     });
-  }, { threshold: 0.12 });
 
-  reveals.forEach(el => observer.observe(el));
-</script>
+    if (procesoField) {
+      procesoField.addEventListener('input', function () {
+        procesoField.dataset.touched = '1';
+      });
+    }
 
-<!-- ============================================================
-     AUTOPILOT CHAT BOT — pegar justo antes de </body>
-     ============================================================ -->
-
-<style>
-  /* — Widget chat bot — */
-#ap-btn {
-  position: fixed;
-  bottom: 18px;
-  right: 18px;
-  left: auto;
-  width: auto;
-  min-width: 54px;
-  height: 54px;
-  border-radius: 999px;
-  padding: 0 20px 0 16px;
-  gap: 9px;
-  z-index: 9999;
-  border: none;
-  background: var(--accent);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 0 0 rgba(200,241,53,0.4);
-  animation: ap-pulse 2.8s ease-in-out infinite;
-  transition: transform 0.2s, background 0.2s;
-}
-  #ap-btn:hover { transform: scale(1.08); }
-  #ap-btn.open { animation: none; background: var(--card-bg); border: 1px solid var(--border); }
-  #ap-btn .ap-ico-close { display: none; }
-  #ap-btn.open .ap-ico-chat { display: none; }
-  #ap-btn.open .ap-ico-close { display: block; }
-
-  @keyframes ap-pulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(200,241,53,0.35); }
-    50%       { box-shadow: 0 0 0 10px rgba(200,241,53,0); }
-  }
-
-  #ap-panel {
-    position: fixed;
-    bottom: 92px;
-    right: 28px;
-    left: auto;
-    z-index: 9998;
-    width: 350px;
-    height: 500px;
-    background: var(--card-bg);
-    border: 1px solid var(--border-strong);
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.6);
-    opacity: 0;
-    transform: translateY(14px) scale(0.97);
-    pointer-events: none;
-    transition: opacity 0.22s ease, transform 0.22s ease;
-  }
-  #ap-panel.open {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    pointer-events: all;
-  }
-
-  .ap-head {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px 18px;
-    border-bottom: 1px solid var(--border);
-    flex-shrink: 0;
-  }
-  .ap-head-avatar {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    background: var(--accent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 15px;
-    flex-shrink: 0;
-    position: relative;
-  }
-  .ap-head-avatar::after {
-    content: '';
-    position: absolute;
-    bottom: 1px; right: 1px;
-    width: 8px; height: 8px;
-    background: #22c55e;
-    border-radius: 50%;
-    border: 2px solid var(--card-bg);
-  }
-  .ap-head-name {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 0.88rem;
-    color: var(--white);
-  }
-  .ap-head-status {
-    font-size: 0.7rem;
-    color: #22c55e;
-    margin-top: 1px;
-    letter-spacing: 0.03em;
-  }
-
-  .ap-msgs {
-    flex: 1;
-    overflow-y: auto;
-    padding: 16px 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    scroll-behavior: smooth;
-  }
-  .ap-msgs::-webkit-scrollbar { width: 3px; }
-  .ap-msgs::-webkit-scrollbar-thumb { background: rgba(200,241,53,0.2); border-radius: 2px; }
-
-  .ap-msg { display: flex; flex-direction: column; max-width: 86%; }
-  .ap-msg.bot { align-self: flex-start; }
-  .ap-msg.user { align-self: flex-end; }
-
-  .ap-bubble {
-    padding: 9px 13px;
-    border-radius: 10px;
-    font-size: 0.84rem;
-    line-height: 1.55;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 300;
-  }
-  .ap-msg.bot .ap-bubble {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid var(--border);
-    color: var(--gray2);
-    border-bottom-left-radius: 3px;
-  }
-  .ap-msg.user .ap-bubble {
-    background: var(--accent);
-    color: var(--black);
-    font-weight: 500;
-    border-bottom-right-radius: 3px;
-  }
-  .ap-msg { animation: ap-msg-in 0.18s ease; }
-  @keyframes ap-msg-in {
-    from { opacity: 0; transform: translateY(5px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .ap-typing .ap-bubble {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 12px 14px;
-  }
-  .ap-dot {
-    width: 5px; height: 5px;
-    background: var(--accent);
-    border-radius: 50%;
-    opacity: 0.5;
-    animation: ap-dot 1.2s ease-in-out infinite;
-  }
-  .ap-dot:nth-child(2) { animation-delay: 0.2s; }
-  .ap-dot:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes ap-dot {
-    0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
-    40%            { transform: translateY(-4px); opacity: 1; }
-  }
-
-  .ap-input-wrap {
-    display: flex;
-    gap: 8px;
-    padding: 10px 14px;
-    border-top: 1px solid var(--border);
-    flex-shrink: 0;
-  }
-  #ap-input {
-    flex: 1;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 9px 12px;
-    color: var(--white);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.84rem;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  #ap-input::placeholder { color: var(--gray); }
-  #ap-input:focus { border-color: rgba(200,241,53,0.35); }
-
-  #ap-send {
-    width: 36px;
-    height: 36px;
-    background: var(--accent);
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    transition: transform 0.15s, background 0.15s;
-  }
-  #ap-send:hover { transform: scale(1.06); background: var(--accent2); }
-  #ap-send:disabled { opacity: 0.35; cursor: default; transform: none; }
-
-  .ap-footer-note {
-    text-align: center;
-    padding: 5px 0 9px;
-    font-size: 0.65rem;
-    color: rgba(255,255,255,0.13);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    flex-shrink: 0;
-  }
-  .ap-footer-note span { color: rgba(200,241,53,0.3); }
-
- @media (max-width: 420px) {
-  #ap-panel { width: calc(100vw - 32px); right: 16px; left: auto; bottom: 84px; }
-  #ap-btn   { right: 16px; left: auto; bottom: 16px; }
-}
-
-  .ap-btn-label {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.78rem;
-    font-weight: 700;
-    color: #060608;
-    white-space: nowrap;
-  }
- #ap-btn.open .ap-btn-label { display: none; }
-</style>
-
-<!-- Botón flotante -->
-<button id="ap-btn" title="Hablar con el asistente de Autopilot" aria-label="Abrir chat"><span class="ap-btn-label">💬 ¿Qué podés automatizar?</span>
-  <svg class="ap-ico-chat" width="21" height="21" viewBox="0 0 24 24" fill="none">
-    <path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.37 5.07L2 22l4.93-1.37A9.96 9.96 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2z" fill="#060608"/>
-    <circle cx="8.5" cy="12" r="1.2" fill="#c8f135"/>
-    <circle cx="12"  cy="12" r="1.2" fill="#c8f135"/>
-    <circle cx="15.5" cy="12" r="1.2" fill="#c8f135"/>
-  </svg>
-  <svg class="ap-ico-close" width="17" height="17" viewBox="0 0 24 24" fill="none">
-    <path d="M18 6L6 18M6 6l12 12" stroke="#c8f135" stroke-width="2.5" stroke-linecap="round"/>
-  </svg>
-</button>
-
-<style>
-
-#ap-tooltip {
-  position: fixed;
-  bottom: 82px;
-  right: 18px;
-  background: var(--white);
-  color: var(--black);
-  padding: 10px 14px;
-  border-radius: 10px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.82rem;
-  font-weight: 500;
-  max-width: 220px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  pointer-events: none;
-  z-index: 9997;
-  line-height: 1.4;
-}
-#ap-tooltip.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-#ap-tooltip::after {
-  content: '';
-  position: absolute;
-  bottom: -6px;
-  right: 22px;
-  width: 12px;
-  height: 12px;
-  background: var(--white);
-  transform: rotate(45deg);
-  border-radius: 2px;
-}
-
-</style>
-
-<div id="ap-tooltip">👋 ¿Tenés procesos manuales que repetís todos los días?</div>
-
-<!-- Panel del chat -->
-<div id="ap-panel" role="dialog" aria-label="Chat Autopilot">
-  <div class="ap-head">
-    <div class="ap-head-avatar">🤖</div>
-    <div>
-      <div class="ap-head-name">Autopilot IA</div>
-      <div class="ap-head-status">● en línea ahora</div>
-    </div>
-  </div>
-  <div class="ap-msgs" id="ap-msgs"></div>
-  <div class="ap-input-wrap">
-    <input id="ap-input" type="text" placeholder="¿Qué querés automatizar?" autocomplete="off" maxlength="500" />
-    <button id="ap-send" aria-label="Enviar">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-        <path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z" stroke="#060608" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </button>
-  </div>
-  <div class="ap-footer-note">powered by <span>autopilot</span> + openai</div>
-</div>
-
-<script>
-(function () {
-  // ── ÚNICA LÍNEA QUE TENÉS QUE CAMBIAR ──────────────────────
-  var WEBHOOK = 'https://untrustworthy-corey-macrolecithal.ngrok-free.dev/webhook/autopilot-chat';
-  // ───────────────────────────────────────────────────────────
-
-  var btn     = document.getElementById('ap-btn');
-  var panel   = document.getElementById('ap-panel');
-  var msgs    = document.getElementById('ap-msgs');
-  var input   = document.getElementById('ap-input');
-  var sendBtn = document.getElementById('ap-send');
-  var history = [];
-  var waiting = false;
-  var opened  = false;
-
-// Tooltip proactivo
-var tooltip = document.getElementById('ap-tooltip');
-var tooltipTimer = setTimeout(function() {
-  if (!opened) {
-    tooltip.classList.add('visible');
-  }
-}, 4000);
-
-tooltip.addEventListener('click', function() {
-  tooltip.classList.remove('visible');
-  if (!opened) btn.click();
-});
-
-btn.addEventListener('click', function () {
-  tooltip.classList.remove('visible');
-  clearTimeout(tooltipTimer);
-  opened = !opened;
-  btn.classList.toggle('open', opened);
-  panel.classList.toggle('open', opened);
-  if (opened && msgs.children.length === 0) {
-    addMsg('bot', '👋 Hola, soy el asistente de **Autopilot**.\n\n¿Qué proceso te gustaría automatizar?');
-  }
-  if (opened) setTimeout(function(){ input.focus(); }, 250);
-});
-
-input.addEventListener('keydown', function (e) {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
-});
-sendBtn.addEventListener('click', send);
-
-  function send() {
-    var text = input.value.trim();
-    if (!text || waiting) return;
-    addMsg('user', text);
-    history.push({ role: 'user', content: text });
-    input.value = '';
-    waiting = true;
-    sendBtn.disabled = true;
-    showTyping();
-
-    fetch(WEBHOOK, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: text, sessionId: sid(), history: history })
-    })
-    .then(function(r){ return r.json(); })
-    .then(function(d){
-      var reply = d.reply || d.text || d.output || 'No pude procesar tu mensaje.';
-      removeTyping();
-      addMsg('bot', reply);
-      history.push({ role: 'assistant', content: reply });
-    })
-    .catch(function(){
-      removeTyping();
-      addMsg('bot', '⚠️ Error de conexión. Verificá que el webhook de n8n esté activo.');
-    })
-    .finally(function(){
-      waiting = false;
-      sendBtn.disabled = false;
-      input.focus();
-    });
-  }
-
-  function addMsg(role, text) {
-    var div    = document.createElement('div');
-    div.className = 'ap-msg ' + role;
-    var bubble = document.createElement('div');
-    bubble.className = 'ap-bubble';
-    bubble.innerHTML = fmt(text);
-    div.appendChild(bubble);
-    msgs.appendChild(div);
-    msgs.scrollTop = msgs.scrollHeight;
-  }
-
-  function fmt(t) {
-    return t.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
-  }
-
-  function showTyping() {
-    var d = document.createElement('div');
-    d.className = 'ap-msg bot ap-typing';
-    d.id = 'ap-typing';
-    d.innerHTML = '<div class="ap-bubble"><div class="ap-dot"></div><div class="ap-dot"></div><div class="ap-dot"></div></div>';
-    msgs.appendChild(d);
-    msgs.scrollTop = msgs.scrollHeight;
-  }
-
-  function removeTyping() {
-    var t = document.getElementById('ap-typing');
-    if (t) t.remove();
-  }
-
-  var _sid;
-  function sid() {
-    if (!_sid) _sid = 'ap_' + Math.random().toString(36).slice(2, 10);
-    return _sid;
-  }
-})();
-</script>
-
-<!-- FIN AUTOPILOT CHAT BOT -->
-
-
+    setType('cobranzas');
+  })();
+  </script>
 </body>
 </html>
