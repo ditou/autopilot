@@ -2050,7 +2050,11 @@
         .then(function (d) {
           var reply = d.reply || d.text || d.output || 'No pude procesar tu mensaje. Probá de nuevo o escribinos por WhatsApp.';
           removeTyping();
-          if (d.brief && (d.brief.negocio || d.brief.problema || (d.brief.funciones && d.brief.funciones.length))) {
+          if (
+            d.brief &&
+            (d.fase === 'resumen' || d.fase === 'confirmacion') &&
+            (d.brief.negocio || d.brief.problema || (d.brief.funciones && d.brief.funciones.length))
+          ) {
             addBrief(d.brief, d.fase);
           }
           addMsg('bot', reply, d.fase);
@@ -2087,7 +2091,7 @@
     function faseLabel(fase) {
       var map = {
         descubrimiento: 'Entendiendo el problema',
-        profundizar: 'Afinando detalles',
+        profundizar: 'Una pregunta más',
         resumen: 'Resumen del proyecto',
         confirmacion: '¿Lo implementamos?',
         captura_lead: 'Datos de contacto',
@@ -2100,12 +2104,10 @@
       var wrap = document.createElement('div');
       wrap.className = 'ap-msg bot';
       wrap.style.maxWidth = '100%';
-      if (fase) {
-        var tag = document.createElement('div');
-        tag.className = 'ap-fase';
-        tag.textContent = faseLabel(fase) || 'Resumen del proyecto';
-        wrap.appendChild(tag);
-      }
+      var tag = document.createElement('div');
+      tag.className = 'ap-fase';
+      tag.textContent = 'Resumen del proyecto';
+      wrap.appendChild(tag);
       var card = document.createElement('div');
       card.className = 'ap-brief';
       var html = '<div class="ap-brief-label">Resumen del proyecto</div>';
