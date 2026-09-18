@@ -1074,9 +1074,32 @@
       grid-template-columns: 1fr 1fr;
       gap: 20px;
     }
+    .cases-grid.three {
+      grid-template-columns: repeat(3, 1fr);
+    }
     .case {
       padding: 28px 0;
       border-top: 1px solid var(--border);
+    }
+    .case-company {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--white);
+      margin-bottom: 4px;
+      letter-spacing: -0.02em;
+    }
+    .case-place {
+      font-size: 0.75rem;
+      color: var(--gray);
+      margin-bottom: 12px;
+    }
+    .cases-note {
+      margin-top: 28px;
+      font-size: 0.78rem;
+      color: var(--gray);
+      line-height: 1.5;
+      max-width: 62ch;
     }
     .case-tag {
       font-size: 0.68rem;
@@ -1305,6 +1328,7 @@
       .services-grid,
       .process-row,
       .cases-grid,
+      .cases-grid.three,
       .pains-grid,
       .pricing-soft,
       .faq-grid,
@@ -1482,25 +1506,39 @@
 
     <section id="casos">
       <div class="container">
-        <p class="section-label reveal">Casos</p>
-        <h2 class="section-title reveal">Resultados concretos</h2>
-        <p class="section-intro reveal">Ejemplos del tipo de problema que resolvemos.</p>
-        <div class="cases-grid">
+        <p class="section-label reveal">Casos tipo</p>
+        <h2 class="section-title reveal">Así se ve el impacto</h2>
+        <p class="section-intro reveal">Escenarios basados en implementaciones y demos reales. Los nombres son ilustrativos.</p>
+        <div class="cases-grid three">
           <article class="case reveal">
             <span class="case-tag">Cobranzas · WhatsApp</span>
-            <h3>Seguimiento automático de deuda durante 72 horas</h3>
-            <p>Primer contacto sin operador, reglas de insistencia y escalado solo cuando la conversación lo requiere.</p>
+            <p class="case-company">Norte Servicios</p>
+            <p class="case-place">Gran Buenos Aires · servicios recurrentes</p>
+            <h3>Seguimiento de deuda en 72 horas sin operador en el primer contacto</h3>
+            <p>Reglas de insistencia, detección de evasivas y escalado a humano solo cuando la conversación lo pide.</p>
             <div class="case-metric">0<span>operadores en el primer contacto</span></div>
-            <a class="case-link" href="demo-bot-cobranzas.html" target="_blank" rel="noopener">Ver demo de cobranzas →</a>
+            <a class="case-link" href="demo-bot-cobranzas.html" target="_blank" rel="noopener">Ver demo →</a>
           </article>
           <article class="case reveal">
             <span class="case-tag">Documentos · IA</span>
-            <h3>Lectura de facturas y carga automática</h3>
-            <p>El documento llega, la IA extrae los datos y los deja listos en el sistema — sin tipeo manual.</p>
-            <div class="case-metric">−80%<span>de tiempo administrativo en el proceso</span></div>
-            <a class="case-link" href="demo-facturas.html" target="_blank" rel="noopener">Ver demo de facturas →</a>
+            <p class="case-company">Distribuidora Sur</p>
+            <p class="case-place">CABA · operaciones y proveedores</p>
+            <h3>Facturas que se leen solas y cargan al sistema</h3>
+            <p>El PDF o la foto llega por canal interno; la IA extrae datos, valida y deja todo listo sin tipeo.</p>
+            <div class="case-metric">−80%<span>tiempo admin en ese proceso</span></div>
+            <a class="case-link" href="demo-facturas.html" target="_blank" rel="noopener">Ver demo →</a>
+          </article>
+          <article class="case reveal">
+            <span class="case-tag">Atención · WhatsApp</span>
+            <p class="case-company">Alert Monitor</p>
+            <p class="case-place">GBA Sur · seguridad electrónica</p>
+            <h3>Consultas y prospectos atendidos 24/7, calificados antes del humano</h3>
+            <p>El bot responde lo repetido, captura datos y deriva solo los casos que valen la pena.</p>
+            <div class="case-metric">24/7<span>primera respuesta activa</span></div>
+            <a class="case-link" href="demo-bot-prospectos.html" target="_blank" rel="noopener">Ver demo →</a>
           </article>
         </div>
+        <p class="cases-note reveal">Casos tipo / ilustrativos: representan el tipo de problema y resultado que buscamos, no testimonios de clientes con esos nombres comerciales.</p>
       </div>
     </section>
 
@@ -1615,6 +1653,8 @@
       <a href="#top" class="footer-logo">Autopilot<span>.</span></a>
       <p class="footer-copy">© 2026 Autopilot · Buenos Aires, Argentina</p>
       <div class="footer-links">
+        <a href="https://www.instagram.com/autopilot.com.ar/" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href="https://www.tiktok.com/@autopilot.com.ar" target="_blank" rel="noopener noreferrer">TikTok</a>
         <a href="#casos">Casos</a>
         <a href="#contacto">Contacto</a>
       </div>
