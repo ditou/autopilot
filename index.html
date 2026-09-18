@@ -888,6 +888,53 @@
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
+    .ap-brief {
+      align-self: stretch;
+      max-width: 100%;
+      margin: 2px 0 4px;
+      padding: 12px 12px 10px;
+      border: 1px solid var(--border-strong);
+      border-radius: 8px;
+      background: rgba(200,241,53,0.05);
+    }
+    .ap-brief-label {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .ap-brief-row {
+      margin-bottom: 8px;
+    }
+    .ap-brief-row strong {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--gray);
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+    .ap-brief-row span,
+    .ap-brief-row li {
+      font-size: 0.8rem;
+      color: var(--gray2);
+      line-height: 1.45;
+    }
+    .ap-brief ul {
+      margin: 0;
+      padding-left: 16px;
+    }
+    .ap-fase {
+      display: inline-block;
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+      opacity: 0.8;
+    }
     #ap-tooltip {
       position: fixed;
       bottom: 82px;
@@ -1574,10 +1621,10 @@
     </div>
   </footer>
 
-  <div id="ap-tooltip">¿Qué proceso podrías automatizar? Preguntame.</div>
+  <div id="ap-tooltip">Contame tu proceso y armamos el brief juntos.</div>
 
   <button id="ap-btn" type="button" title="Hablar con el asistente" aria-label="Abrir chat" aria-expanded="false">
-    <span class="ap-btn-label">Preguntá a la IA</span>
+    <span class="ap-btn-label">Armar mi brief</span>
     <svg class="ap-ico-chat" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.37 5.07L2 22l4.93-1.37A9.96 9.96 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2z" fill="#060608"/>
       <circle cx="8.5" cy="12" r="1.2" fill="#c8f135"/>
@@ -1931,7 +1978,7 @@
       tooltip.classList.remove('visible');
       clearTimeout(tooltipTimer);
       if (msgs.children.length === 0) {
-        addMsg('bot', 'Hola, soy el asistente de Autopilot.\n\nContame qué proceso te gustaría automatizar y te ayudo a aterrizarlo.');
+        addMsg('bot', 'Hola — soy el discovery de Autopilot.\n\nContame qué proceso te frena hoy (aunque sea a grandes rasgos). Te hago unas preguntas, armo el resumen del proyecto y vemos si lo implementamos.');
       }
       if (seedText && !seeded) {
         seeded = true;
@@ -1968,7 +2015,7 @@
     document.getElementById('ctaChatExample').addEventListener('click', function () {
       var payload = window.__apGetExample ? window.__apGetExample() : null;
       var seed = payload
-        ? 'Armé este ejemplo en la web:\n' + payload.summary + '\n\n¿Cómo lo implementarían y qué necesitarían de mi lado?'
+        ? 'Quiero automatizar esto:\n' + payload.summary + '\n\nAyudame a aterrizar el proyecto con preguntas y un resumen.'
         : null;
       openChat(seed);
     });
@@ -2003,7 +2050,10 @@
         .then(function (d) {
           var reply = d.reply || d.text || d.output || 'No pude procesar tu mensaje. Probá de nuevo o escribinos por WhatsApp.';
           removeTyping();
-          addMsg('bot', reply);
+          if (d.brief && (d.brief.negocio || d.brief.problema || (d.brief.funciones && d.brief.funciones.length))) {
+            addBrief(d.brief, d.fase);
+          }
+          addMsg('bot', reply, d.fase);
           history.push({ role: 'assistant', content: reply });
         })
         .catch(function () {
@@ -2017,15 +2067,73 @@
         });
     }
 
-    function addMsg(role, text) {
+    function addMsg(role, text, fase) {
       var div = document.createElement('div');
       div.className = 'ap-msg ' + role;
+      if (role === 'bot' && fase) {
+        var tag = document.createElement('div');
+        tag.className = 'ap-fase';
+        tag.textContent = faseLabel(fase);
+        div.appendChild(tag);
+      }
       var bubble = document.createElement('div');
       bubble.className = 'ap-bubble';
       bubble.textContent = text;
       div.appendChild(bubble);
       msgs.appendChild(div);
       msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    function faseLabel(fase) {
+      var map = {
+        descubrimiento: 'Entendiendo el problema',
+        profundizar: 'Afinando detalles',
+        resumen: 'Resumen del proyecto',
+        confirmacion: '¿Lo implementamos?',
+        captura_lead: 'Datos de contacto',
+        completo: 'Listo'
+      };
+      return map[fase] || '';
+    }
+
+    function addBrief(brief, fase) {
+      var wrap = document.createElement('div');
+      wrap.className = 'ap-msg bot';
+      wrap.style.maxWidth = '100%';
+      if (fase) {
+        var tag = document.createElement('div');
+        tag.className = 'ap-fase';
+        tag.textContent = faseLabel(fase) || 'Resumen del proyecto';
+        wrap.appendChild(tag);
+      }
+      var card = document.createElement('div');
+      card.className = 'ap-brief';
+      var html = '<div class="ap-brief-label">Resumen del proyecto</div>';
+      if (brief.negocio) html += row('Negocio', brief.negocio);
+      if (brief.problema) html += row('Problema', brief.problema);
+      if (brief.usuarios) html += row('Usuarios', brief.usuarios);
+      if (brief.funciones && brief.funciones.length) {
+        html += '<div class="ap-brief-row"><strong>Funciones clave</strong><ul>' +
+          brief.funciones.map(function (f) { return '<li>' + escText(f) + '</li>'; }).join('') +
+          '</ul></div>';
+      }
+      if (brief.notas) html += row('Notas', brief.notas);
+      card.innerHTML = html;
+      wrap.appendChild(card);
+      msgs.appendChild(wrap);
+      msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    function row(label, value) {
+      return '<div class="ap-brief-row"><strong>' + escText(label) + '</strong><span>' + escText(value) + '</span></div>';
+    }
+
+    function escText(s) {
+      return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
     }
 
     function showTyping() {
