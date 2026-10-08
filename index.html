@@ -3,24 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Autopilot | Tu empresa en piloto automático</title>
-  <meta name="description" content="Automatizamos WhatsApp, tareas internas e integraciones con IA para que tu empresa reduzca trabajo manual, responda más rápido y opere mejor." />
+  <title>Autopilot | Ingeniería de automatización con IA</title>
+  <meta name="description" content="Diseñamos e implementamos sistemas a medida con IA: procesamiento de documentos, integraciones y automatización de operaciones. Ingeniería, no plantillas." />
   <link rel="canonical" href="https://autopilot.com.ar/" />
 
   <meta property="og:locale" content="es_AR" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Autopilot | Tu empresa en piloto automático" />
-  <meta property="og:description" content="Bots de WhatsApp, automatización de procesos e integraciones con IA para empresas que quieren operar mejor sin sumar trabajo manual." />
+  <meta property="og:title" content="Autopilot | Ingeniería de automatización con IA" />
+  <meta property="og:description" content="Sistemas a medida con IA que leen documentos, toman decisiones y se integran con lo que tu empresa ya usa. Ingeniería, no plantillas." />
   <meta property="og:url" content="https://autopilot.com.ar/" />
   <meta property="og:site_name" content="Autopilot" />
   <meta property="og:image" content="https://autopilot.com.ar/og-image.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Autopilot – Tu empresa en piloto automático" />
+  <meta property="og:image:alt" content="Autopilot – Ingeniería de automatización con IA" />
 
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Autopilot | Tu empresa en piloto automático" />
-  <meta name="twitter:description" content="Implementamos automatizaciones con IA, WhatsApp e integraciones para que tu empresa gane tiempo y orden operativo." />
+  <meta name="twitter:title" content="Autopilot | Ingeniería de automatización con IA" />
+  <meta name="twitter:description" content="Diseñamos sistemas a medida con IA: documentos, integraciones y operaciones automatizadas. Ingeniería, no plantillas." />
   <meta name="twitter:image" content="https://autopilot.com.ar/og-image.png" />
 
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
@@ -41,7 +41,7 @@
     "@type": "ProfessionalService",
     "name": "Autopilot",
     "url": "https://autopilot.com.ar/",
-    "description": "Servicio de automatización con IA, bots de WhatsApp e integración de sistemas para empresas.",
+    "description": "Ingeniería de automatización con IA: sistemas a medida, procesamiento de documentos e integración de sistemas para empresas.",
     "areaServed": ["Argentina", "LatAm"],
     "address": {
       "@type": "PostalAddress",
@@ -50,7 +50,7 @@
     },
     "email": "hola@autopilot.com.ar",
     "priceRange": "USD 500 - A medida",
-    "knowsAbout": ["automatización con IA", "bots de WhatsApp", "integración de sistemas", "automatización de cobranzas", "lectura de documentos con IA"]
+    "knowsAbout": ["ingeniería de software", "automatización con IA", "procesamiento de documentos con IA", "integración de sistemas", "orquestación de atención multicanal"]
   }
   </script>
 
@@ -89,6 +89,22 @@
         "acceptedAnswer": {
           "@type": "Answer",
           "text": "Justamente para eso sirve el diagnóstico inicial: ordenar el proceso, ver si vale la pena y priorizar dónde hay más impacto real."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Esto es un bot?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Un bot contesta mensajes. Nosotros diseñamos el sistema que hay detrás: lectura de datos, reglas de negocio, integraciones y derivación a personas. El canal (WhatsApp, mail o web) es solo la entrada."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿De quién es el sistema?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tuyo. Lo entregamos documentado y funcionando, sin atarte a una plantilla cerrada."
         }
       }
     ]
@@ -1066,6 +1082,41 @@
       line-height: 1.55;
     }
 
+    /* ENGINEERING */
+    .eng-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .eng-item {
+      background: var(--black);
+      padding: 26px 22px;
+    }
+    .eng-item .n {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      margin-bottom: 14px;
+    }
+    .eng-item h3 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    .eng-item p {
+      color: var(--gray2);
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
     /* CASES */
     .cases-grid {
       display: grid;
@@ -1355,6 +1406,7 @@
       .hero-title { max-width: none; }
       .services-grid,
       .process-row,
+      .eng-grid,
       .cases-grid,
       .cases-grid.three,
       .case.featured,
@@ -1412,6 +1464,7 @@
       <ul class="nav-links">
         <li><a href="#probar">Probar</a></li>
         <li><a href="#dolores">Dolores</a></li>
+        <li><a href="#ingenieria">Ingeniería</a></li>
         <li><a href="#casos">Casos</a></li>
         <li><a href="#faq">FAQ</a></li>
       </ul>
@@ -1425,6 +1478,7 @@
   <div class="nav-mobile" id="navMobile" hidden>
     <a href="#probar">Probar</a>
     <a href="#dolores">Dolores</a>
+    <a href="#ingenieria">Ingeniería</a>
     <a href="#casos">Casos</a>
     <a href="#faq">FAQ</a>
     <a href="#contacto" class="accent">Pedir diagnóstico</a>
@@ -1433,10 +1487,11 @@
   <header class="hero" id="top">
     <div class="hero-inner">
       <div>
+        <p class="section-label">Ingeniería de automatización con IA</p>
         <h1 class="brand-mark">Autopilot<span>.</span></h1>
         <p class="hero-title">Automatizamos lo que tu equipo repite todos los días.</p>
         <p class="hero-copy">
-          WhatsApp, documentos e integraciones — sin cambiar todos tus sistemas.
+          Diseñamos sistemas a medida que leen documentos, toman decisiones y se integran con lo que ya usás.
         </p>
         <p class="hero-hint" id="probar">Armá tu ejemplo</p>
         <p style="color:var(--gray);font-size:0.9rem;line-height:1.5;max-width:34ch;">
@@ -1447,10 +1502,10 @@
       <div class="builder" id="builder" aria-label="Constructor de automatización">
         <div class="builder-tabs" role="tablist">
           <button type="button" class="builder-tab active" role="tab" data-type="laboratorio" aria-selected="true">Laboratorio</button>
-          <button type="button" class="builder-tab" role="tab" data-type="cobranzas" aria-selected="false">Cobranzas</button>
-          <button type="button" class="builder-tab" role="tab" data-type="prospectos" aria-selected="false">Consultas</button>
           <button type="button" class="builder-tab" role="tab" data-type="facturas" aria-selected="false">Documentos</button>
           <button type="button" class="builder-tab" role="tab" data-type="integraciones" aria-selected="false">Integraciones</button>
+          <button type="button" class="builder-tab" role="tab" data-type="cobranzas" aria-selected="false">Cobranzas</button>
+          <button type="button" class="builder-tab" role="tab" data-type="prospectos" aria-selected="false">Consultas</button>
         </div>
 
         <div class="builder-body">
@@ -1474,19 +1529,19 @@
   <div class="services">
     <div class="container services-grid">
       <div class="service-item reveal">
-        <span class="num">01 · WhatsApp</span>
-        <h3>Bots y call center que atienden, cobran y hacen seguimiento</h3>
-        <p>Consultas, cobranzas, laboratorios y handoff a humano con contexto — no solo respuestas sueltas.</p>
+        <span class="num">01 · Sistemas con IA</span>
+        <h3>Software que lee documentos, decide y ejecuta</h3>
+        <p>Órdenes, facturas y formularios: de la imagen o el PDF a datos validados y acciones en tu sistema.</p>
       </div>
       <div class="service-item reveal">
-        <span class="num">02 · Procesos</span>
-        <h3>IA que lee documentos y ejecuta acciones</h3>
-        <p>Órdenes, facturas y formularios: de la imagen o el PDF a datos útiles en el sistema.</p>
+        <span class="num">02 · Integraciones</span>
+        <h3>Tus sistemas conectados, sin cargar dos veces lo mismo</h3>
+        <p>CRM, ERP, bases de datos, planillas y APIs hablando entre sí.</p>
       </div>
       <div class="service-item reveal">
-        <span class="num">03 · Integraciones</span>
-        <h3>Sistemas que hoy no se hablan, conectados</h3>
-        <p>CRM, ERP, planillas y APIs sin copiar y pegar.</p>
+        <span class="num">03 · Canales</span>
+        <h3>WhatsApp, mail o web conectados a tu operación</h3>
+        <p>No un bot suelto: cada mensaje entra al sistema, se resuelve o llega a la persona correcta con contexto.</p>
       </div>
     </div>
   </div>
@@ -1500,14 +1555,14 @@
         <article class="pain reveal" data-pain="laboratorio">
           <div class="n">01 / 03</div>
           <h3>Call center desbordado</h3>
-          <p>WhatsApp del laboratorio explota: órdenes, obras sociales y consultas que el equipo responde a mano.</p>
+          <p>Órdenes, obras sociales y consultas que entran por todos los canales y el equipo resuelve a mano.</p>
           <a class="pain-link" href="#probar">Armar ejemplo de laboratorio →</a>
         </article>
-        <article class="pain reveal" data-pain="prospectos">
+        <article class="pain reveal" data-pain="integraciones">
           <div class="n">02 / 03</div>
-          <h3>WhatsApp comercial desordenado</h3>
-          <p>El mismo mensaje mil veces. Consultas y seguimientos que se pierden entre chats.</p>
-          <a class="pain-link" href="#probar">Armar ejemplo de consultas →</a>
+          <h3>Sistemas que no se hablan</h3>
+          <p>El mismo dato cargado en el CRM, en el ERP y en una planilla. Y cada copia, una chance de error.</p>
+          <a class="pain-link" href="#probar">Armar ejemplo de integración →</a>
         </article>
         <article class="pain reveal" data-pain="facturas">
           <div class="n">03 / 03</div>
@@ -1533,13 +1588,43 @@
           </div>
           <div class="process-step reveal">
             <div class="n">02</div>
-            <h3>Propuesta cerrada</h3>
-            <p>Alcance, plazo y costo — sin ambigüedad.</p>
+            <h3>Diseño técnico</h3>
+            <p>Arquitectura, alcance, plazo y costo cerrados — sin ambigüedad.</p>
           </div>
           <div class="process-step reveal">
             <div class="n">03</div>
-            <h3>Implementación</h3>
-            <p>Lo dejamos funcionando y lo ajustamos con uso real.</p>
+            <h3>Implementación y operación</h3>
+            <p>Lo dejamos funcionando, monitoreado y documentado, y lo ajustamos con uso real.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ingenieria">
+      <div class="container">
+        <p class="section-label reveal">Ingeniería</p>
+        <h2 class="section-title reveal">Cómo construimos</h2>
+        <p class="section-intro reveal">Un bot contesta. Un sistema resuelve. Por eso trabajamos como un equipo de ingeniería, no como una agencia de plantillas.</p>
+        <div class="eng-grid reveal">
+          <div class="eng-item">
+            <div class="n">01</div>
+            <h3>Arquitectura para tu proceso</h3>
+            <p>Partimos de cómo opera tu empresa y diseñamos el sistema alrededor de eso, no al revés.</p>
+          </div>
+          <div class="eng-item">
+            <div class="n">02</div>
+            <h3>Código propio, no plantillas</h3>
+            <p>Lógica de negocio, reglas y validaciones escritas para tu caso, con IA donde suma de verdad.</p>
+          </div>
+          <div class="eng-item">
+            <div class="n">03</div>
+            <h3>Integración real</h3>
+            <p>APIs, bases de datos, ERP y sistemas propios: el dato entra una vez y llega a donde tiene que llegar.</p>
+          </div>
+          <div class="eng-item">
+            <div class="n">04</div>
+            <h3>Operación y monitoreo</h3>
+            <p>Registro de cada paso, alertas cuando algo falla y documentación. El sistema es tuyo.</p>
           </div>
         </div>
       </div>
@@ -1557,20 +1642,20 @@
               <span class="case-tag">Salud · Call center de laboratorio</span>
               <p class="case-company">Laboratorio Biorossi</p>
               <p class="case-place">Zona sur GBA · análisis clínicos</p>
-              <h3>Call center de laboratorio por WhatsApp: bot + lectura de órdenes + handoff al humano con contexto</h3>
+              <h3>Sistema de atención para laboratorio: lectura de órdenes médicas, cruce con los códigos de GLYMS y orquestación multi-sede</h3>
               <p>
-                Solución integral sobre Chatwoot: el paciente escribe o manda la orden por WhatsApp;
-                el sistema atiende el flujo conversacional (consultas, obras sociales, particular, domicilio),
-                lee la orden con IA, la mapea a códigos de estudio del laboratorio (GLYMS) y deja nota privada
-                lista para el agente. Cuando hace falta, escala a una persona del call center con el contexto armado —
-                sin que el equipo empiece de cero en cada chat.
+                Diseñamos el sistema completo detrás del call center. El paciente manda la orden por el canal que use;
+                el sistema la lee con IA, identifica cada estudio y lo cruza contra los códigos del sistema del laboratorio (GLYMS)
+                con matching exacto, por alias, aproximado y semántico. Un orquestador sobre Chatwoot resuelve el flujo
+                (consultas, obras sociales, particular, domicilio), aplica la configuración de cada sede, deja la nota lista
+                para el agente y deriva a la persona correcta con todo el contexto armado.
               </p>
               <a class="case-link" href="https://biorossi.com.ar/" target="_blank" rel="noopener noreferrer">biorossi.com.ar →</a>
             </div>
             <div class="case-side">
-              <div class="case-metric">WA + Chatwoot<span>canal unificado de atención</span></div>
-              <div class="case-metric">OCR → GLYMS<span>órdenes a códigos de estudio</span></div>
-              <div class="case-metric">Handoff<span>escala a humano con contexto</span></div>
+              <div class="case-metric">Orden → códigos<span>lectura con IA y cruce con GLYMS</span></div>
+              <div class="case-metric">Multi-sede<span>configuración y reglas por sede</span></div>
+              <div class="case-metric">Chatwoot + GLYMS<span>integrado a los sistemas del laboratorio</span></div>
             </div>
           </article>
 
@@ -1578,27 +1663,27 @@
             <span class="case-tag">Caso tipo · Cobranzas</span>
             <p class="case-company">Norte Servicios</p>
             <p class="case-place">Gran Buenos Aires · servicios recurrentes</p>
-            <h3>Seguimiento de deuda en 72 horas sin operador en el primer contacto</h3>
-            <p>Reglas de insistencia, detección de evasivas y escalado a humano solo cuando hace falta.</p>
-            <div class="case-metric">0<span>operadores en el primer contacto</span></div>
+            <h3>Cobranzas integradas al sistema de facturación</h3>
+            <p>El sistema toma la deuda de facturación, aplica reglas de seguimiento, registra cada promesa de pago y escala a una persona solo cuando hace falta.</p>
+            <div class="case-metric">Factura → cobro<span>reglas de negocio, no mensajes sueltos</span></div>
             <a class="case-link" href="demo-bot-cobranzas.html" target="_blank" rel="noopener">Ver demo →</a>
           </article>
           <article class="case reveal">
             <span class="case-tag">Caso tipo · Documentos</span>
             <p class="case-company">Distribuidora Sur</p>
             <p class="case-place">CABA · operaciones y proveedores</p>
-            <h3>Facturas que se leen solas y cargan al sistema</h3>
-            <p>El PDF o la foto llega; la IA extrae datos, valida y deja todo listo sin tipeo.</p>
-            <div class="case-metric">−80%<span>tiempo admin en ese proceso</span></div>
+            <h3>De PDF a ERP, con validación</h3>
+            <p>Llega la factura por mail o foto; la IA extrae los datos, el sistema los valida contra proveedores y órdenes de compra, y los carga sin tipeo.</p>
+            <div class="case-metric">PDF → ERP<span>extracción, validación y carga</span></div>
             <a class="case-link" href="demo-facturas.html" target="_blank" rel="noopener">Ver demo →</a>
           </article>
           <article class="case reveal">
-            <span class="case-tag">Caso tipo · Atención</span>
-            <p class="case-company">Comercio con alto volumen WA</p>
-            <p class="case-place">Consultas repetidas · stock y precios</p>
-            <h3>Prospectos y consultas atendidos 24/7, calificados antes del humano</h3>
-            <p>El bot responde lo repetido, captura datos y deriva solo los casos que valen la pena.</p>
-            <div class="case-metric">24/7<span>primera respuesta activa</span></div>
+            <span class="case-tag">Caso tipo · Operación comercial</span>
+            <p class="case-company">Comercio con alto volumen de consultas</p>
+            <p class="case-place">Stock, precios y seguimiento</p>
+            <h3>Consultas, stock y CRM conectados en un solo flujo</h3>
+            <p>Las respuestas salen del stock y los precios reales; cada prospecto queda calificado en el CRM y el vendedor recibe solo lo que vale la pena.</p>
+            <div class="case-metric">CRM + stock<span>datos reales, no respuestas armadas</span></div>
             <a class="case-link" href="demo-bot-prospectos.html" target="_blank" rel="noopener">Ver demo →</a>
           </article>
         </div>
@@ -1619,7 +1704,7 @@
           </div>
           <div class="pricing-soft-item featured">
             <p class="tier">02 · Operativo</p>
-            <h3>Bot + IA + varias conexiones</h3>
+            <h3>Sistema con IA + integraciones</h3>
             <p>El más elegido cuando ya hay volumen real.</p>
           </div>
           <div class="pricing-soft-item">
@@ -1656,6 +1741,14 @@
           <article class="faq-item reveal">
             <h3>¿No sé qué automatizar?</h3>
             <p>Para eso es el diagnóstico: ordenamos prioridades y vemos si vale la pena.</p>
+          </article>
+          <article class="faq-item reveal">
+            <h3>¿Esto es un bot?</h3>
+            <p>No. Un bot contesta mensajes. Nosotros diseñamos el sistema que hay detrás: lectura de datos, reglas, integraciones y derivación a personas. El canal es solo la entrada.</p>
+          </article>
+          <article class="faq-item reveal">
+            <h3>¿De quién es el sistema?</h3>
+            <p>Tuyo. Lo entregamos documentado y funcionando, sin atarte a una plantilla cerrada.</p>
           </article>
         </div>
       </div>
@@ -1703,7 +1796,7 @@
           </div>
           <div>
             <label for="proceso">¿Qué proceso querés automatizar?</label>
-            <textarea id="proceso" name="proceso" placeholder="Ej: cobranzas por WhatsApp, consultas, facturas..." required></textarea>
+            <textarea id="proceso" name="proceso" placeholder="Ej: carga de facturas, órdenes médicas, integrar CRM con ERP..." required></textarea>
           </div>
           <button class="submit-btn" type="submit">Enviar consulta</button>
           <p class="form-note">Usamos tus datos solo para responder esta consulta.</p>
@@ -1802,22 +1895,22 @@
         demoBlank: false,
         fields: [
           { id: 'lab', label: 'Nombre del laboratorio', placeholder: 'ej. Biorossi', default: 'tu laboratorio' },
-          { id: 'canal', label: 'Qué llega por WhatsApp', placeholder: 'ej. órdenes y consultas', default: 'órdenes y consultas' }
+          { id: 'canal', label: 'Qué recibe el call center', placeholder: 'ej. órdenes y consultas', default: 'órdenes y consultas' }
         ],
         summary: function (v) {
-          return 'Quiero un call center de laboratorio por WhatsApp para ' + v.lab + ': atender ' + v.canal + ', leer órdenes con IA, mapear estudios y escalar al humano con contexto.';
+          return 'Quiero un sistema de atención para ' + v.lab + ': recibir ' + v.canal + ' por cualquier canal, leer las órdenes con IA, cruzar cada estudio con los códigos del laboratorio y derivar a la persona correcta con el contexto armado.';
         },
         render: function (v, el) {
           el.className = 'preview flow-preview';
           el.style.border = '1px solid rgba(255,255,255,0.08)';
           el.innerHTML =
-            flowStep('1', 'WhatsApp del paciente', esc(v.canal) + ' llegan a ' + esc(v.lab), 0) +
-            '<div class="flow-arrow" style="animation-delay:0.08s">↓ bot + call center</div>' +
-            flowStep('2', 'Autopilot atiende y lee', 'Responde el flujo y OCR de la orden médica', 1) +
-            '<div class="flow-arrow" style="animation-delay:0.16s">↓ matching</div>' +
-            flowStep('3', 'Códigos de estudio', 'Orden mapeada + nota lista para el agente', 2) +
-            '<div class="flow-arrow" style="animation-delay:0.24s">↓ si hace falta</div>' +
-            flowStep('4', 'Handoff humano', 'Escala al call center con el contexto armado', 3);
+            flowStep('1', 'Entra la orden', esc(v.canal) + ' llegan a ' + esc(v.lab) + ' por cualquier canal', 0) +
+            '<div class="flow-arrow" style="animation-delay:0.08s">↓ lectura con IA</div>' +
+            flowStep('2', 'Autopilot lee la orden', 'Extrae paciente, estudios y obra social', 1) +
+            '<div class="flow-arrow" style="animation-delay:0.16s">↓ cruce con el sistema</div>' +
+            flowStep('3', 'Códigos de estudio', 'Cada estudio validado contra el sistema del laboratorio', 2) +
+            '<div class="flow-arrow" style="animation-delay:0.24s">↓ reglas por sede</div>' +
+            flowStep('4', 'Derivación con contexto', 'La persona correcta recibe el caso ya resuelto', 3);
         }
       },
       cobranzas: {
@@ -1830,7 +1923,7 @@
           { id: 'servicio', label: 'Qué cobrás', placeholder: 'ej. abono mensual', default: 'tu servicio' }
         ],
         summary: function (v) {
-          return 'Quiero automatizar cobranzas por WhatsApp para ' + v.empresa + ' (cobro de ' + v.servicio + ').';
+          return 'Quiero un sistema de cobranzas para ' + v.empresa + ' (cobro de ' + v.servicio + '), conectado a facturación, con reglas de seguimiento y registro de cada promesa de pago.';
         },
         render: function (v, el) {
           el.className = 'preview';
@@ -1840,9 +1933,9 @@
               '<div><div class="preview-name">' + esc(v.empresa) + '</div><div class="preview-status">en línea</div></div>' +
             '</div>' +
             '<div class="preview-msgs">' +
-              bubble('out', 'Hola, te escribimos de ' + esc(v.empresa) + '. Tenés un pago pendiente de ' + esc(v.servicio) + '. ¿Podés confirmar cuándo lo liquidás?', 'Bot · ahora', 0) +
+              bubble('out', 'Hola, te escribimos de ' + esc(v.empresa) + '. Tenés un pago pendiente de ' + esc(v.servicio) + '. ¿Podés confirmar cuándo lo liquidás?', 'Sistema · según facturación', 0) +
               bubble('in', 'Esta semana no puedo, la semana que viene.', 'Cliente', 1) +
-              bubble('out', 'Entendido. Te vuelvo a escribir en 48 hs. Si ya pagaste, respondé con el comprobante.', 'Bot · +48 hs', 2) +
+              bubble('out', 'Entendido. Te vuelvo a escribir en 48 hs. Si ya pagaste, respondé con el comprobante.', 'Promesa registrada · +48 hs', 2) +
             '</div>';
         }
       },
@@ -1856,7 +1949,7 @@
           { id: 'producto', label: 'Qué ofrecés', placeholder: 'ej. planes de internet', default: 'nuestros servicios' }
         ],
         summary: function (v) {
-          return 'Quiero un bot de WhatsApp para atender consultas y calificar prospectos de ' + v.empresa + ' (' + v.producto + ').';
+          return 'Quiero un sistema para ' + v.empresa + ' (' + v.producto + ') que responda consultas con datos reales, califique cada prospecto y lo cargue en el CRM para el vendedor.';
         },
         render: function (v, el) {
           el.className = 'preview';
@@ -1867,9 +1960,9 @@
             '</div>' +
             '<div class="preview-msgs">' +
               bubble('in', 'Hola, quiero info sobre ' + esc(v.producto), 'Prospecto', 0) +
-              bubble('out', '¡Hola! Soy el asistente de ' + esc(v.empresa) + '. ¿Para empresa o particular?', 'Bot', 1) +
+              bubble('out', '¡Hola! Soy el asistente de ' + esc(v.empresa) + '. ¿Para empresa o particular?', 'Asistente', 1) +
               bubble('in', 'Empresa, somos 40 personas.', 'Prospecto', 2) +
-              bubble('out', 'Perfecto. Un asesor te contacta hoy con la propuesta. ¿Cuál es tu nombre y mail?', 'Bot · calificado', 3) +
+              bubble('out', 'Perfecto. Un asesor te contacta hoy con la propuesta. ¿Cuál es tu nombre y mail?', 'Calificado · cargado en CRM', 3) +
             '</div>';
         }
       },
@@ -1883,24 +1976,24 @@
           { id: 'doc', label: 'Qué documento procesás', placeholder: 'ej. facturas de proveedores', default: 'facturas' }
         ],
         summary: function (v) {
-          return 'Quiero automatizar la lectura de ' + v.doc + ' para ' + v.empresa + '.';
+          return 'Quiero un sistema que lea ' + v.doc + ' para ' + v.empresa + ', valide los datos contra nuestros registros y los cargue sin tipeo.';
         },
         render: function (v, el) {
           el.className = 'preview flow-preview';
           el.style.border = '1px solid rgba(255,255,255,0.08)';
           el.innerHTML =
-            flowStep('1', 'Llega el documento', esc(v.doc) + ' por WhatsApp, mail o carpeta', 0) +
-            '<div class="flow-arrow" style="animation-delay:0.1s">↓</div>' +
-            flowStep('2', 'Autopilot lee con IA', 'Extrae monto, fecha, proveedor y valida', 1) +
-            '<div class="flow-arrow" style="animation-delay:0.2s">↓</div>' +
+            flowStep('1', 'Llega el documento', esc(v.doc) + ' por mail, carpeta o mensaje', 0) +
+            '<div class="flow-arrow" style="animation-delay:0.1s">↓ lectura con IA</div>' +
+            flowStep('2', 'Autopilot extrae y valida', 'Monto, fecha y proveedor, cruzados con tus registros', 1) +
+            '<div class="flow-arrow" style="animation-delay:0.2s">↓ integración</div>' +
             flowStep('3', 'Queda cargado', 'En el sistema de ' + esc(v.empresa) + ' — sin tipeo', 2);
         }
       },
       integraciones: {
         label: 'Integraciones',
-        demo: 'demo-bot-cobranzas.html',
-        demoLabel: 'Ver demo completa',
-        demoBlank: true,
+        demo: '#ingenieria',
+        demoLabel: 'Ver cómo construimos',
+        demoBlank: false,
         fields: [
           { id: 'desde', label: 'Desde qué sistema', placeholder: 'ej. planilla / formulario', default: 'Formulario web' },
           { id: 'hacia', label: 'Hacia qué sistema', placeholder: 'ej. CRM / ERP', default: 'CRM' }

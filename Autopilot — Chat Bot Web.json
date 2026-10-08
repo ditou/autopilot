@@ -186,11 +186,11 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "Nombre": "={{ $json.nombre }}",
-            "Empresa": "={{ $json.empresa }}",
-            "Whatsapp": "={{ $json.whatsapp }}",
+            "Nombre": "={{ $('Edit Fields1').item.json.nombre }}",
+            "Empresa": "={{ $('Edit Fields1').item.json.empresa }}",
+            "Whatsapp": "={{ $('Edit Fields1').item.json.whatsapp }}",
             "Fecha": "={{ $now }}",
-            "Resumen": "={{ $json.resumen }}"
+            "Resumen": "={{ $('Edit Fields1').item.json.resumen }}"
           },
           "matchingColumns": [
             "Whatsapp"
@@ -262,8 +262,7 @@
           "id": "7qEad3C9UXyCuSmJ",
           "name": "Google Sheets account"
         }
-      },
-      "onError": "continueErrorOutput"
+      }
     },
     {
       "parameters": {
