@@ -1,0 +1,10 @@
+{
+  // Worker de sólo archivos estáticos que sirve autopilot.com.ar (se despliega solo al pushear a main).
+  "name": "withered-frost-4aff",
+  "compatibility_date": "2026-10-19",
+  "assets": {
+    "directory": "./",
+    "not_found_handling": "404-page",
+    "html_handling": "auto-trailing-slash"
+  }
+}

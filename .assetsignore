@@ -1,0 +1,7 @@
+.git
+.claude
+tools
+*.md
+wrangler.jsonc
+.assetsignore
+.gitignore
