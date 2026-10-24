@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /gracias/
+Disallow: /tools/
+
+Sitemap: https://autopilot.com.ar/sitemap.xml

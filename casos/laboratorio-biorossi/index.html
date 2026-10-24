@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Caso Laboratorio Biorossi: atención con IA | Autopilot</title>
+  <meta name="description" content="Cómo construimos el sistema detrás del call center de Laboratorio Biorossi: lectura de órdenes médicas con IA, cruce con GLYMS, reglas por sede y Chatwoot." />
+  <link rel="canonical" href="https://autopilot.com.ar/casos/laboratorio-biorossi/" />
+  <meta name="theme-color" content="#060608" />
+  <meta property="og:locale" content="es_AR" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Caso Laboratorio Biorossi: atención con IA | Autopilot" />
+  <meta property="og:description" content="Cómo construimos el sistema detrás del call center de Laboratorio Biorossi: lectura de órdenes médicas con IA, cruce con GLYMS, reglas por sede y Chatwoot." />
+  <meta property="og:url" content="https://autopilot.com.ar/casos/laboratorio-biorossi/" />
+  <meta property="og:site_name" content="Autopilot" />
+  <meta property="og:image" content="https://autopilot.com.ar/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/favicon.ico" sizes="32x32" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="preload" href="/assets/fonts/syne-latin-8vIH7w4q.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/fonts/dmsans-latin-rP2Yp2yw.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/assets/fonts.css" />
+  <link rel="stylesheet" href="/assets/site.css" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://autopilot.com.ar/"},{"@type":"ListItem","position":2,"name":"Caso Biorossi","item":"https://autopilot.com.ar/casos/laboratorio-biorossi/"}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Laboratorio Biorossi: el sistema detrás del call center","inLanguage":"es-AR","author":{"@type":"Person","name":"Fernando Alonso","url":"https://www.linkedin.com/in/fernando-alonso-75b9a086/"},"publisher":{"@type":"Organization","name":"Autopilot","logo":{"@type":"ImageObject","url":"https://autopilot.com.ar/logo.png"}},"image":"https://autopilot.com.ar/og-image.png","datePublished":"2026-10-24","about":{"@type":"MedicalBusiness","name":"Laboratorio Biorossi","url":"https://biorossi.com.ar/"}}</script>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">Autopilot<span>.</span></a>
+      <ul class="nav-links">
+        <li><a href="/servicios/lectura-de-documentos-con-ia/">Documentos</a></li>
+        <li><a href="/servicios/integracion-de-sistemas/">Integraciones</a></li>
+        <li><a href="/servicios/automatizacion-whatsapp/">WhatsApp</a></li>
+        <li><a href="/casos/laboratorio-biorossi/">Caso Biorossi</a></li>
+      </ul>
+      <a class="nav-cta" href="/#contacto">Pedir diagnóstico</a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="wrap crumbs"><a href="/">Inicio</a> / <span>Caso Biorossi</span></div>
+    <header class="hero">
+      <div class="wrap">
+        <p class="label">Caso real · En producción</p>
+        <h1>Laboratorio Biorossi: el sistema detrás del call center</h1>
+        <p class="lead">Biorossi es un laboratorio de análisis clínicos de zona sur del Gran Buenos Aires con varias sedes. Diseñamos y operamos el sistema que atiende a sus pacientes, lee las órdenes médicas y deja cada consulta lista para el equipo.</p>
+        <div class="actions">
+          <a class="btn" href="/#contacto">Pedir diagnóstico gratis</a>
+          <a class="btn-ghost" href="https://wa.me/5491157676283?text=Hola%2C%20quiero%20ver%20si%20puedo%20automatizar%20un%20proceso%20con%20Autopilot." target="_blank" rel="noopener noreferrer">Escribir por WhatsApp</a>
+        </div>
+      </div>
+    </header>
+
+    <section>
+      <div class="wrap">
+        <h2>El desafío</h2>
+        <p>Los pacientes escriben por el canal que usan y mandan la foto de su orden. Cada estudio de esa orden hay que identificarlo y encontrar su código en GLYMS, el sistema de gestión del laboratorio. Además, cada sede tiene su configuración, y las consultas cambian según sea obra social, particular o domicilio.</p><p>Todo eso pasaba por el call center.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Lo que construimos</h2>
+        <ul class="list"><li><strong>Lectura de órdenes con IA.</strong> El sistema lee la orden e identifica cada estudio pedido.</li><li><strong>Cruce con GLYMS.</strong> Cada estudio se busca contra los códigos del laboratorio con cuatro niveles: coincidencia exacta, por alias, aproximada y semántica.</li><li><strong>Orquestador sobre Chatwoot.</strong> Resuelve el flujo de cada conversación: consultas, obras sociales, particular y domicilio.</li><li><strong>Reglas por sede.</strong> Se aplica la configuración de cada sede sin que el agente tenga que recordarla.</li><li><strong>Derivación con contexto.</strong> El agente recibe la nota lista y la consulta llega a la persona correcta.</li></ul>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Cómo lo trabajamos</h2>
+        <p>Arrancamos con un relevamiento junto al equipo del laboratorio para entender cómo atendían y dónde se trababan. Después diseñamos la arquitectura, la integramos con los sistemas que ya usaban y la pusimos en producción.</p><p>Hoy el sistema corre en producción. Lo monitoreamos todos los días y lo seguimos mejorando con lo que aparece en las conversaciones reales.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Tecnología</h2>
+        <div class="grid"><div class="card"><span class="num">Lectura</span><h3>IA para documentos</h3><p>Extracción de los estudios desde la foto de la orden médica.</p></div><div class="card"><span class="num">Integración</span><h3>GLYMS</h3><p>Códigos de estudios y datos del laboratorio.</p></div><div class="card"><span class="num">Atención</span><h3>Chatwoot</h3><p>Bandeja de conversaciones del equipo, con el orquestador por encima.</p></div></div><p style="margin-top:20px">Sitio del laboratorio: <a href="https://biorossi.com.ar/" target="_blank" rel="noopener">biorossi.com.ar</a></p>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>¿Tenés un laboratorio o un call center parecido?</h2>
+        <p>Mirá cómo lo planteamos para el rubro en <a href="/rubros/laboratorios/">automatización para laboratorios</a>, o contanos tu caso y lo vemos en el diagnóstico.</p>
+      </div>
+    </section>
+
+
+    <section class="cta">
+      <div class="wrap">
+        <div class="cta-box">
+          <h2>Contanos cómo atiende hoy tu equipo</h2>
+          <p>El diagnóstico es gratis. Te decimos si vale la pena, qué alcance tendría, en cuánto tiempo y cuánto cuesta.</p>
+          <div class="actions">
+            <a class="btn" href="/#contacto">Pedir diagnóstico</a>
+            <a class="btn-ghost" href="https://wa.me/5491157676283?text=Hola%2C%20quiero%20ver%20si%20puedo%20automatizar%20un%20proceso%20con%20Autopilot." target="_blank" rel="noopener noreferrer">WhatsApp: +54 9 11 5767-6283</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <a href="/" class="footer-logo">Autopilot<span>.</span></a>
+        <p class="footer-copy">© 2026 Autopilot · Buenos Aires, Argentina</p>
+      </div>
+      <div class="footer-cols">
+        <div><p>Servicios</p><a href="/servicios/lectura-de-documentos-con-ia/">Lectura de documentos con IA</a><a href="/servicios/integracion-de-sistemas/">Integración de sistemas</a><a href="/servicios/automatizacion-whatsapp/">Automatización de WhatsApp</a></div>
+        <div><p>Rubros</p><a href="/rubros/laboratorios/">Laboratorios</a><a href="/rubros/distribuidoras/">Distribuidoras</a><a href="/casos/laboratorio-biorossi/">Caso Biorossi</a></div>
+        <div><p>Autopilot</p><a href="/#contacto">Contacto</a><a href="https://www.linkedin.com/in/fernando-alonso-75b9a086/" target="_blank" rel="noopener">LinkedIn</a><a href="https://www.instagram.com/autopilot.com.ar/" target="_blank" rel="noopener noreferrer">Instagram</a><a href="https://www.tiktok.com/@autopilot.com.ar" target="_blank" rel="noopener noreferrer">TikTok</a></div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
