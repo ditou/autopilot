@@ -391,7 +391,7 @@
     .hero-title {
       font-family: 'Syne', sans-serif;
       font-weight: 700;
-      font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+      font-size: clamp(1.9rem, 3.6vw, 2.9rem);
       line-height: 1.25;
       letter-spacing: -0.03em;
       color: var(--white);
@@ -399,6 +399,10 @@
       margin-bottom: 14px;
     }
 
+    .hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; margin: 6px 0 18px; }
+    .hero-proof { color: var(--gray2); font-size: 0.88rem; line-height: 1.5; max-width: 44ch; margin-bottom: 30px; }
+    .hero-proof span { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin-right: 8px; box-shadow: 0 0 0 4px rgba(200,241,53,0.15); }
+    .hero-proof a { color: var(--white); }
     .hero-copy {
       color: var(--gray2);
       font-size: 1.02rem;
@@ -1528,10 +1532,10 @@
       <a href="#top" class="nav-logo">Autopilot<span>.</span></a>
       <ul class="nav-links">
         <li><a href="#probar">Probar</a></li>
-        <li><a href="#dolores">Dolores</a></li>
-        <li><a href="#ingenieria">Ingeniería</a></li>
+        
+        <li><a href="#ingenieria">Cómo trabajamos</a></li>
         <li><a href="#casos">Casos</a></li>
-        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#faq">Preguntas</a></li>
       </ul>
       <a class="nav-cta" href="#contacto">Pedir diagnóstico</a>
       <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">
@@ -1542,10 +1546,10 @@
 
   <div class="nav-mobile" id="navMobile" hidden>
     <a href="#probar">Probar</a>
-    <a href="#dolores">Dolores</a>
-    <a href="#ingenieria">Ingeniería</a>
+    
+    <a href="#ingenieria">Cómo trabajamos</a>
     <a href="#casos">Casos</a>
-    <a href="#faq">FAQ</a>
+    <a href="#faq">Preguntas</a>
     <a href="#contacto" class="accent">Pedir diagnóstico</a>
   </div>
 
@@ -1553,11 +1557,15 @@
     <div class="hero-inner">
       <div>
         <p class="section-label">Ingeniería de automatización con IA</p>
-        <p class="brand-mark" aria-hidden="true">Autopilot<span>.</span></p>
         <h1 class="hero-title">Automatizamos lo que tu equipo repite todos los días.</h1>
         <p class="hero-copy">
           Diseñamos sistemas a medida que leen documentos, toman decisiones y se integran con lo que ya usás.
         </p>
+        <div class="hero-ctas">
+          <a class="btn-primary" href="#contacto">Pedir diagnóstico gratis</a>
+          <a class="btn-secondary" href="https://wa.me/5491157676283?text=Hola%2C%20quiero%20ver%20si%20puedo%20automatizar%20un%20proceso%20con%20Autopilot." target="_blank" rel="noopener noreferrer">WhatsApp</a>
+        </div>
+        <p class="hero-proof"><span></span>En producción en <a href="/casos/laboratorio-biorossi/">Laboratorio Biorossi</a>, atención de pacientes y lectura de órdenes médicas.</p>
         <p class="hero-hint" id="probar">Armá tu ejemplo</p>
         <p style="color:var(--gray);font-size:0.9rem;line-height:1.5;max-width:34ch;">
           Elegí el problema. En segundos ves cómo quedaría automatizado.
@@ -1726,25 +1734,25 @@
           </article>
 
           <article class="case reveal">
-            <span class="case-tag">Caso tipo · Cobranzas</span>
-            <p class="case-company">Norte Servicios</p>
-            <p class="case-place">Gran Buenos Aires · servicios recurrentes</p>
+            <span class="case-tag">Ejemplo · Cobranzas</span>
+            <p class="case-company">Empresa de servicios</p>
+            <p class="case-place">Abonos y facturación mensual</p>
             <h3>Cobranzas integradas al sistema de facturación</h3>
             <p>El sistema toma la deuda de facturación, aplica reglas de seguimiento, registra cada promesa de pago y escala a una persona solo cuando hace falta.</p>
             <div class="case-metric">Factura → cobro<span>reglas de negocio, no mensajes sueltos</span></div>
             <a class="case-link" href="/demo-bot-cobranzas" target="_blank" rel="noopener">Ver demo →</a>
           </article>
           <article class="case reveal">
-            <span class="case-tag">Caso tipo · Documentos</span>
-            <p class="case-company">Distribuidora Sur</p>
-            <p class="case-place">CABA · operaciones y proveedores</p>
+            <span class="case-tag">Ejemplo · Documentos</span>
+            <p class="case-company">Distribuidora</p>
+            <p class="case-place">Facturas de proveedores</p>
             <h3>De PDF a ERP, con validación</h3>
             <p>Llega la factura por mail o foto; la IA extrae los datos, el sistema los valida contra proveedores y órdenes de compra, y los carga sin tipeo.</p>
             <div class="case-metric">PDF → ERP<span>extracción, validación y carga</span></div>
             <a class="case-link" href="/demo-facturas" target="_blank" rel="noopener">Ver demo →</a>
           </article>
           <article class="case reveal">
-            <span class="case-tag">Caso tipo · Operación comercial</span>
+            <span class="case-tag">Ejemplo · Operación comercial</span>
             <p class="case-company">Comercio con alto volumen de consultas</p>
             <p class="case-place">Stock, precios y seguimiento</p>
             <h3>Consultas, stock y CRM conectados en un solo flujo</h3>
@@ -1872,8 +1880,8 @@
               <input id="whatsapp" name="whatsapp" type="tel" placeholder="11 1234 5678" required>
             </div>
             <div>
-              <label for="email">Email</label>
-              <input id="email" name="email" type="email" placeholder="vos@empresa.com" required>
+              <label for="email">Email (opcional)</label>
+              <input id="email" name="email" type="email" placeholder="vos@empresa.com">
             </div>
           </div>
           <div>
@@ -1906,10 +1914,10 @@
     </div>
   </footer>
 
-  <div id="ap-tooltip">Contame tu proceso y armamos el brief juntos.</div>
+  <div id="ap-tooltip">¿Dudas? Contame tu proceso y te digo si se puede automatizar.</div>
 
   <button id="ap-btn" type="button" title="Hablar con el asistente" aria-label="Abrir chat" aria-expanded="false">
-    <span class="ap-btn-label">Armar mi brief</span>
+    <span class="ap-btn-label">Consultar</span>
     <svg class="ap-ico-chat" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.37 5.07L2 22l4.93-1.37A9.96 9.96 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2z" fill="#060608"/>
       <circle cx="8.5" cy="12" r="1.2" fill="#c8f135"/>
@@ -2060,7 +2068,7 @@
         demoLabel: 'Ver demo completa',
         demoBlank: true,
         fields: [
-          { id: 'empresa', label: 'Nombre de tu empresa', placeholder: 'ej. Distribuidora Sur', default: 'Tu Empresa' },
+          { id: 'empresa', label: 'Nombre de tu empresa', placeholder: 'ej. Distribuidora Rivas', default: 'Tu Empresa' },
           { id: 'doc', label: 'Qué documento procesás', placeholder: 'ej. facturas de proveedores', default: 'facturas' }
         ],
         summary: function (v) {
@@ -2277,7 +2285,7 @@
 
   // Chat widget
   (function () {
-    var WEBHOOK = 'https://untrustworthy-corey-macrolecithal.ngrok-free.dev/webhook/autopilot-chat';
+    var WEBHOOK = 'https://alertn8n.autopilot.com.ar/webhook/autopilot-chat';
 
     var btn = document.getElementById('ap-btn');
     var panel = document.getElementById('ap-panel');
