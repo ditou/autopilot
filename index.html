@@ -150,6 +150,14 @@
       },
       {
         "@type": "Question",
+        "name": "¿Cuánto cuesta?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Depende de qué haya que automatizar. En el diagnóstico gratis te decimos alcance, plazo y costo, sin compromiso."
+        }
+      },
+      {
+        "@type": "Question",
         "name": "¿De quién es el sistema?",
         "acceptedAnswer": {
           "@type": "Answer",
@@ -388,6 +396,9 @@
     }
     .brand-mark span { color: var(--accent); }
 
+    [hidden] { display: none !important; }
+    h1, h2, h3 { text-wrap: balance; }
+    p { text-wrap: pretty; }
     .hero-title {
       font-family: 'Syne', sans-serif;
       font-weight: 700;
@@ -1557,9 +1568,9 @@
     <div class="hero-inner">
       <div>
         <p class="section-label">Ingeniería de automatización con IA</p>
-        <h1 class="hero-title">Automatizamos lo que tu equipo repite todos los días.</h1>
+        <h1 class="hero-title">Tu equipo deja de hacer a mano lo que repite todos los días.</h1>
         <p class="hero-copy">
-          Diseñamos sistemas a medida que leen documentos, toman decisiones y se integran con lo que ya usás.
+          Sistemas a medida para empresas: leen documentos, responden consultas y cargan los datos en lo que ya usás.
         </p>
         <div class="hero-ctas">
           <a class="btn-primary" href="#contacto">Pedir diagnóstico gratis</a>
@@ -1589,8 +1600,8 @@
             <a class="btn-secondary" id="ctaDemo" href="#casos" rel="noopener">Ver caso Biorossi</a>
           </div>
           <div class="builder-takeaway">
-            <button type="button" class="takeaway-btn" id="ctaCopy">Copiar ejemplo</button>
-            <button type="button" class="takeaway-btn" id="ctaDownload">Descargar .txt</button>
+            <button type="button" class="takeaway-btn" id="ctaCopy" hidden>Copiar ejemplo</button>
+            <button type="button" class="takeaway-btn" id="ctaDownload" hidden>Descargar .txt</button>
             <button type="button" class="takeaway-btn" id="ctaChatExample">Chatear sobre esto</button>
             <a class="takeaway-btn" id="ctaWaExample" href="#" target="_blank" rel="noopener" style="text-decoration:none;">Enviar por WhatsApp</a>
           </div>
@@ -1715,21 +1726,21 @@
               <span class="case-tag">Salud · Call center de laboratorio</span>
               <p class="case-company">Laboratorio Biorossi</p>
               <p class="case-place">Zona sur GBA · análisis clínicos</p>
-              <h3>Sistema de atención para laboratorio: lectura de órdenes médicas, cruce con los códigos de GLYMS y orquestación multi-sede</h3>
+              <h3>Las órdenes médicas llegan, se leen solas y el equipo recibe cada caso armado</h3>
               <p>
-                Diseñamos el sistema completo detrás del call center. El paciente manda la orden por el canal que use;
-                el sistema la lee con IA, identifica cada estudio y lo cruza contra los códigos del sistema del laboratorio (GLYMS)
-                con matching exacto, por alias, aproximado y semántico. Un orquestador sobre Chatwoot resuelve el flujo
-                (consultas, obras sociales, particular, domicilio), aplica la configuración de cada sede, deja la nota lista
-                para el agente y deriva a la persona correcta con todo el contexto armado.
+                El paciente manda la foto de su orden por el canal que use. El sistema la lee, entiende qué estudios pide
+                y los deja con los códigos del laboratorio, sin que nadie los tipee. Resuelve las consultas de siempre
+                (obras sociales, particular, domicilio) con las reglas de cada sede, y cuando hace falta una persona,
+                el caso le llega con todo el contexto armado.
               </p>
+              <p style="font-size:.8rem;opacity:.6;margin-top:.6rem;">Por dentro: lectura con IA, cruce con GLYMS (exacto, por alias, aproximado y semántico) y orquestación sobre Chatwoot.</p>
               <a class="case-link" href="/casos/laboratorio-biorossi/">Ver el caso completo →</a>
               <a class="case-link" href="https://biorossi.com.ar/" target="_blank" rel="noopener noreferrer">biorossi.com.ar →</a>
             </div>
             <div class="case-side">
-              <div class="case-metric">Orden → códigos<span>lectura con IA y cruce con GLYMS</span></div>
-              <div class="case-metric">Multi-sede<span>configuración y reglas por sede</span></div>
-              <div class="case-metric">Chatwoot + GLYMS<span>integrado a los sistemas del laboratorio</span></div>
+              <div class="case-metric">Orden → estudios<span>la foto de la orden queda cargada con los códigos del laboratorio</span></div>
+              <div class="case-metric">Cada sede, sus reglas<span>el sistema responde según la sede que corresponde</span></div>
+              <div class="case-metric">Sin cambiar sistemas<span>integrado a lo que el laboratorio ya usaba</span></div>
             </div>
           </article>
 
@@ -1835,6 +1846,10 @@
           <article class="faq-item reveal">
             <h3>¿Esto es un bot?</h3>
             <p>No. Un bot contesta mensajes. Nosotros diseñamos el sistema que hay detrás: lectura de datos, reglas, integraciones y derivación a personas. El canal es solo la entrada.</p>
+          </article>
+          <article class="faq-item reveal">
+            <h3>¿Cuánto cuesta?</h3>
+            <p>Depende de qué haya que automatizar. En el diagnóstico gratis te decimos alcance, plazo y costo, sin compromiso.</p>
           </article>
           <article class="faq-item reveal">
             <h3>¿De quién es el sistema?</h3>
