@@ -3,7 +3,7 @@
 // Uso: node tools/build-landings.js
 const fs = require('fs'), path = require('path');
 const ROOT = path.join(__dirname, '..'), SITE = 'https://autopilot.com.ar';
-const idx = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+const idx = fs.readFileSync(path.join(__dirname, 'base-oscura.html'), 'utf8');
 const entre = (a, b) => { const i = idx.indexOf(a), j = idx.indexOf(b, i); if (i < 0 || j < 0) throw new Error('no encuentro ' + a); return idx.slice(i, j + b.length); };
 const estilos = entre('<style>', '</style>');
 const nav = entre('<nav>', '</nav>').replace(/href="#top"/g, 'href="/"').replace(/href="#(\w+)"/g, 'href="/#$1"');
