@@ -51,7 +51,7 @@ function page(p) {
   <link rel="preload" href="/assets/fonts/syne-latin-8vIH7w4q.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/assets/fonts/dmsans-latin-rP2Yp2yw.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="/assets/fonts.css" />
-  <link rel="stylesheet" href="/assets/site.css" />
+  <link rel="stylesheet" href="/assets/site.css?v=1117" />
 ${ld.map(o => `  <script type="application/ld+json">${JSON.stringify(o)}</script>`).join('\n')}
 ${p.styles ? `  <style>${p.styles}</style>\n` : ''}</head>
 <body>

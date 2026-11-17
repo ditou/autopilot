@@ -24,7 +24,9 @@ const [f0, f1] = corta('<form class="reveal" method="POST"', '</form>');
 const form = vieja.slice(f0, f1 + 7).replace('class="reveal" ', '');
 
 const WA = t => 'https://wa.me/5491157676283?text=' + encodeURIComponent(t);
-const ctaMain = WA('Hola, vi la web. Quiero probar el agente de WhatsApp en mi negocio.');
+const REG = 'https://app.autopilot.com.ar/registro.html';
+const ctaMain = REG + '?utm_source=web';
+const ctaSoporte = WA('Hola, estoy probando Autopilot y necesito una mano para configurarlo.');
 const check = '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const flecha = '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const waIco = '<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4a.5.5 0 0 0 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.2c0-.1-.2-.2-.5-.3Z"/></svg>';
@@ -170,6 +172,22 @@ const CSS = `<style>
   .ok i { width: 18px; height: 18px; border-radius: 50%; background: #e7f6ee; display: grid; place-items: center; font-style: normal; font-size: .7rem; }
   .cap { text-align: center; color: var(--gray); font-size: .8rem; margin-top: 14px; }
 
+  /* caso */
+  .caso { display: grid; grid-template-columns: 1.1fr .9fr; gap: 56px; align-items: center; border: 1px solid var(--line); border-radius: 28px; padding: 48px; background: linear-gradient(135deg, #fbfdf3, #fff 60%); }
+  .caso h2 { font-size: clamp(1.9rem, 3.6vw, 2.6rem); margin: 16px 0 14px; }
+  .caso p { color: var(--ink2); font-size: 1.04rem; }
+  .caso ul { list-style: none; display: grid; gap: 10px; margin: 18px 0 6px; color: var(--ink2); }
+  .caso li { display: flex; gap: 10px; } .caso li svg { color: var(--verde); flex: none; margin-top: 4px; }
+  .caso-num { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .caso-num > div { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 20px; }
+  .caso-num b { display: block; font-size: 2.2rem; letter-spacing: -.04em; line-height: 1; }
+  .caso-num span { color: var(--gray); font-size: .88rem; }
+  .caso-num .orden { grid-column: 1 / 3; font-size: .88rem; }
+  .orden small { display: block; font-family: var(--font-mono); font-size: .7rem; letter-spacing: .1em; color: var(--gray); margin-bottom: 10px; }
+  .orden .r { display: flex; justify-content: space-between; padding: 6px 0; border-top: 1px dashed var(--line); }
+  .orden code { font-family: var(--font-mono); background: var(--lima2); color: var(--lima-ink); border-radius: 6px; padding: 1px 8px; }
+  .orden p { margin-top: 10px; color: var(--verde); font-weight: 600; font-size: .86rem; }
+  @media (max-width: 980px) { .caso { grid-template-columns: 1fr; padding: 28px 20px; } }
   /* pasos */
   .pasos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
   .paso { border: 1px solid var(--line); border-radius: 22px; padding: 26px; background: #fff; position: relative; }
@@ -294,6 +312,10 @@ const ESC = [
   { tab: 'Estética', nombre: 'Estudio Bruma', ini: 'B', f1: ['Consulta registrada', 'Caro · alisado', 'pelo largo · prefiere sábado'], f2: ['Sofi avisada', 'Consulta armada', 'para coordinar día y hora'],
     seq: [[500, 'out', 'Hola! ¿Cuánto sale el alisado? Tengo el pelo largo'], [700, 'tip'], [1500, 'in', '¡Hola! Para pelo largo arranca en $45.000 y lleva unas 3 horas. ¿Me decís tu nombre así Sofi coordina el día con vos?'],
       [1600, 'out', 'Caro. Si puede ser un sábado mejor'], [700, 'tip'], [1300, 'in', 'Gracias, Caro 😊 Ya le paso tu consulta a Sofi para ver el sábado.'], [900, 'f1'], [1300, 'f2']] },
+  { tab: 'Laboratorio', nombre: 'Laboratorio', ini: 'L', f1: ['Orden leída', '4 estudios', 'con su código del sistema del laboratorio'], f2: ['Derivada a sede Centro', 'Caso armado', 'orden, cobertura y consulta'],
+    seq: [[500, 'out', 'Hola, ¿me cubren estos análisis? Les mando la orden'], [900, 'out', '<div style="background:#fff;border-radius:6px;padding:8px;font-size:.72rem;line-height:1.35;color:#444"><b>Dr. M. Pérez</b> · MN 84.112<br>Paciente: Laura G. · OSDE 210<br>Rp/ Hemograma · Glucemia · TSH · Perfil lipídico</div>'],
+      [700, 'tip'], [1800, 'in', '¡Hola Laura! Leí tu orden: hemograma, glucemia, TSH y perfil lipídico. Con OSDE 210 están cubiertos. ¿A qué sede te queda más cómodo ir?'],
+      [1600, 'out', 'Centro. ¿Puedo ir el sábado?'], [700, 'tip'], [1300, 'in', 'Te paso con Marina de sede Centro para el horario. Ya tiene tu orden cargada 👍'], [900, 'f1'], [1300, 'f2']] },
   { tab: 'Comercio', nombre: 'Ferretería Ramos', ini: 'R', f1: ['Cliente registrado', 'Mayorista · 10 u.', 'bordeadora Gamma 1000W'], f2: ['Lucas avisado', 'Pedido armado', 'para cotizar por cantidad'],
     seq: [[500, 'out', '¿Tienen la bordeadora Gamma 1000W? ¿Qué precio?'], [700, 'tip'], [1500, 'in', 'Sí, quedan 6 en el depósito. Sale $89.900 en efectivo o en 3 cuotas sin interés.'],
       [1600, 'out', 'Necesito 10 para mi local, ¿hacen precio por cantidad?'], [700, 'tip'], [1300, 'in', 'Por cantidad te atiende Lucas, de mayoristas. Ya le paso tu pedido 👍'], [900, 'f1'], [1300, 'f2']] },
@@ -309,29 +331,21 @@ const faq = [
   ['¿Hacen cosas a medida?', 'Sí. Lectura de documentos, integraciones entre sistemas y procesos internos. Contanos qué te come tiempo y te decimos si se puede automatizar.'],
 ];
 
-const html = `${head}${CSS}
-</head>
-<body id="top">
-  <div class="legal-top"><div class="wrap"><a href="mailto:fernando@autopilot.com.ar?subject=Arrepentimiento%20de%20contratacion">Botón de arrepentimiento</a> · <a href="mailto:fernando@autopilot.com.ar?subject=Solicitud%20de%20baja%20de%20servicio">Botón de baja de servicio</a></div></div>
-  <nav><div class="wrap nav-in">
+const NAV = `  <nav><div class="wrap nav-in">
     <a class="logo" href="/">Autopilot<span>.</span></a>
     <ul class="nav-links"><li><a href="#como">Cómo funciona</a></li><li><a href="#rubros">Rubros</a></li><li><a href="/obras/">Obras</a></li><li><a href="#precios">Precios</a></li><li><a href="#preguntas">Preguntas</a></li></ul>
-    <div class="nav-r"><a class="btn btn-ghost btn-sm" href="https://app.autopilot.com.ar/">Ingresar</a><a class="btn btn-main btn-sm" href="${ctaMain}" target="_blank" rel="noopener">Probalo gratis</a></div>
-  </div></nav>
-
-  <main>
-    <header class="hero"><div class="wrap hero-grid">
-      <div>
-        <span class="pill"><i></i>Agentes de IA para WhatsApp</span>
-        <h1>Este mensaje vale $26.400. <mark>Y nadie lo contestó.</mark></h1>
-        <p class="sub">Un agente en el WhatsApp de tu negocio contesta con tus precios, arma el pedido, lo cobra y lo deja cargado. A tu equipo le llega sólo lo que necesita una persona.</p>
-        <div class="ctas"><a class="btn btn-main" href="${ctaMain}" target="_blank" rel="noopener">Crear mi agente ${flecha}</a><a class="btn btn-ghost" href="#como">Ver cómo funciona</a></div>
-        <div class="checks"><span>${check}Piloto acompañado</span><span>${check}Sin permanencia</span><span>${check}Desde USD 69 por mes</span></div>
-        <div class="try"><small>PROBALO AHORA, SIN REGISTRARTE</small>
-          <a href="${WA('Hola! Quiero ver cómo atiende el agente de Autopilot.')}" target="_blank" rel="noopener"><span class="ic">${waIco}</span><div><b>Escribinos por WhatsApp</b><span>Te mostramos el agente atendiendo un pedido real, en tu celular.</span></div><span class="go">${flecha}</span></a>
-        </div>
-      </div>
-      <div class="stage">
+    <div class="nav-r"><a class="btn btn-ghost btn-sm" href="https://app.autopilot.com.ar/">Ingresar</a><a class="btn btn-main btn-sm" href="${ctaMain}">Probalo 7 días gratis</a></div>
+  </div></nav>`;
+const FOOTER = `  <footer><div class="wrap foot">
+    <div><a class="logo" href="/">Autopilot<span>.</span></a><p style="margin-top:8px">© 2026 Autopilot · Buenos Aires, Argentina</p></div>
+    <div class="foot-cols">
+      <ul><li><a href="/agente-whatsapp/">Agente de WhatsApp</a></li><li><a href="/obras/">Obras y rentabilidad</a></li><li><a href="/precios/">Precios</a></li></ul>
+      <ul><li><a href="/servicios/lectura-de-documentos-con-ia/">Documentos con IA</a></li><li><a href="/servicios/integracion-de-sistemas/">Integraciones</a></li><li><a href="/casos/laboratorio-biorossi/">Caso Biorossi</a></li></ul>
+      <ul><li><a href="/terminos/">Términos y condiciones</a></li><li><a href="/privacidad/">Política de privacidad</a></li><li><a href="/terminos/#arrepentimiento">Botón de arrepentimiento</a></li><li><a href="/terminos/#baja">Botón de baja de servicio</a></li></ul>
+      <ul><li><a href="https://www.instagram.com/autopilot.com.ar/" target="_blank" rel="noopener noreferrer">Instagram</a></li><li><a href="https://www.tiktok.com/@autopilot.com.ar" target="_blank" rel="noopener noreferrer">TikTok</a></li></ul>
+    </div>
+  </div></footer>`;
+const STAGE = nota => `      <div class="stage">
         <div class="iphone"><div class="scr">
           <div class="sbar"><span>21:02</span><span>●●● 5G</span></div>
           <div class="wah"><div class="av" id="wav">P</div><div><b id="wnom">Pizzería La Esquina</b><span id="wst">en línea</span></div></div>
@@ -341,19 +355,79 @@ const html = `${head}${CSS}
         <div class="flot f1" id="f1"><div class="t">${check}<span></span></div><b></b><span></span></div>
         <div class="flot f2" id="f2"><div class="t">${check}<span></span></div><b></b><span></span></div>
         <div class="rtabs" id="rtabs" role="tablist" aria-label="Elegí un rubro"></div>
-        <p class="nota">Recreación con precios de ejemplo.</p>
+        <p class="nota">${nota}</p>
+      </div>`;
+const PLAYER = esc => `    var S = ${JSON.stringify(esc)};
+    var cht = document.getElementById('cht'), tabs = document.getElementById('rtabs'), wst = document.getElementById('wst');
+    var f1 = document.getElementById('f1'), f2 = document.getElementById('f2');
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches, run = 0, cur = 0, pinned = false;
+    S.forEach(function (s, i) { var b = document.createElement('button'); b.type = 'button'; b.textContent = s.tab; b.setAttribute('role', 'tab'); b.onclick = function () { pinned = true; play(i); }; tabs.appendChild(b); });
+    function flot(el, d) { el.querySelector('.t span').textContent = d[0]; el.querySelector('b').textContent = d[1]; el.querySelector(':scope > span').textContent = d[2]; el.classList.add('show'); }
+    function add(cls, html) { var d = document.createElement('div'); d.className = 'm ' + cls; d.innerHTML = html; cht.appendChild(d); while (cht.children.length > 8) cht.removeChild(cht.firstChild); return d; }
+    function hora() { return '21:0' + Math.min(9, cht.children.length + 2); }
+    function play(i) {
+      var r = ++run, s = S[i]; cur = i; cht.innerHTML = ''; f1.classList.remove('show'); f2.classList.remove('show');
+      document.getElementById('wnom').textContent = s.nombre; document.getElementById('wav').textContent = s.ini;
+      [].forEach.call(tabs.children, function (b, k) { b.classList.toggle('on', k === i); b.setAttribute('aria-selected', k === i); });
+      if (reduce) { s.seq.forEach(function (m) { if (m[1] === 'in' || m[1] === 'out') add(m[1], m[2]).classList.add('show'); }); flot(f1, s.f1); flot(f2, s.f2); return; }
+      var t = 0, tip = null;
+      s.seq.forEach(function (m) { t += m[0]; setTimeout(function () { if (r !== run) return;
+        if (tip) { tip.remove(); tip = null; wst.textContent = 'en línea'; }
+        if (m[1] === 'tip') { tip = add('in', '<span class="tip"><i></i><i></i><i></i></span>'); tip.classList.add('show'); wst.textContent = 'escribiendo…'; return; }
+        if (m[1] === 'f1') return flot(f1, s.f1); if (m[1] === 'f2') return flot(f2, s.f2);
+        var d = add(m[1], m[2] + '<small>' + hora() + (m[1] === 'out' ? ' ✓✓' : '') + '</small>'); requestAnimationFrame(function () { d.classList.add('show'); }); }, t); });
+      setTimeout(function () { if (r === run) play(pinned ? cur : (cur + 1) % S.length); }, t + 4500);
+    }
+    play(0);`;
+
+const html = `${head}${CSS}
+</head>
+<body id="top">
+  <div class="legal-top"><div class="wrap"><a href="mailto:fernando@autopilot.com.ar?subject=Arrepentimiento%20de%20contratacion">Botón de arrepentimiento</a> · <a href="mailto:fernando@autopilot.com.ar?subject=Solicitud%20de%20baja%20de%20servicio">Botón de baja de servicio</a></div></div>
+  ${NAV}
+
+  <main>
+    <header class="hero"><div class="wrap hero-grid">
+      <div>
+        <span class="pill"><i></i>Agentes de IA para WhatsApp</span>
+        <h1>Este mensaje vale $26.400. <mark>Y nadie lo contestó.</mark></h1>
+        <p class="sub">Un agente en el WhatsApp de tu negocio contesta con tus precios, arma el pedido, lo cobra y lo deja cargado. A tu equipo le llega sólo lo que necesita una persona.</p>
+        <div class="ctas"><a class="btn btn-main" href="${ctaMain}">Crear mi agente ${flecha}</a><a class="btn btn-ghost" href="#como">Ver cómo funciona</a></div>
+        <div class="checks"><span>${check}7 días gratis</span><span>${check}Sin permanencia</span><span>${check}Desde USD 69 por mes</span></div>
+        <div class="try"><small>PROBALO AHORA · 7 DÍAS GRATIS</small>
+          <a href="${ctaMain}"><span class="ic" style="background:var(--lima2);color:var(--lima-ink)">${flecha}</span><div><b>Creá tu cuenta en 2 minutos</b><span>Cargás tu carta, conectás tu WhatsApp y el agente empieza a atender.</span></div><span class="go">${flecha}</span></a>
+          <a href="${ctaSoporte}" target="_blank" rel="noopener"><span class="ic">${waIco}</span><div><b>Te ayudamos por WhatsApp</b><span>Si te trabás en algo, te lo dejamos andando con vos.</span></div><span class="go">${flecha}</span></a>
+        </div>
       </div>
+      ${STAGE('Recreación con precios de ejemplo.')}
     </div></header>
 
     <div class="trust"><div class="wrap">
       <p>Funcionando todos los días en <a href="/casos/laboratorio-biorossi/" style="color:var(--ink);font-weight:600;text-decoration:underline;text-underline-offset:3px">Laboratorio Biorossi</a></p>
-      <div class="stats">
-        <div class="stat reveal"><b>6.500</b><span>conversaciones por mes en un solo cliente</span></div>
-        <div class="stat reveal"><b>36.000</b><span>mensajes mensuales contestados</span></div>
-        <div class="stat reveal"><b>24/7</b><span>atiende de noche, findes y feriados</span></div>
-        <div class="stat reveal"><b>2 sem.</b><span>de piloto acompañado para arrancar</span></div>
-      </div>
     </div></div>
+
+    <section id="caso"><div class="wrap">
+      <div class="caso reveal">
+        <div>
+          <span class="pill"><i></i>Caso real · en producción</span>
+          <h2>Laboratorio Biorossi: <mark>6.500 conversaciones por mes</mark> sin agrandar el call center.</h2>
+          <p>Laboratorio de análisis clínicos de zona sur, con varias sedes. Los pacientes mandan por WhatsApp la foto de su orden médica y el sistema hace el trabajo que antes pasaba por el call center:</p>
+          <ul>
+            <li>${check}<span>Lee la orden y encuentra cada estudio con su código en GLYMS, el sistema del laboratorio.</span></li>
+            <li>${check}<span>Contesta cobertura, preparación y horarios según la obra social y la sede.</span></li>
+            <li>${check}<span>Deriva a la persona indicada con la orden y la consulta ya armadas.</span></li>
+          </ul>
+          <div class="ctas"><a class="btn btn-ghost" href="/casos/laboratorio-biorossi/">Ver el caso completo ${flecha}</a></div>
+        </div>
+        <div class="caso-num">
+          <div><b>6.500</b><span>conversaciones por mes</span></div>
+          <div><b>36.000</b><span>mensajes mensuales</span></div>
+          <div class="orden"><small>ORDEN MÉDICA · LEÍDA</small>
+            <div class="r"><span>Hemograma completo</span><code>475</code></div><div class="r"><span>Glucemia</span><code>412</code></div><div class="r"><span>TSH</span><code>1035</code></div><div class="r"><span>Perfil lipídico</span><code>546</code></div>
+            <p>✓ Cargada con 4 códigos · sin tipear nada</p></div>
+        </div>
+      </div>
+    </div></section>
 
     <section><div class="wrap">
       <div class="head reveal"><span class="pill">Desde tu lado</span><h2>Ves cada charla, cada pedido y cada cobro.</h2><p>Un panel simple: qué se vendió, qué falta cobrar y qué charlas necesitan a una persona.</p></div>
@@ -394,7 +468,7 @@ const html = `${head}${CSS}
         <div class="paso reveal"><div class="n">3</div><h3>Atiende y te avisa</h3><p>Contesta, arma el pedido, cobra y le avisa a quien corresponda. Vos mirás el panel.</p>
           <div class="mini"><div class="nt"><b>Pedido #184 · $26.400</b><br><span style="color:var(--gray)">pagado · sale para Caseros</span></div><div class="nt" style="border-color:#f0b429"><b>Diego quiere hablar con vos</b><br><span style="color:var(--gray)">la charla ya está armada</span></div></div></div>
       </div>
-      <div class="centro"><a class="btn btn-main" href="${ctaMain}" target="_blank" rel="noopener">Empezar el piloto ${flecha}</a><small>Piloto acompañado de 2 semanas · sin permanencia</small></div>
+      <div class="centro"><a class="btn btn-main" href="${ctaMain}">Crear mi cuenta gratis ${flecha}</a><small>7 días gratis · te ayudamos por WhatsApp · sin permanencia</small></div>
     </div></section>
 
     <section><div class="wrap">
@@ -457,52 +531,23 @@ const html = `${head}${CSS}
 
     <section id="contacto"><div class="wrap contact">
       <div><span class="pill">Hablemos</span><h2>El próximo mensaje, <mark>que lo conteste alguien.</mark></h2><p>Dejanos tus datos y te escribimos por WhatsApp. O escribinos directo y lo vemos hoy.</p>
-        <div class="ctas"><a class="btn btn-main" href="${ctaMain}" target="_blank" rel="noopener">${waIco} Escribinos por WhatsApp</a></div></div>
+        <div class="ctas"><a class="btn btn-main" href="${ctaMain}">${waIco} Escribinos por WhatsApp</a></div></div>
       ${form.replace('¿Qué querés automatizar?', '¿Qué querés resolver?').replace('Pedir diagnóstico gratis', 'Quiero que me escriban')}
     </div></section>
   </main>
 
-  <footer><div class="wrap foot">
-    <div><a class="logo" href="/">Autopilot<span>.</span></a><p style="margin-top:8px">© 2026 Autopilot · Buenos Aires, Argentina</p></div>
-    <div class="foot-cols">
-      <ul><li><a href="/agente-whatsapp/">Agente de WhatsApp</a></li><li><a href="/obras/">Obras y rentabilidad</a></li><li><a href="/precios/">Precios</a></li></ul>
-      <ul><li><a href="/servicios/lectura-de-documentos-con-ia/">Documentos con IA</a></li><li><a href="/servicios/integracion-de-sistemas/">Integraciones</a></li><li><a href="/casos/laboratorio-biorossi/">Caso Biorossi</a></li></ul>
-      <ul><li><a href="/terminos/">Términos y condiciones</a></li><li><a href="/privacidad/">Política de privacidad</a></li><li><a href="/terminos/#arrepentimiento">Botón de arrepentimiento</a></li><li><a href="/terminos/#baja">Botón de baja de servicio</a></li></ul>
-      <ul><li><a href="https://www.instagram.com/autopilot.com.ar/" target="_blank" rel="noopener noreferrer">Instagram</a></li><li><a href="https://www.tiktok.com/@autopilot.com.ar" target="_blank" rel="noopener noreferrer">TikTok</a></li></ul>
-    </div>
-  </div></footer>
+  ${FOOTER}
   ${widgetHtml}
   <script>
   (function () {
     var io = 'IntersectionObserver' in window ? new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }); }, { threshold: .12 }) : null;
     document.querySelectorAll('.reveal').forEach(function (el) { io ? io.observe(el) : el.classList.add('in'); });
-    var S = ${JSON.stringify(ESC)};
-    var cht = document.getElementById('cht'), tabs = document.getElementById('rtabs'), wst = document.getElementById('wst');
-    var f1 = document.getElementById('f1'), f2 = document.getElementById('f2');
-    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches, run = 0, cur = 0, pinned = false;
-    S.forEach(function (s, i) { var b = document.createElement('button'); b.type = 'button'; b.textContent = s.tab; b.setAttribute('role', 'tab'); b.onclick = function () { pinned = true; play(i); }; tabs.appendChild(b); });
-    function flot(el, d) { el.querySelector('.t span').textContent = d[0]; el.querySelector('b').textContent = d[1]; el.querySelector(':scope > span').textContent = d[2]; el.classList.add('show'); }
-    function add(cls, html) { var d = document.createElement('div'); d.className = 'm ' + cls; d.innerHTML = html; cht.appendChild(d); while (cht.children.length > 8) cht.removeChild(cht.firstChild); return d; }
-    function hora() { return '21:0' + Math.min(9, cht.children.length + 2); }
-    function play(i) {
-      var r = ++run, s = S[i]; cur = i; cht.innerHTML = ''; f1.classList.remove('show'); f2.classList.remove('show');
-      document.getElementById('wnom').textContent = s.nombre; document.getElementById('wav').textContent = s.ini;
-      [].forEach.call(tabs.children, function (b, k) { b.classList.toggle('on', k === i); b.setAttribute('aria-selected', k === i); });
-      if (reduce) { s.seq.forEach(function (m) { if (m[1] === 'in' || m[1] === 'out') add(m[1], m[2]).classList.add('show'); }); flot(f1, s.f1); flot(f2, s.f2); return; }
-      var t = 0, tip = null;
-      s.seq.forEach(function (m) { t += m[0]; setTimeout(function () { if (r !== run) return;
-        if (tip) { tip.remove(); tip = null; wst.textContent = 'en línea'; }
-        if (m[1] === 'tip') { tip = add('in', '<span class="tip"><i></i><i></i><i></i></span>'); tip.classList.add('show'); wst.textContent = 'escribiendo…'; return; }
-        if (m[1] === 'f1') return flot(f1, s.f1); if (m[1] === 'f2') return flot(f2, s.f2);
-        var d = add(m[1], m[2] + '<small>' + hora() + (m[1] === 'out' ? ' ✓✓' : '') + '</small>'); requestAnimationFrame(function () { d.classList.add('show'); }); }, t); });
-      setTimeout(function () { if (r === run) play(pinned ? cur : (cur + 1) % S.length); }, t + 4500);
-    }
-    play(0);
+    ${PLAYER(ESC)}
   })();
   </script>
   ${widgetJs}
 </body>
 </html>
 `;
-fs.writeFileSync(path.join(ROOT, 'index.html'), html);
-console.log('home ok', html.length);
+if (require.main === module) { fs.writeFileSync(path.join(ROOT, 'index.html'), html); console.log('home ok', html.length); }
+module.exports = { CSS, NAV, FOOTER, STAGE, PLAYER, head, widgetHtml, widgetJs, check, flecha, waIco, WA };
