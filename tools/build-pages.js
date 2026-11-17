@@ -53,7 +53,7 @@ function page(p) {
   <link rel="stylesheet" href="/assets/fonts.css" />
   <link rel="stylesheet" href="/assets/site.css" />
 ${ld.map(o => `  <script type="application/ld+json">${JSON.stringify(o)}</script>`).join('\n')}
-</head>
+${p.styles ? `  <style>${p.styles}</style>\n` : ''}</head>
 <body>
   <nav>
     <div class="nav-inner">
@@ -76,8 +76,8 @@ ${ld.map(o => `  <script type="application/ld+json">${JSON.stringify(o)}</script
         <h1>${p.h1}</h1>
         <p class="lead">${p.lead}</p>
         <div class="actions">
-          <a class="btn" href="/#contacto">Pedir diagnóstico gratis</a>
-          <a class="btn-ghost" href="${WA}" target="_blank" rel="noopener noreferrer">Escribir por WhatsApp</a>
+${p.waText ? `          <a class="btn" href="${waLink(p.waText)}" target="_blank" rel="noopener noreferrer">${p.ctaLabel}</a>` : `          <a class="btn" href="/#contacto">Pedir diagnóstico gratis</a>
+          <a class="btn-ghost" href="${WA}" target="_blank" rel="noopener noreferrer">Escribir por WhatsApp</a>`}
         </div>
       </div>
     </header>
@@ -100,10 +100,10 @@ ${p.faq ? `
       <div class="wrap">
         <div class="cta-box">
           <h2>${p.ctaTitle || 'Contanos qué querés automatizar'}</h2>
-          <p>El diagnóstico es gratis. Te decimos si vale la pena, qué alcance tendría, en cuánto tiempo y cuánto cuesta.</p>
+          <p>${p.ctaDesc || 'El diagnóstico es gratis. Te decimos si vale la pena, qué alcance tendría, en cuánto tiempo y cuánto cuesta.'}</p>
           <div class="actions">
-            <a class="btn" href="/#contacto">Pedir diagnóstico</a>
-            <a class="btn-ghost" href="${WA}" target="_blank" rel="noopener noreferrer">WhatsApp: +54 9 11 5767-6283</a>
+${p.waText ? `            <a class="btn" href="${waLink(p.waText)}" target="_blank" rel="noopener noreferrer">${p.ctaLabel}</a>` : `            <a class="btn" href="/#contacto">Pedir diagnóstico</a>
+            <a class="btn-ghost" href="${WA}" target="_blank" rel="noopener noreferrer">WhatsApp: +54 9 11 5767-6283</a>`}
           </div>
         </div>
       </div>
@@ -123,12 +123,13 @@ ${p.faq ? `
       </div>
     </div>
   </footer>
-</body>
+${p.script ? `  <script>${p.script}</script>\n` : ''}</body>
 </html>
 `;
   const out = path.join(ROOT, p.path, 'index.html');
   fs.mkdirSync(path.dirname(out), { recursive: true });
-  fs.writeFileSync(out, html);
+  const eol = fs.existsSync(out) && fs.readFileSync(out, 'utf8').includes('\r\n') ? '\r\n' : '\n';
+  fs.writeFileSync(out, html.replace(/\r?\n/g, eol));
   return p.path;
 }
 
@@ -308,4 +309,114 @@ const pages = [
   },
 ];
 
+const waLink = text => 'https://wa.me/5491157676283?text=' + encodeURIComponent(text);
+const plans = [
+  ['Inicial', 69, 'Un local que contesta consultas y toma pedidos'],
+  ['Negocio', 149, 'Tu local con turnos, cobros y seguimiento'],
+  ['Pro', 399, 'Varias sucursales o integración con tu sistema'],
+];
+
+pages.push(
+  {
+    path: '/obras/', short: 'Obras y rentabilidad',
+    title: 'Obras y rentabilidad para tu taller · USD 69 por mes | Autopilot',
+    desc: 'Presupuestos, cobros, costos y ganancia real por obra. Para talleres y contratistas. USD 69 por mes, 7 días de prueba gratis. Pasamos tu planilla al sistema.',
+    label: 'Talleres y contratistas', h1: 'Obras y rentabilidad',
+    lead: 'Sabé cuánto te deja cada obra y cuánto te falta cobrar. Para talleres, metalúrgicas, toldos y policarbonatos y contratistas que hoy llevan todo en una planilla.',
+    schema: service('Obras y rentabilidad', 'Gestión de obras para talleres y contratistas.', { offers: { '@type': 'Offer', price: '69', priceCurrency: 'USD' } }),
+    waText: 'Hola, quiero ver el sistema de obras', ctaLabel: 'Ver el sistema de obras',
+    sections: [
+      { h2: 'Cada obra con sus números al día', body: `<div class="grid">${[
+        card('Obra', 'Todo en una ficha', 'Presupuesto, cobros, costos y gastos juntos. Ves el estado de cada obra y lo que falta cobrar.'),
+        card('Rentabilidad', 'La ganancia real', 'Incluí comisiones e impuestos en los números de cada obra. Sabés cuánto te queda después de los gastos.'),
+        card('Migración', 'Traé tu planilla', 'Pasamos tu planilla vieja al sistema para que puedas seguir con las obras que ya tenés.'),
+      ].join('')}</div>` },
+      { h2: 'Cada persona ve lo que necesita', body: list([
+        '<strong>Dueño:</strong> ve todo, incluidas ganancias y sueldos.',
+        '<strong>Administración:</strong> trabaja con las obras y los cobros. No ve ganancias ni sueldos.',
+        '<strong>Técnico:</strong> ve sólo la ficha de la obra.',
+      ]) },
+      { h2: 'USD 69 por mes', body: '<p>Probalo 7 días gratis. Sin permanencia: cancelás cuando quieras.</p><p>Si necesitás registrar las horas del equipo, sumá el fichaje de horas por USD 19 por mes aparte.</p>' },
+      { h2: 'Ya lo usan en un taller', body: '<p>Un taller de toldos y policarbonatos ya lo usa para llevar sus obras.</p>' },
+    ],
+    faq: [
+      ['¿Sirve para mi rubro?', 'Está pensado para talleres, metalúrgicas, toldos y policarbonatos y contratistas que trabajan por obra. Te mostramos cómo se adapta a tus fichas y números.'],
+      ['¿Qué pasa con mi planilla actual?', 'Pasamos tu planilla vieja al sistema. La revisamos con vos para ubicar presupuestos, cobros, costos y gastos.'],
+      ['¿Mi equipo puede ver las ganancias?', 'El dueño ve todo. Administración no ve ganancias ni sueldos. El técnico ve sólo la ficha de la obra.'],
+      ['¿El fichaje de horas está incluido?', 'Es opcional y cuesta USD 19 por mes aparte del abono de USD 69.'],
+      ['¿Puedo probarlo antes de pagar?', 'Sí, tenés 7 días de prueba gratis. Después cuesta USD 69 por mes, sin permanencia.'],
+    ],
+    ctaTitle: 'Mirá tus obras dentro del sistema', ctaDesc: 'Te mostramos la ficha y cómo se calcula la ganancia. Tenés 7 días de prueba gratis.',
+  },
+  {
+    path: '/agente-whatsapp/', short: 'Agente de WhatsApp',
+    title: 'Agente de WhatsApp conectado a tu negocio | Autopilot',
+    desc: 'Un agente de WhatsApp que consulta precios y stock, registra pedidos y avisa a tu equipo. Arrancá con un piloto acompañado. Planes desde USD 69 por mes.',
+    label: 'WhatsApp conectado a tu negocio', h1: 'No vendemos un chatbot',
+    lead: 'El agente trabaja dentro de tu sistema: consulta lo que necesita el cliente, registra el pedido y avisa a tu equipo cuando hace falta una persona.',
+    schema: service('Agente de WhatsApp', 'Atención de consultas, registro de pedidos y derivación a personas.'),
+    waText: 'Hola, quiero ver el agente de WhatsApp', ctaLabel: 'Ver el agente de WhatsApp',
+    sections: [
+      { h2: 'Qué hace con cada conversación', body: `<div class="grid">${[
+        card('Consultar', 'Responde con tus datos', 'Consulta precios, stock y horarios del negocio para responder al cliente.'),
+        card('Registrar', 'Deja la consulta cargada', 'El pedido o la consulta quedan registrados en el sistema, con los datos que necesita tu equipo.'),
+        card('Avisar', 'Le pasa la posta a una persona', 'Avisa al dueño o al equipo cuando una conversación necesita atención humana.'),
+      ].join('')}</div>` },
+      { h2: 'Elegí por dónde arrancar', body: `<div class="grid">${[
+        card('Pedidos', 'Catálogo y carrito', 'Para pizzerías, comida y comercios. Arma el carrito, cobra con Mercado Pago o registra el pago en efectivo y deja el pedido confirmado. Turnos y cobros con Mercado Pago desde Negocio.'),
+        card('Consultas', 'Respuestas y toma de datos', 'Para comercios que reciben consultas de productos y disponibilidad. Responde y toma los datos del cliente para seguir la atención.'),
+        card('Turnos', 'Una reserva que queda cargada', 'Para estética y peluquería. Consulta disponibilidad, toma los datos y registra el turno. Disponible desde Negocio.'),
+      ].join('')}</div>` },
+      { h2: 'En producción, con conversaciones reales', body: `<p>Una red de laboratorios atiende unas 6.500 conversaciones y 36.000 mensajes por mes con el sistema.</p>${fs.existsSync(path.join(ROOT, 'casos/laboratorio-biorossi/index.html')) ? '<p><a href="/casos/laboratorio-biorossi/">Mirá cómo funciona el sistema del laboratorio →</a></p>' : ''}` },
+      { h2: 'Arrancamos con un piloto acompañado', body: '<p>Elegimos un recorrido con vos, cargamos la información del negocio y revisamos las conversaciones del piloto para ajustar la atención.</p><p>La integración con el sistema del negocio se cotiza aparte.</p><p><a href="/precios/">Mirá los planes desde USD 69 por mes →</a></p>' },
+    ],
+    faq: [
+      ['¿Qué pasa si no entiende una consulta?', 'Deriva la conversación a una persona del equipo con el contexto de lo que habló el cliente.'],
+      ['¿Puede usar mi número de WhatsApp?', 'Revisamos con vos cómo usás tu número actual y definimos la conexión durante el piloto, antes de activarlo.'],
+      ['¿Puede tomar pedidos y cobrar?', 'Sí. Arma el carrito desde tu catálogo y deja el pedido confirmado. Turnos y cobros con Mercado Pago están disponibles desde Negocio; también puede registrar pagos en efectivo.'],
+      ['¿Se conecta con el sistema que ya uso?', 'Revisamos qué datos y acciones permite tu sistema. Esa integración se cotiza aparte del abono.'],
+      ['¿Cómo empezamos y cuánto cuesta?', 'Arrancamos con un piloto acompañado para un recorrido concreto. Los planes van desde USD 69 por mes. <a href="/precios/">Consultá los precios y la opción anual</a>.'],
+    ],
+    ctaTitle: 'Mostranos cómo atendés hoy', ctaDesc: 'Vemos qué recorrido conviene probar primero y qué necesita la conexión con tu sistema.',
+  },
+  {
+    path: '/precios/', short: 'Precios', title: 'Precios del agente de WhatsApp en USD | Autopilot',
+    desc: 'Inicial USD 69, Negocio USD 149 y Pro USD 399 por mes. Pago anual con 2 meses gratis. La integración con tu sistema se cotiza aparte.',
+    label: 'Planes del agente de WhatsApp', h1: 'Elegí el plan para tu negocio',
+    lead: 'Precios en USD. Arrancamos con un piloto acompañado para definir el recorrido que vas a usar.',
+    schema: service('Planes del agente de WhatsApp', 'Abonos mensuales o anuales.', { offers: plans.map(([name, price]) => ({ '@type': 'Offer', name, price: String(price), priceCurrency: 'USD' })) }),
+    waText: 'Hola, quiero ver el agente de WhatsApp', ctaLabel: 'Consultar por WhatsApp',
+    styles: '.billing{display:flex;gap:12px;flex-wrap:wrap;margin:24px 0}.billing button{cursor:pointer;font:inherit;background:transparent}.billing button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}.pricing-grid{align-items:center;grid-template-columns:1fr 1.12fr 1fr}.plan-featured{border:2px solid var(--accent);padding:32px 24px}.card .plan-price{font-family:Syne,sans-serif;font-size:2rem;color:var(--white);margin:22px 0 8px}.plan-featured .plan-price{font-size:2.3rem}.plan-price small{font:400 1rem "DM Sans",sans-serif}.card .plan-note{font-size:.8rem;margin-top:12px}.card .plan-saving{color:var(--accent);margin:12px 0}.plan .btn{margin-top:20px}.plan-featured .num{font-size:.9rem}@media(max-width:800px){.pricing-grid{grid-template-columns:1fr}}',
+    sections: [
+      { h2: 'Mensual o anual', body: `<p>Con el pago anual tenés 2 meses gratis: pagás 10 meses y usás 12.</p><div class="billing" role="group" aria-label="Período de facturación"><button type="button" class="btn-ghost" data-billing="monthly" aria-pressed="true">Mensual</button><button type="button" class="btn-ghost" data-billing="annual" aria-pressed="false">Anual · 2 meses gratis</button></div><p>Turnos y cobros con Mercado Pago desde Negocio.</p><div class="grid pricing-grid">${plans.map(([name, price, audience]) => `<article class="card plan${name === 'Negocio' ? ' plan-featured' : ''}">${name === 'Negocio' ? '<span class="num">El más elegido</span>' : ''}<h3>${name}</h3><p>${audience}</p><div aria-live="polite" aria-atomic="true"><p class="plan-price" data-monthly="${price}">USD ${price}<small> / mes</small></p><p class="plan-saving" hidden>Ahorrás USD ${price * 2} por año.</p></div><a class="btn" data-plan="${name}" href="${waLink('Hola, quiero elegir el plan ' + name + ' con pago mensual')}" target="_blank" rel="noopener noreferrer">Elegir ${name}</a><p class="plan-note">Sin permanencia. Cancelás cuando quieras.</p></article>`).join('')}</div>` },
+      { h2: 'La conexión con tu sistema', body: '<p>La integración con el sistema del negocio se cotiza aparte en todos los planes, incluido Pro. Definimos el alcance antes de empezar.</p><p><a href="/agente-whatsapp/">Mirá qué hace el agente de WhatsApp →</a></p>' },
+      { h2: '¿Tenés un taller o hacés obras?', body: '<p><a href="/obras/">Obras y rentabilidad, USD 69 por mes →</a></p>' },
+    ],
+    script: `document.querySelectorAll('[data-billing]').forEach(button => button.addEventListener('click', () => {
+      const annual = button.dataset.billing === 'annual';
+      document.querySelectorAll('[data-billing]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+      document.querySelectorAll('[data-monthly]').forEach(item => {
+        const monthly = Number(item.dataset.monthly);
+        item.innerHTML = 'USD ' + (annual ? monthly * 10 : monthly) + '<small> / ' + (annual ? 'año' : 'mes') + '</small>';
+      });
+      document.querySelectorAll('.plan-saving').forEach(item => { item.hidden = !annual; });
+      document.querySelectorAll('[data-plan]').forEach(item => {
+        item.href = 'https://wa.me/5491157676283?text=' + encodeURIComponent('Hola, quiero elegir el plan ' + item.dataset.plan + ' con pago ' + (annual ? 'anual' : 'mensual'));
+      });
+    }));`,
+    ctaTitle: 'Vemos qué plan te sirve', ctaDesc: 'Contanos cómo atendés hoy y qué querés que quede resuelto dentro del sistema.',
+  }
+);
+
 console.log(pages.map(page));
+
+// Conserva las entradas existentes y agrega las páginas que todavía no están.
+const sitemapPath = path.join(ROOT, 'sitemap.xml');
+let sitemap = fs.readFileSync(sitemapPath, 'utf8');
+const eol = sitemap.includes('\r\n') ? '\r\n' : '\n';
+const missing = pages.filter(p => !sitemap.includes(`<loc>${SITE + p.path}</loc>`));
+if (missing.length) {
+  const entries = missing.map(p => `  <url><loc>${SITE + p.path}</loc><lastmod>2026-11-16</lastmod><priority>0.8</priority></url>`).join(eol);
+  sitemap = sitemap.replace('</urlset>', entries + eol + '</urlset>');
+  fs.writeFileSync(sitemapPath, sitemap);
+}
