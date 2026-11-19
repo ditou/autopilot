@@ -546,6 +546,7 @@ const html = `${head}${CSS}
   })();
   </script>
   ${widgetJs}
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "fd53afc6c049408fbe246e5b3c0d1258"}'></script>
 </body>
 </html>
 `;

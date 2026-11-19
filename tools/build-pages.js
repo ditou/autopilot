@@ -123,7 +123,8 @@ ${p.waText ? `            <a class="btn" href="${waLink(p.waText)}" target="_bla
       </div>
     </div>
   </footer>
-${p.script ? `  <script>${p.script}</script>\n` : ''}</body>
+${p.script ? `  <script>${p.script}</script>\n` : ''}<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "fd53afc6c049408fbe246e5b3c0d1258"}'></script>
+</body>
 </html>
 `;
   const out = path.join(ROOT, p.path, 'index.html');

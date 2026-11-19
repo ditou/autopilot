@@ -5,3 +5,4 @@ tools
 wrangler.jsonc
 .assetsignore
 .gitignore
+.autopilot
