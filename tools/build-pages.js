@@ -51,7 +51,7 @@ function page(p) {
   <link rel="preload" href="/assets/fonts/syne-latin-8vIH7w4q.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/assets/fonts/dmsans-latin-rP2Yp2yw.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="/assets/fonts.css" />
-  <link rel="stylesheet" href="/assets/site.css?v=1117" />
+  <link rel="stylesheet" href="/assets/site.css?v=1119" />
 ${ld.map(o => `  <script type="application/ld+json">${JSON.stringify(o)}</script>`).join('\n')}
 ${p.styles ? `  <style>${p.styles}</style>\n` : ''}</head>
 <body>
@@ -68,14 +68,15 @@ ${p.styles ? `  <style>${p.styles}</style>\n` : ''}</head>
     </div>
   </nav>
 
-  <main>
+  <main${p.guia ? ' class="guia"' : ''}>
     <div class="wrap crumbs">${crumbs.map(([h, n], i) => i < crumbs.length - 1 ? `<a href="${h}">${n}</a> / ` : `<span>${n}</span>`).join('')}</div>
     <header class="hero">
       <div class="wrap">
         <p class="label">${p.label}</p>
         <h1>${p.h1}</h1>
         <p class="lead">${p.lead}</p>
-        <div class="actions">
+${p.guia ? `        <p class="guia-meta">Por Fernando Alonso · Actualizado el ${p.guia.split('-').reverse().join('/')}</p>
+` : ''}        <div class="actions">
 ${p.waText ? `          <a class="btn" href="${waLink(p.waText)}" target="_blank" rel="noopener noreferrer">${p.ctaLabel}</a>` : `          <a class="btn" href="/#contacto">Pedir diagnóstico gratis</a>
           <a class="btn-ghost" href="${WA}" target="_blank" rel="noopener noreferrer">Escribir por WhatsApp</a>`}
         </div>
@@ -119,7 +120,7 @@ ${p.waText ? `            <a class="btn" href="${waLink(p.waText)}" target="_bla
       <div class="footer-cols">
         <div><p>Servicios</p>${SERVICIOS.map(([h, n]) => `<a href="${h}">${n}</a>`).join('')}</div>
         <div><p>Rubros</p>${RUBROS.map(([h, n]) => `<a href="${h}">${n}</a>`).join('')}<a href="/casos/laboratorio-biorossi/">Caso Biorossi</a></div>
-        <div><p>Autopilot</p><a href="/#contacto">Contacto</a><a href="https://www.linkedin.com/in/fernando-alonso-75b9a086/" target="_blank" rel="noopener">LinkedIn</a><a href="https://www.instagram.com/autopilot.com.ar/" target="_blank" rel="noopener noreferrer">Instagram</a><a href="https://www.tiktok.com/@autopilot.com.ar" target="_blank" rel="noopener noreferrer">TikTok</a></div>
+        <div><p>Autopilot</p><a href="/guias/">Guías</a><a href="/#contacto">Contacto</a><a href="https://www.linkedin.com/in/fernando-alonso-75b9a086/" target="_blank" rel="noopener">LinkedIn</a><a href="https://www.instagram.com/autopilot.com.ar/" target="_blank" rel="noopener noreferrer">Instagram</a><a href="https://www.tiktok.com/@autopilot.com.ar" target="_blank" rel="noopener noreferrer">TikTok</a></div>
       </div>
     </div>
   </footer>
@@ -346,6 +347,31 @@ pages.push(
     ctaTitle: 'Vemos qué plan te sirve', ctaDesc: 'Contanos cómo atendés hoy y qué querés que quede resuelto dentro del sistema.',
   }
 );
+
+// Guías (tools/guias/*.js): una página por archivo + índice /guias/.
+const GUIAS_DIR = path.join(ROOT, 'tools/guias');
+const guias = fs.readdirSync(GUIAS_DIR).filter(f => f.endsWith('.js')).sort().map(f => require(path.join(GUIAS_DIR, f)));
+const author = { '@type': 'Person', name: 'Fernando Alonso', url: SITE + '/' };
+for (const g of guias) {
+  const url = SITE + '/guias/' + g.slug + '/';
+  pages.push({
+    path: '/guias/' + g.slug + '/', short: g.short, crumb: ['/guias/', 'Guías'], guia: g.date,
+    title: g.title, desc: g.desc, label: g.label, h1: g.h1, lead: g.lead,
+    schema: { '@context': 'https://schema.org', '@type': 'Article', headline: g.h1, description: g.desc, datePublished: g.date, dateModified: g.date, author, publisher: provider, mainEntityOfPage: url, inLanguage: 'es-AR' },
+    sections: g.sections.map(x => ({ ...x, body: x.body.replace(/<table class="table">([\s\S]*?)<\/table>/g, '<div class="table-wrap"><table class="table">$1</table></div>') })),
+    faq: g.faq,
+  });
+}
+pages.push({
+  path: '/guias/', short: 'Guías', crumb: null,
+  title: 'Guías de automatización para pymes | Autopilot',
+  desc: 'Guías prácticas para dueños de pymes: cuánto cuesta un bot de WhatsApp, cómo tomar pedidos sin perder mensajes y cómo saber cuánto te deja cada obra.',
+  label: 'Guías', h1: 'Guías para ordenar tu negocio',
+  lead: 'Lo que nos preguntan los dueños antes de automatizar, explicado con números y ejemplos de acá.',
+  schema: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Guías de Autopilot', url: SITE + '/guias/', hasPart: guias.map(g => ({ '@type': 'Article', headline: g.h1, url: SITE + '/guias/' + g.slug + '/' })) },
+  sections: [{ h2: 'Todas las guías', body: `<div class="grid">${guias.map(g => linkCard('/guias/' + g.slug + '/', g.short, strip(g.lead))).join('')}</div>` }],
+  faq: null,
+});
 
 console.log(pages.map(page));
 
